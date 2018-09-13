@@ -28,7 +28,7 @@ public class BaiduLibsServiceImpl implements LbsService {
 
     @Override
     public Optional<Location> byLocation(String lng, String lat) {
-        String url = String.format(Constants.Baidu.LOCATION_URL, lng, lat, baiduConfig.getAk());
+        String url = String.format(Constants.Baidu.LOCATION_URL, lat, lng, baiduConfig.getAk());
         log.debug("url : {} ", url);
         ResponseEntity<String> responseEntity = this.restTemplate.getForEntity(url, String.class);
         log.debug("response : {} ", responseEntity);
