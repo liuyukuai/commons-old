@@ -37,8 +37,9 @@ public class BaiduLibsServiceImpl implements LbsService {
             LinkedHashMap linkedHashMap = optional.get();
             // success
             if (Objects.equals(Constants.Baidu.SUCCESS_STATUS, String.valueOf(linkedHashMap.get(Constants.Baidu.KEY_OF_STATUS)))) {
-                LinkedHashMap location = (LinkedHashMap) linkedHashMap.get(Constants.Baidu.KEY_OF_LOCATION);
-                String address = String.valueOf(linkedHashMap.get(Constants.Baidu.KEY_FORMATTED_ADDRESS));
+                LinkedHashMap result = (LinkedHashMap) linkedHashMap.get(Constants.Baidu.KEY_OF_RESULT);
+                LinkedHashMap location = (LinkedHashMap) result.get(Constants.Baidu.KEY_OF_LOCATION);
+                String address = String.valueOf(result.get(Constants.Baidu.KEY_FORMATTED_ADDRESS));
                 return Optional.of(new Location(address, "", String.valueOf(location.get(Constants.Baidu.KEY_OF_LNG)), String.valueOf(location.get(Constants.Baidu.KEY_OF_LAT))));
             }
         }
