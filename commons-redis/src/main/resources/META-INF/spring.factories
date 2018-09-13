@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.itxiaoer.commons.redis.RedisOperationsConfiguration,\
+com.itxiaoer.commons.redis.RedisConfig,\
+com.itxiaoer.commons.redis.sentinel.RedisSentinelConfig

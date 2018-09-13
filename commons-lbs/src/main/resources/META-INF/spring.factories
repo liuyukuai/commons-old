@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.itxiaoer.commons.lbs.baidu.BaiduConfig,\
+com.itxiaoer.commons.lbs.HttpConfiguration
