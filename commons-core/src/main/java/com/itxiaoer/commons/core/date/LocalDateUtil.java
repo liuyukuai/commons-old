@@ -2,8 +2,11 @@ package com.itxiaoer.commons.core.date;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author : liuyk
@@ -114,6 +117,45 @@ public final class LocalDateUtil {
      */
     public static LocalDate parse(String localDate, String pattern) {
         return LocalDate.from(DateTimeFormatter.ofPattern(pattern).parse(localDate));
+    }
+
+    /**
+     * 计算两个时间内的日期
+     *
+     * @param startDate 开始时间
+     * @param endDate   结束时间
+     * @return 日期集合
+     */
+    public static List<LocalDate> untilDays(String startDate, String endDate) {
+        return untilDays(parse(startDate, DEFAULT_PATTERN), parse(endDate, DEFAULT_PATTERN));
+    }
+
+    /**
+     * 计算两个时间内的日期
+     *
+     * @param startDate 开始时间
+     * @param endDate   结束时间
+     * @param pattern   日期格式
+     * @return 日期集合
+     */
+    public static List<LocalDate> untilDays(String startDate, String endDate, String pattern) {
+        return untilDays(parse(startDate, pattern), parse(endDate, pattern));
+    }
+
+    /**
+     * 计算两个时间内的日期
+     *
+     * @param startDate 开始时间
+     * @param endDate   结束时间
+     * @return 日期集合
+     */
+    public static List<LocalDate> untilDays(LocalDate startDate, LocalDate endDate) {
+        long until = startDate.until(endDate, ChronoUnit.DAYS) + 1;
+        List<LocalDate> dates = new ArrayList<>();
+        for (long i = 0; i < until; i++) {
+            dates.add(startDate.plusDays(i));
+        }
+        return dates;
     }
 
 }
