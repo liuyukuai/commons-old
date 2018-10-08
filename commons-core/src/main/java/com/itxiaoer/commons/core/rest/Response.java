@@ -2,27 +2,29 @@ package com.itxiaoer.commons.core.rest;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
+
 
 /**
  * 响应结果对象
  *
  * @author liuyk
  */
+@Slf4j
 @Data
-@SuppressWarnings({"unused", "all"})
+@SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Response<T> implements Serializable {
 
     private static final long serialVersionUID = -3212041374480698935L;
 
-    private static Logger logger = LoggerFactory.getLogger(Response.class);
-
     private boolean success;
 
+    /**
+     * data
+     */
     private T data;
 
     /**
@@ -59,27 +61,59 @@ public class Response<T> implements Serializable {
         this.code = code;
     }
 
-
+    /**
+     * success response
+     *
+     * @param <E> data type
+     * @return response
+     */
     public static <E> Response<E> ok() {
         return new Response<>(null);
     }
 
+    /**
+     * success response
+     *
+     * @param <E>  data type
+     * @param data data
+     * @return response
+     */
     public static <E> Response<E> ok(E data) {
         return new Response<>(data);
     }
 
-    public static <E> Response<E> no() {
+    /**
+     * failure response
+     *
+     * @param <E> data type
+     * @return response
+     */
+    public static <E> Response<E> failure() {
         return new Response<>(false, "");
     }
 
+    /**
+     * failure response
+     *
+     * @param <E>     data type
+     * @param message failure message
+     * @return response
+     */
 
-    public static <E> Response<E> no(String msg) {
-        return new Response<>(false, msg);
+    public static <E> Response<E> failure(String message) {
+        return new Response<>(false, message);
     }
 
+    /**
+     * failure response
+     *
+     * @param <E>     data type
+     * @param message failure message
+     * @param code    failure code
+     * @return response
+     */
 
-    public static <E> Response<E> no(String msg, String code) {
-        return new Response<>(false, msg);
+    public static <E> Response<E> failure(String message, String code) {
+        return new Response<>(false, message, code);
     }
-
 }

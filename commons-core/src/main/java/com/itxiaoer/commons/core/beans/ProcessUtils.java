@@ -1,13 +1,16 @@
 package com.itxiaoer.commons.core.beans;
 
+import com.itxiaoer.commons.core.util.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cglib.beans.BeanCopier;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 /**
  * processUtils
@@ -38,20 +41,16 @@ public final class ProcessUtils {
     /**
      * 拷贝list对象
      *
-     * @param clazz 目标类型
-     * @param src   原对象集合
+     * @param clazz      目标类型
+     * @param src        原对象集合
+     * @param biConsumer 回调函数
      * @return 目标对象集合
      */
-    public static <T, R> List<R> processList(Class<R> clazz, List<T> src, Callback<R, T> callback) {
-        if (src == null || src.isEmpty()) {
+    public static <T, R> List<R> processList(Class<R> clazz, List<T> src, BiConsumer<R, T> biConsumer) {
+        if (!Lists.iterable(src)) {
             throw new IllegalArgumentException("the src argument must be null");
         }
-        List<R> rs = new ArrayList<>();
-        for (T t : src) {
-            R process = process(clazz, t, callback);
-            rs.add(process);
-        }
-        return rs;
+        return src.stream().map(e -> process(clazz, e, biConsumer)).collect(Collectors.toList());
     }
 
     /**
@@ -69,34 +68,49 @@ public final class ProcessUtils {
     /**
      * 拷贝单个对象
      *
-     * @param clazz    目标类型
-     * @param src      原对象
-     * @param callback 回调函数
+     * @param clazz      目标类型
+     * @param src        原对象
+     * @param biConsumer 回调函数
      * @return 目标对象
      */
-    public static <T, R> R process(Class<R> clazz, T src, Callback<R, T> callback) {
-        if (clazz == null) {
+    public static <T, R> R process(Class<R> clazz, T src, BiConsumer<R, T> biConsumer) {
+        if (Objects.isNull(clazz)) {
             throw new IllegalArgumentException("the clazz argument must be null");
         }
-        if (src == null) {
+        if (Objects.isNull(src)) {
             throw new IllegalArgumentException("the src argument must be null");
         }
-
         try {
             R r = clazz.newInstance();
-            return processObject(r, src, callback);
+            return processObject(r, src, biConsumer);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new IllegalArgumentException(e.getMessage());
         }
     }
 
+    /**
+     * 拷贝单个对象
+     *
+     * @param r   目标对象
+     * @param src 原对象
+     * @return 目标对象
+     */
     public static <T, R> R processObject(R r, T src) {
         return processObject(r, src, (r1, src1) -> {
         });
     }
 
-    public static <T, R> R processObject(R r, T src, Callback<R, T> callback) {
+    /**
+     * 拷贝单个对象
+     *
+     * @param r          目标对象
+     * @param src        原对象
+     * @param biConsumer 回调函数
+     * @return 目标对象
+     */
+
+    public static <T, R> R processObject(R r, T src, BiConsumer<R, T> biConsumer) {
         try {
             BeanUtils.copyProperties(src, r);
             String beanKey = generateKey(src.getClass(), r.getClass());
@@ -108,7 +122,7 @@ public final class ProcessUtils {
                 copier = BEAN_COPIER_MAP.get(beanKey);
             }
             copier.copy(src, r, null);
-            callback.call(r, src);
+            biConsumer.accept(r, src);
             return r;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -116,26 +130,7 @@ public final class ProcessUtils {
         }
     }
 
-
     private static String generateKey(Class<?> class1, Class<?> class2) {
         return String.join(class1.toString(), class2.toString());
     }
-
-    /**
-     * callback
-     *
-     * @author liuyk
-     */
-    @FunctionalInterface
-    public interface Callback<R, S> {
-
-        /**
-         * 回调函数
-         *
-         * @param dest 目标对象
-         * @param src  原始对象
-         */
-        void call(R dest, S src);
-    }
-
 }

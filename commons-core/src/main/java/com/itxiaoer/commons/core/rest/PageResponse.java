@@ -1,5 +1,6 @@
 package com.itxiaoer.commons.core.rest;
 
+import com.itxiaoer.commons.core.util.Lists;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -25,11 +26,11 @@ public class PageResponse<T> implements Serializable {
 
     private PageResponse(Long total, List<T> data) {
         this.total = total;
-        this.data = data;
+        this.data = Lists.empty(data);
     }
 
     public static <E> PageResponse<E> empty() {
-        return new PageResponse<>();
+        return new PageResponse<>(0L, Lists.newArrayList());
     }
 
 
