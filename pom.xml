@@ -4,7 +4,7 @@
 
     <groupId>com.itxiaoer.commons</groupId>
     <artifactId>commons</artifactId>
-    <version>2.0.12</version>
+    <version>2.0.13-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>commons</name>
@@ -85,7 +85,7 @@
             scm:git:https://github.com/liuyukuai/commons.git
         </developerConnection>
         <url>https://github.com/liuyukuai/commons</url>
-        <tag>v2.0.12</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
