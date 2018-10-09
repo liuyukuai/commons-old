@@ -1,5 +1,7 @@
 package com.itxiaoer.commons.core.util;
 
+import com.itxiaoer.commons.core.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,7 +57,15 @@ public final class Lists {
      */
     public static <E> List<E> clean(List<E> list) {
         if (iterable(list)) {
-            return list.stream().filter(e -> !Objects.isNull(e)).collect(Collectors.toList());
+            return list.stream().filter(e -> {
+                if (Objects.isNull(e)) {
+                    return false;
+                }
+                if (e instanceof Nullable) {
+                    return !((Nullable) e).isNull();
+                }
+                return true;
+            }).collect(Collectors.toList());
         }
         return list;
     }
