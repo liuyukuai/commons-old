@@ -5,6 +5,7 @@ import java.util.Optional;
 /**
  * @author : liuyk
  */
+@SuppressWarnings("unused")
 public interface LbsService {
     /**
      * 通过纬度值和经度值查询地址位置
@@ -27,6 +28,8 @@ public interface LbsService {
     /**
      * 经纬度转换
      *
+     * @param lng  lng
+     * @param lat  lat
      * @param type 其他类型经纬度 google
      * @return location
      */
