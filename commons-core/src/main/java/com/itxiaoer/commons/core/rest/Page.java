@@ -39,13 +39,13 @@ public class Page {
     /**
      * 解析page对象,若参数错误，默认desc
      *
-     * @param pageFunction 解析函数
+     * @param thirdFunction 解析函数
      * @param <R>          解析后的对象
      * @return 返回解析结果
      */
-    public <R> R get(PageFunction<R, Integer, Integer, List<Sort>> pageFunction) {
+    public <R> R get(ThirdFunction<R, Integer, Integer, List<Sort>> thirdFunction) {
         if (StringUtils.isBlank(sort)) {
-            return pageFunction.apply(PageUtils.page(page), PageUtils.size(size), Lists.newArrayList());
+            return thirdFunction.apply(PageUtils.page(page), PageUtils.size(size), Lists.newArrayList());
         }
         List<Sort> sorts = Arrays.stream(sort.split(",")).map(s -> {
             try {
@@ -61,7 +61,7 @@ public class Page {
                 return null;
             }
         }).collect(Collectors.toList());
-        return pageFunction.apply(PageUtils.page(page), PageUtils.size(size), sorts);
+        return thirdFunction.apply(PageUtils.page(page), PageUtils.size(size), sorts);
     }
 
 }
