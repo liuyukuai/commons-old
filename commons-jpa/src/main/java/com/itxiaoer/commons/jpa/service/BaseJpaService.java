@@ -106,7 +106,10 @@ public abstract class BaseJpaService<DTO, E, ID extends Serializable, JPA extend
 
     @Override
     public List<E> getById(List<ID> ids) {
-        return this.repository.findAllById(ids);
+        if (Lists.iterable(ids)) {
+            return this.repository.findAllById(ids);
+        }
+        return Lists.newArrayList();
     }
 
     @Override
