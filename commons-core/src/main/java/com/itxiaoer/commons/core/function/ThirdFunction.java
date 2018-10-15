@@ -1,4 +1,4 @@
-package com.itxiaoer.commons.core.rest;
+package com.itxiaoer.commons.core.function;
 
 /**
  * ThirdFunction

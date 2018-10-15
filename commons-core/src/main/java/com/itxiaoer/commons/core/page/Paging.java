@@ -1,7 +1,10 @@
-package com.itxiaoer.commons.core.rest;
+package com.itxiaoer.commons.core.page;
 
+import com.itxiaoer.commons.core.function.ThirdFunction;
 import com.itxiaoer.commons.core.util.Lists;
-import lombok.Data;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,10 +17,11 @@ import java.util.stream.Collectors;
  *
  * @author : liuyk
  */
-@Data
 @Slf4j
-@SuppressWarnings("unused")
-public class Page {
+@Builder
+@ToString
+@EqualsAndHashCode
+public class Paging {
 
     private static final String DESC = "desc";
 
@@ -32,18 +36,40 @@ public class Page {
     private String size;
 
     /**
-     * 排序规则 eg: xxx-desc,xxx-asc
+     * 排序规则 eg: xxx-desc, xxx-asc
      */
     private String sort;
+
+    public Paging() {
+    }
+
+    private Paging(String page, String size) {
+        this(page, size, StringUtils.EMPTY);
+    }
+
+    private Paging(String page, String size, String sort) {
+        this.page = page;
+        this.size = size;
+        this.sort = sort;
+    }
+
+    public static Paging of(String page, String size) {
+        return new Paging(page, size);
+    }
+
+
+    public static Paging of(String page, String size, String sort) {
+        return new Paging(page, size, sort);
+    }
 
     /**
      * 解析page对象,若参数错误，默认desc
      *
      * @param thirdFunction 解析函数
-     * @param <R>          解析后的对象
+     * @param <R>           解析后的对象
      * @return 返回解析结果
      */
-    public <R> R get(ThirdFunction<R, Integer, Integer, List<Sort>> thirdFunction) {
+    public <R, F extends ThirdFunction<R, Integer, Integer, List<Sort>>> R get(F thirdFunction) {
         if (StringUtils.isBlank(sort)) {
             return thirdFunction.apply(PageUtils.page(page), PageUtils.size(size), Lists.newArrayList());
         }
@@ -63,5 +89,6 @@ public class Page {
         }).collect(Collectors.toList());
         return thirdFunction.apply(PageUtils.page(page), PageUtils.size(size), sorts);
     }
+
 
 }

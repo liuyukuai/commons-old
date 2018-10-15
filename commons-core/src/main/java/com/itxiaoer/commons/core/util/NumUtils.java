@@ -41,7 +41,7 @@ public final class NumUtils {
         try {
             return NumberUtils.createNumber(val).intValue();
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.warn("intVal(String, int) throw {}, return defaultValue = {}", e, defaultValue);
             return defaultValue;
         }
     }
@@ -67,7 +67,7 @@ public final class NumUtils {
         try {
             return NumberUtils.createNumber(val).longValue();
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.warn("longVal(String, int) throw {}, return defaultValue = {}", e, defaultValue);
             return defaultValue;
         }
     }

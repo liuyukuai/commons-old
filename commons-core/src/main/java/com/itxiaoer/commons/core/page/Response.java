@@ -1,10 +1,12 @@
-package com.itxiaoer.commons.core.rest;
+package com.itxiaoer.commons.core.page;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 
 /**
@@ -115,5 +117,16 @@ public class Response<T> implements Serializable {
 
     public static <E> Response<E> failure(String message, String code) {
         return new Response<>(false, message, code);
+    }
+
+    /**
+     * get response message
+     *
+     * @param response response
+     * @param <E>      e
+     * @return message
+     */
+    public static <E> String message(Response<E> response) {
+        return Optional.ofNullable(response).map(Response::getMsg).orElse(StringUtils.EMPTY);
     }
 }

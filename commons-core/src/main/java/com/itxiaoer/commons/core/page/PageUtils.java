@@ -1,4 +1,4 @@
-package com.itxiaoer.commons.core.rest;
+package com.itxiaoer.commons.core.page;
 
 import com.itxiaoer.commons.core.util.NumUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -14,22 +14,22 @@ public class PageUtils {
     /**
      * 默认最大分页数
      */
-    private static final int DEFAULT_MAX_LIMIT = 5000;
+    public static final int DEFAULT_MAX_PAGE_SIZE = 5000;
 
     /**
      * 默认最小分页数
      */
-    private static final int DEFAULT_LIMIT = 20;
+    public static final int DEFAULT_PAGE_SIZE = 20;
 
     /**
      * 默认最大起始页数
      */
-    private static final int DEFAULT_MAX_START = 100;
+    public static final int DEFAULT_MAX_PAGE = 200;
 
     /**
      * 默认最小起始页数
      */
-    private static final int DEFAULT_MIN_START = 1;
+    public static final int DEFAULT_MIN_PAGE = 1;
 
 
     /**
@@ -39,7 +39,7 @@ public class PageUtils {
      * @return page
      */
     public static int page(String page) {
-        return page(page, DEFAULT_MAX_START);
+        return page(page, DEFAULT_MAX_PAGE);
     }
 
     /**
@@ -51,10 +51,10 @@ public class PageUtils {
      */
     public static int page(String page, int maxValue) {
         if (StringUtils.isBlank(page)) {
-            return DEFAULT_MIN_START;
+            return DEFAULT_MIN_PAGE;
         }
         int parseInt = NumUtils.intVal(page);
-        return parseInt <= 0 ? DEFAULT_MIN_START : (parseInt > maxValue ? maxValue : parseInt);
+        return parseInt <= 0 ? DEFAULT_MIN_PAGE : (parseInt > maxValue ? maxValue : parseInt);
     }
 
     /**
@@ -64,7 +64,7 @@ public class PageUtils {
      * @return size
      */
     public static int size(String size) {
-        return size(size, DEFAULT_LIMIT);
+        return size(size, DEFAULT_PAGE_SIZE);
     }
 
     /**
@@ -75,8 +75,8 @@ public class PageUtils {
      * @return size
      */
     public static int size(String size, int defaultValue) {
-        int parseInt = NumUtils.intVal(size);
+        int parseInt = NumUtils.intVal(size, defaultValue);
         return parseInt <= 0 ? defaultValue
-                : (parseInt > DEFAULT_MAX_LIMIT ? DEFAULT_MAX_LIMIT : parseInt);
+                : (parseInt > DEFAULT_MAX_PAGE_SIZE ? DEFAULT_MAX_PAGE_SIZE : parseInt);
     }
 }

@@ -2,7 +2,6 @@ package com.itxiaoer.commons.core.beans;
 
 import com.itxiaoer.commons.core.util.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.cglib.beans.BeanCopier;
 
 import java.util.List;
@@ -112,7 +111,6 @@ public final class ProcessUtils {
 
     public static <T, R> R processObject(R r, T src, BiConsumer<R, T> biConsumer) {
         try {
-            BeanUtils.copyProperties(src, r);
             String beanKey = generateKey(src.getClass(), r.getClass());
             BeanCopier copier;
             if (!BEAN_COPIER_MAP.containsKey(beanKey)) {
