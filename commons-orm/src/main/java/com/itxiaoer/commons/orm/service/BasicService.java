@@ -4,7 +4,6 @@ package com.itxiaoer.commons.orm.service;
 import com.itxiaoer.commons.core.beans.ProcessUtils;
 import com.itxiaoer.commons.core.page.PageResponse;
 import com.itxiaoer.commons.core.page.Paging;
-import com.itxiaoer.commons.core.page.Response;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -23,7 +22,7 @@ public interface BasicService<DTO, E, ID> {
      * @param dto dto
      * @return id
      */
-    Response<E> create(DTO dto);
+    E create(DTO dto);
 
 
     /**
@@ -33,7 +32,7 @@ public interface BasicService<DTO, E, ID> {
      * @param consumer 对象转换器
      * @return id
      */
-    Response<E> create(DTO dto, BiConsumer<E, DTO> consumer);
+    E create(DTO dto, BiConsumer<E, DTO> consumer);
 
 
     /**
@@ -43,7 +42,7 @@ public interface BasicService<DTO, E, ID> {
      * @param dto dto对象
      * @return 更新后的对象
      */
-    Response<E> update(ID id, DTO dto);
+    E update(ID id, DTO dto);
 
 
     /**
@@ -54,7 +53,7 @@ public interface BasicService<DTO, E, ID> {
      * @param consumer 对象转换器
      * @return 更新后的对象
      */
-    Response<E> update(ID id, DTO dto, BiConsumer<E, DTO> consumer);
+    E update(ID id, DTO dto, BiConsumer<E, DTO> consumer);
 
 
     /**
@@ -147,5 +146,4 @@ public interface BasicService<DTO, E, ID> {
         ParameterizedType genericInterfaces = (ParameterizedType) this.getClass().getGenericInterfaces()[0];
         return (Class<E>) genericInterfaces.getActualTypeArguments()[index];
     }
-
 }

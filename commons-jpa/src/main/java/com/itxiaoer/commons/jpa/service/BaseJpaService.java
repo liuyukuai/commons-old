@@ -5,16 +5,15 @@ import com.itxiaoer.commons.core.NotFoundException;
 import com.itxiaoer.commons.core.beans.ProcessUtils;
 import com.itxiaoer.commons.core.page.PageResponse;
 import com.itxiaoer.commons.core.page.Paging;
-import com.itxiaoer.commons.core.page.Response;
 import com.itxiaoer.commons.core.util.Lists;
 import com.itxiaoer.commons.jpa.page.JpaPaging;
 import com.itxiaoer.commons.orm.service.BasicService;
 import com.itxiaoer.commons.orm.validate.Validate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
@@ -24,43 +23,49 @@ import java.util.function.BiConsumer;
  * @author : liuyk
  */
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"all"})
 @Transactional(readOnly = true, rollbackFor = Exception.class)
-public class JapServiceImpl<DTO, E, ID extends Serializable, JPA extends JpaRepository<E, ID>> implements BasicService<DTO, E, ID>, Validate<DTO, ID> {
+public abstract class BaseJpaService<DTO, E, ID extends Serializable, JPA extends JpaRepository<E, ID>> implements BasicService<DTO, E, ID>, Validate<DTO, ID> {
 
-    @Resource
+    @Autowired
     private JPA repository;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<E> create(DTO dto) {
+    public E create(DTO dto) {
         return this.create(dto, consumer());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<E> create(DTO dto, BiConsumer<E, DTO> consumer) {
+    public E create(DTO dto, BiConsumer<E, DTO> consumer) {
         this.valid(dto);
         E process = process(dto, consumer);
         this.repository.saveAndFlush(process);
-        return Response.ok(process);
+        return process;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<E> update(ID id, DTO dto) {
+    public E update(ID id, DTO dto) {
         return this.update(id, dto, consumer());
     }
 
+
+    @Transactional(rollbackFor = Exception.class)
+    public E update(E e) {
+        return this.repository.saveAndFlush(e);
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response<E> update(ID id, DTO dto, BiConsumer<E, DTO> consumer) {
+    public E update(ID id, DTO dto, BiConsumer<E, DTO> consumer) {
         this.idValid(id);
         Optional<E> optional = this.repository.findById(id);
         E e = optional.orElseThrow(NotFoundException::new);
         ProcessUtils.processObject(e, dto, consumer);
         this.repository.saveAndFlush(e);
-        return Response.ok(e);
+        return e;
     }
 
     @Override
@@ -101,5 +106,15 @@ public class JapServiceImpl<DTO, E, ID extends Serializable, JPA extends JpaRepo
     public PageResponse<E> list(Paging paging) {
         Page<E> page = this.repository.findAll(JpaPaging.of(paging));
         return JpaPaging.of(page);
+    }
+
+
+    /**
+     * 获取数据层对象
+     *
+     * @return 数据持久层对象
+     */
+    public JPA getRepository() {
+        return this.repository;
     }
 }

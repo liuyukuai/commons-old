@@ -2,9 +2,7 @@ package com.itxiaoer.commons.core.page;
 
 import com.itxiaoer.commons.core.function.ThirdFunction;
 import com.itxiaoer.commons.core.util.Lists;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,15 +27,21 @@ public class Paging {
     /**
      * 分页页数，默认值1，最小值为1
      */
+    @Setter
+    @Getter
     private String page;
     /**
      * 每页条数，默认值10
      */
+    @Setter
+    @Getter
     private String size;
 
     /**
      * 排序规则 eg: xxx-desc, xxx-asc
      */
+    @Setter
+    @Getter
     private String sort;
 
     public Paging() {
