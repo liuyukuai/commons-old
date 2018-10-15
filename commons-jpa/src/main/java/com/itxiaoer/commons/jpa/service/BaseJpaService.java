@@ -49,7 +49,8 @@ public abstract class BaseJpaService<DTO, E, ID extends Serializable, JPA extend
     @Override
     @Transactional(rollbackFor = Exception.class)
     public E update(ID id, DTO dto) {
-        return this.update(id, dto, consumer());
+        return this.update(id, dto, (dest, source) -> {
+        });
     }
 
     @Override

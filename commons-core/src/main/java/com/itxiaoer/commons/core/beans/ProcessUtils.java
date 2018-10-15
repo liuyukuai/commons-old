@@ -132,7 +132,9 @@ public final class ProcessUtils {
                 copier = BEAN_COPIER_MAP.get(beanKey);
             }
             copier.copy(src, r, null);
-            biConsumer.accept(r, src);
+            if (biConsumer != null) {
+                biConsumer.accept(r, src);
+            }
             return r;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
