@@ -28,7 +28,7 @@ public class TestJpaPaging {
         paging = Paging.of("2", "10");
         pagingStr = Paging.of("abc", "1234a");
         pagingSort = Paging.of("abc", "1234a", "createTime-desc");
-        pagingSorts = Paging.of("abc", "1234a", "createTime-desc, publishTime-desc");
+        pagingSorts = Paging.of("abc", "1234a", "createTime-desc,publishTime-desc");
     }
 
 

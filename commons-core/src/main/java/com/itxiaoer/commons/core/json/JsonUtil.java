@@ -36,6 +36,7 @@ public final class JsonUtil {
      * object to json
      *
      * @param <T> T t
+     * @param t   参数类型
      * @return string
      */
     public static <T> String toJson(T t) {

@@ -30,6 +30,8 @@ public final class ProcessUtils {
      *
      * @param clazz 目标类型
      * @param src   原对象集合
+     * @param <T>   原数据类型
+     * @param <R>   目标数据类型
      * @return 目标对象集合
      */
     public static <T, R> List<R> processList(Class<R> clazz, List<T> src) {
@@ -43,6 +45,8 @@ public final class ProcessUtils {
      * @param clazz      目标类型
      * @param src        原对象集合
      * @param biConsumer 回调函数
+     * @param <T>        原数据类型
+     * @param <R>        目标数据类型
      * @return 目标对象集合
      */
     public static <T, R> List<R> processList(Class<R> clazz, List<T> src, BiConsumer<R, T> biConsumer) {
@@ -57,6 +61,8 @@ public final class ProcessUtils {
      *
      * @param clazz 目标类型
      * @param src   原对象
+     * @param <T>   原数据类型
+     * @param <R>   目标数据类型
      * @return 目标对象
      */
     public static <T, R> R process(Class<R> clazz, T src) {
@@ -70,6 +76,8 @@ public final class ProcessUtils {
      * @param clazz      目标类型
      * @param src        原对象
      * @param biConsumer 回调函数
+     * @param <T>        原数据类型
+     * @param <R>        目标数据类型
      * @return 目标对象
      */
     public static <T, R> R process(Class<R> clazz, T src, BiConsumer<R, T> biConsumer) {
@@ -93,6 +101,8 @@ public final class ProcessUtils {
      *
      * @param r   目标对象
      * @param src 原对象
+     * @param <T> 原数据类型
+     * @param <R> 目标数据类型
      * @return 目标对象
      */
     public static <T, R> R processObject(R r, T src) {
@@ -106,6 +116,8 @@ public final class ProcessUtils {
      * @param r          目标对象
      * @param src        原对象
      * @param biConsumer 回调函数
+     * @param <T>        原数据类型
+     * @param <R>        目标数据类型
      * @return 目标对象
      */
 

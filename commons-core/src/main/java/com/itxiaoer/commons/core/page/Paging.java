@@ -67,6 +67,7 @@ public class Paging {
      *
      * @param thirdFunction 解析函数
      * @param <R>           解析后的对象
+     * @param <F>           function
      * @return 返回解析结果
      */
     public <R, F extends ThirdFunction<R, Integer, Integer, List<Sort>>> R get(F thirdFunction) {
