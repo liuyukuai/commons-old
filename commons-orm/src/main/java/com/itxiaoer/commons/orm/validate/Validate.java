@@ -29,7 +29,7 @@ public interface Validate<E, ID> {
             throw new ParameterException("the id is null. ");
         }
         boolean validate = id instanceof String && StringUtils.isBlank((String) id);
-        if (!validate) {
+        if (validate) {
             throw new ParameterException("the id is null. ");
         }
     }

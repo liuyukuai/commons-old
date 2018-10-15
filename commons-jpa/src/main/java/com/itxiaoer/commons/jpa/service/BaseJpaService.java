@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * @author : liuyk
@@ -49,6 +50,16 @@ public abstract class BaseJpaService<DTO, E, ID extends Serializable, JPA extend
     @Transactional(rollbackFor = Exception.class)
     public E update(ID id, DTO dto) {
         return this.update(id, dto, consumer());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public E update(ID id, Consumer<E> consumer) {
+        this.idValid(id);
+        Optional<E> optional = this.repository.findById(id);
+        E e = optional.orElseThrow(NotFoundException::new);
+        consumer.accept(e);
+        return this.repository.saveAndFlush(e);
     }
 
 

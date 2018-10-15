@@ -9,6 +9,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * @author : liuyk
@@ -43,6 +44,16 @@ public interface BasicService<DTO, E, ID> {
      * @return 更新后的对象
      */
     E update(ID id, DTO dto);
+
+
+    /**
+     * 更新对象
+     *
+     * @param id       id
+     * @param consumer 消费方法
+     * @return 更新后的对象
+     */
+    E update(ID id, Consumer<E> consumer);
 
 
     /**
@@ -143,7 +154,7 @@ public interface BasicService<DTO, E, ID> {
      */
     @SuppressWarnings("unchecked")
     default Class<E> getGenericClass(int index) {
-        ParameterizedType genericInterfaces = (ParameterizedType) this.getClass().getGenericInterfaces()[0];
+        ParameterizedType genericInterfaces = (ParameterizedType) this.getClass().getGenericSuperclass();
         return (Class<E>) genericInterfaces.getActualTypeArguments()[index];
     }
 }

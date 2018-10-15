@@ -9,6 +9,7 @@ import com.itxiaoer.commons.orm.service.BasicService;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class UserService implements BasicService<UserDto, User, String> {
     @Override
@@ -23,6 +24,11 @@ public class UserService implements BasicService<UserDto, User, String> {
 
     @Override
     public User update(String s, UserDto userDto) {
+        return null;
+    }
+
+    @Override
+    public User update(String s, Consumer<User> consumer) {
         return null;
     }
 
