@@ -65,8 +65,9 @@ public class TestProcessUtils {
 
     @Test
     public void process() {
-        Dest process = ProcessUtils.processObject(new Dest(), this.source);
+        Dest dest = new Dest();
+        ProcessUtils.processObject(dest, this.source);
         System.out.println(source);
-        System.out.println(process);
+        System.out.println(dest);
     }
 }

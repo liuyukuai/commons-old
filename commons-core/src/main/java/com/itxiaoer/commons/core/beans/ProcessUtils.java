@@ -89,7 +89,8 @@ public final class ProcessUtils {
         }
         try {
             R r = clazz.newInstance();
-            return processObject(r, src, biConsumer);
+            processObject(r, src, biConsumer);
+            return r;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new IllegalArgumentException(e.getMessage());
@@ -103,10 +104,9 @@ public final class ProcessUtils {
      * @param src 原对象
      * @param <T> 原数据类型
      * @param <R> 目标数据类型
-     * @return 目标对象
      */
-    public static <T, R> R processObject(R r, T src) {
-        return processObject(r, src, (r1, src1) -> {
+    public static <T, R> void processObject(R r, T src) {
+        processObject(r, src, (r1, src1) -> {
         });
     }
 
@@ -118,10 +118,9 @@ public final class ProcessUtils {
      * @param biConsumer 回调函数
      * @param <T>        原数据类型
      * @param <R>        目标数据类型
-     * @return 目标对象
      */
 
-    public static <T, R> R processObject(R r, T src, BiConsumer<R, T> biConsumer) {
+    public static <T, R> void processObject(R r, T src, BiConsumer<R, T> biConsumer) {
         try {
             String beanKey = generateKey(src.getClass(), r.getClass());
             BeanCopier copier;
@@ -135,7 +134,6 @@ public final class ProcessUtils {
             if (biConsumer != null) {
                 biConsumer.accept(r, src);
             }
-            return r;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new IllegalArgumentException(e.getMessage());

@@ -127,7 +127,7 @@ public interface BasicService<DTO, E, ID> {
      * dto convert to e
      *
      * @param dto      dto
-     * @param consumer consumer
+     * @param consumer process
      * @return e
      */
 
@@ -136,8 +136,20 @@ public interface BasicService<DTO, E, ID> {
         return ProcessUtils.process(clazz, dto, consumer);
     }
 
+
     /**
-     * 创建对象转换器
+     * 转换对象
+     *
+     * @param e        目标对象
+     * @param dto      原对象
+     * @param consumer 额外转换器
+     */
+    default void process(E e, DTO dto, BiConsumer<E, DTO> consumer) {
+        ProcessUtils.processObject(e, dto, consumer);
+    }
+
+    /**
+     * 创建对象转换器（只能用于新增）
      *
      * @return 返回对象转换器
      */

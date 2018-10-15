@@ -2,7 +2,6 @@ package com.itxiaoer.commons.jpa.service;
 
 
 import com.itxiaoer.commons.core.NotFoundException;
-import com.itxiaoer.commons.core.beans.ProcessUtils;
 import com.itxiaoer.commons.core.page.PageResponse;
 import com.itxiaoer.commons.core.page.Paging;
 import com.itxiaoer.commons.core.util.Lists;
@@ -55,6 +54,17 @@ public abstract class BaseJpaService<DTO, E, ID extends Serializable, JPA extend
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public E update(ID id, DTO dto, BiConsumer<E, DTO> consumer) {
+        this.idValid(id);
+        Optional<E> optional = this.repository.findById(id);
+        E e = optional.orElseThrow(NotFoundException::new);
+        this.process(e, dto, consumer);
+        this.repository.saveAndFlush(e);
+        return e;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public E update(ID id, Consumer<E> consumer) {
         this.idValid(id);
         Optional<E> optional = this.repository.findById(id);
@@ -69,16 +79,6 @@ public abstract class BaseJpaService<DTO, E, ID extends Serializable, JPA extend
         return this.repository.saveAndFlush(e);
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public E update(ID id, DTO dto, BiConsumer<E, DTO> consumer) {
-        this.idValid(id);
-        Optional<E> optional = this.repository.findById(id);
-        E e = optional.orElseThrow(NotFoundException::new);
-        ProcessUtils.processObject(e, dto, consumer);
-        this.repository.saveAndFlush(e);
-        return e;
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
