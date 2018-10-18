@@ -114,6 +114,14 @@ public interface BasicService<DTO, E, ID> {
     <T> List<E> listByWhere(T query);
 
     /**
+     * 查询所有的对象
+     *
+     * @param query 多条件查询对象
+     * @return list
+     */
+    <T extends Paging> PageResponse<E> listByWhere(T query);
+
+    /**
      * 查询所有的对象（分页）
      *
      * @param paging 分页对象

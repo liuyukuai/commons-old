@@ -125,6 +125,12 @@ public abstract class BaseJpaService<DTO, E, ID extends Serializable, JPA extend
     }
 
     @Override
+    public <T extends Paging> PageResponse<E> listByWhere(T query) {
+        Page<E> page = this.repository.findAll(Restrictions.of().where(query).get(), JpaPaging.of(query));
+        return JpaPaging.of(page);
+    }
+
+    @Override
     public PageResponse<E> list(Paging paging) {
         Page<E> page = this.repository.findAll(JpaPaging.of(paging));
         return JpaPaging.of(page);
