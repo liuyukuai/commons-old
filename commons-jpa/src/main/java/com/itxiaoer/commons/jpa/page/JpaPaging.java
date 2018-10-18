@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
@@ -49,5 +50,9 @@ public class JpaPaging {
             return PageResponse.apply(page.getTotalElements(), ProcessUtils.processList(t, content, biConsumer));
         }
         return PageResponse.apply(page.getTotalElements(), Lists.newArrayList());
+    }
+
+    public static org.springframework.data.domain.Sort of(com.itxiaoer.commons.core.page.Sort... sorts) {
+        return defaultFunction.apply(Arrays.asList(sorts));
     }
 }

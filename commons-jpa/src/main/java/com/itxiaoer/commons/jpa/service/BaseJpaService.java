@@ -4,6 +4,7 @@ package com.itxiaoer.commons.jpa.service;
 import com.itxiaoer.commons.core.NotFoundException;
 import com.itxiaoer.commons.core.page.PageResponse;
 import com.itxiaoer.commons.core.page.Paging;
+import com.itxiaoer.commons.core.page.Sort;
 import com.itxiaoer.commons.core.util.Lists;
 import com.itxiaoer.commons.jpa.Restrictions;
 import com.itxiaoer.commons.jpa.page.JpaPaging;
@@ -120,14 +121,8 @@ public abstract class BaseJpaService<DTO, E, ID extends Serializable, JPA extend
     }
 
     @Override
-    public <T> List<E> listByWhere(T query) {
-        return this.repository.findAll(Restrictions.of().where(query).get());
-    }
-
-    @Override
-    public <T extends Paging> PageResponse<E> listByWhere(T query) {
-        Page<E> page = this.repository.findAll(Restrictions.of().where(query).get(), JpaPaging.of(query));
-        return JpaPaging.of(page);
+    public List<E> list(Sort... sorts) {
+        return this.repository.findAll(JpaPaging.of(sorts));
     }
 
     @Override
@@ -136,6 +131,21 @@ public abstract class BaseJpaService<DTO, E, ID extends Serializable, JPA extend
         return JpaPaging.of(page);
     }
 
+    @Override
+    public <T> List<E> listByWhere(T query) {
+        return this.repository.findAll(Restrictions.of().where(query).get());
+    }
+
+    @Override
+    public <T> List<E> listByWhere(T query, Sort... sorts) {
+        return this.repository.findAll(Restrictions.of().where(query).get(), JpaPaging.of(sorts));
+    }
+
+    @Override
+    public <T extends Paging> PageResponse<E> listByWhere(T query) {
+        Page<E> page = this.repository.findAll(Restrictions.of().where(query).get(), JpaPaging.of(query));
+        return JpaPaging.of(page);
+    }
 
     /**
      * 获取数据层对象

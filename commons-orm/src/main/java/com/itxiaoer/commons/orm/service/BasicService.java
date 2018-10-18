@@ -4,6 +4,7 @@ package com.itxiaoer.commons.orm.service;
 import com.itxiaoer.commons.core.beans.ProcessUtils;
 import com.itxiaoer.commons.core.page.PageResponse;
 import com.itxiaoer.commons.core.page.Paging;
+import com.itxiaoer.commons.core.page.Sort;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -108,10 +109,28 @@ public interface BasicService<DTO, E, ID> {
     /**
      * 查询所有的对象
      *
+     * @param sorts 排序规则
+     * @return list
+     */
+    List<E> list(Sort... sorts);
+
+    /**
+     * 查询所有的对象
+     *
      * @param query 多条件查询对象
      * @return list
      */
     <T> List<E> listByWhere(T query);
+
+
+    /**
+     * 查询所有的对象
+     *
+     * @param query 多条件查询对象
+     * @param sorts 排序对象
+     * @return list
+     */
+    <T> List<E> listByWhere(T query, Sort... sorts);
 
     /**
      * 查询所有的对象
