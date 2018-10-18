@@ -5,12 +5,14 @@ import com.itxiaoer.commons.core.NotFoundException;
 import com.itxiaoer.commons.core.page.PageResponse;
 import com.itxiaoer.commons.core.page.Paging;
 import com.itxiaoer.commons.core.util.Lists;
+import com.itxiaoer.commons.jpa.Restrictions;
 import com.itxiaoer.commons.jpa.page.JpaPaging;
 import com.itxiaoer.commons.orm.service.BasicService;
 import com.itxiaoer.commons.orm.validate.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -25,7 +27,7 @@ import java.util.function.Consumer;
 
 @SuppressWarnings({"all"})
 @Transactional(readOnly = true, rollbackFor = Exception.class)
-public abstract class BaseJpaService<DTO, E, ID extends Serializable, JPA extends JpaRepository<E, ID>> implements BasicService<DTO, E, ID>, Validate<DTO, ID> {
+public abstract class BaseJpaService<DTO, E, ID extends Serializable, JPA extends JpaRepository<E, ID> & JpaSpecificationExecutor> implements BasicService<DTO, E, ID>, Validate<DTO, ID> {
 
     @Autowired
     private JPA repository;
@@ -115,6 +117,11 @@ public abstract class BaseJpaService<DTO, E, ID extends Serializable, JPA extend
     @Override
     public List<E> list() {
         return this.repository.findAll();
+    }
+
+    @Override
+    public <T> List<E> listByWhere(T query) {
+        return this.repository.findAll(Restrictions.of().where(query).get());
     }
 
     @Override

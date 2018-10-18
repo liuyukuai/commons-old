@@ -1,5 +1,6 @@
 package com.itxiaoer.commons.core.page;
 
+import com.itxiaoer.commons.core.Exclude;
 import com.itxiaoer.commons.core.function.ThirdFunction;
 import com.itxiaoer.commons.core.util.Lists;
 import lombok.*;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @Builder
 @ToString
 @EqualsAndHashCode
+@SuppressWarnings("unused")
 public class Paging {
 
     private static final String DESC = "desc";
@@ -29,12 +31,14 @@ public class Paging {
      */
     @Setter
     @Getter
+    @Exclude
     private String page;
     /**
      * 每页条数，默认值10
      */
     @Setter
     @Getter
+    @Exclude
     private String size;
 
     /**
@@ -42,13 +46,10 @@ public class Paging {
      */
     @Setter
     @Getter
+    @Exclude
     private String sort;
 
     public Paging() {
-    }
-
-    private Paging(String page, String size) {
-        this(page, size, StringUtils.EMPTY);
     }
 
     private Paging(String page, String size, String sort) {
@@ -57,8 +58,13 @@ public class Paging {
         this.sort = sort;
     }
 
+    public static Paging of() {
+        return new Paging();
+    }
+
+
     public static Paging of(String page, String size) {
-        return new Paging(page, size);
+        return of(page, size, "");
     }
 
 

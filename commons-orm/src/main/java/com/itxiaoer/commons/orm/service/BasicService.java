@@ -106,12 +106,21 @@ public interface BasicService<DTO, E, ID> {
     List<E> list();
 
     /**
+     * 查询所有的对象
+     *
+     * @param query 多条件查询对象
+     * @return list
+     */
+    <T> List<E> listByWhere(T query);
+
+    /**
      * 查询所有的对象（分页）
      *
      * @param paging 分页对象
      * @return list
      */
     PageResponse<E> list(Paging paging);
+
 
     /**
      * dto convert to e
