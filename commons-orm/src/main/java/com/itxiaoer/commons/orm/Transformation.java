@@ -15,11 +15,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Transformation {
 
-    private String field;
+    private String[] field;
 
     private Object value;
 
     private Operator operator;
+
+    private Operator relation;
 
     private boolean ignoreEmpty;
 

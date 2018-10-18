@@ -7,13 +7,16 @@ import com.itxiaoer.commons.demo.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.annotation.Repeat;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
@@ -25,7 +28,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @SpringBootTest
 // 方法执行顺序，按照方法名
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@Rollback
+// 回滚事物，无法测试
+//@Transactional
 public class UserControllerTest {
     private static volatile AtomicInteger create = new AtomicInteger(0);
     private static volatile AtomicInteger update = new AtomicInteger(0);
@@ -187,12 +191,62 @@ public class UserControllerTest {
         Assert.assertEquals(users.size(), 12);
     }
 
-//    @After
-//    public void delete() {
-//        for (int i = 1; i < 20; i++) {
-//            this.userService.delete(String.valueOf(i));
-//        }
-//    }
+    @Test
+    @Repeat(20)
+    public void t16_listOther() {
+        for (int i = 1; i < 20; i++) {
+            List<User> users = this.userService.listByWhere(new UserQueryOther(String.valueOf(i)));
+            int num = i * 2;
+            updateUser.setId(String.valueOf(i));
+            updateUser.setName("张三" + num);
+            updateUser.setAddress("北京" + num);
+            updateUser.setAge(num);
+            Assert.assertEquals(users.get(0), updateUser);
+
+        }
+    }
+
+    @Test
+    @Repeat(20)
+    public void t18_listOtherAndIn() {
+        List<User> users = this.userService.listByWhere(new UserQueryIn(Arrays.asList("1", "2")));
+        Assert.assertEquals(users.size(), 2);
+    }
+
+
+    @Test
+    @Repeat(20)
+    public void t20_UserQueryOtherAndOr() {
+        List<User> users = this.userService.listByWhere(new UserQueryOtherOr("1"));
+        Assert.assertEquals(users.size(), 16);
+    }
+
+    @Test
+    @Repeat(20)
+    public void t22_UserQueryOtherAnd() {
+        List<User> users = this.userService.listByWhere(new UserQueryOtherAnd("0"));
+        Assert.assertEquals(users.size(), 2);
+    }
+
+    @Test
+    @Repeat(20)
+    public void t24_UserQueryOtherAndMany() {
+        List<User> users = this.userService.listByWhere(new UserQueryOtherAndMany("0", "张三40"));
+        Assert.assertEquals(users.size(), 1);
+    }
+
+    @Repeat(20)
+    @Test(expected = InvalidDataAccessApiUsageException.class)
+    public void t26_UserQueryFieldNotExist() {
+        List<User> users = this.userService.listByWhere(new UserQueryFieldNotExist("张三40"));
+    }
+
+    @Test
+    public void t99_delete() {
+        for (int i = 1; i < 21; i++) {
+            this.userService.delete(String.valueOf(i));
+        }
+    }
 
 
     @Data
@@ -302,5 +356,61 @@ public class UserControllerTest {
 
         @Transform(operator = Operator.LIKE)
         private String name;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class UserQueryOther {
+
+        @Transform("id")
+        private String sId;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class UserQueryOtherAndIn {
+
+        @Transform(value = "id", operator = Operator.IN)
+        private String[] sId;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class UserQueryOtherOr {
+
+        @Transform(value = {"id", "name"}, operator = Operator.LIKE, relation = Operator.OR)
+        private String id;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class UserQueryOtherAnd {
+
+        @Transform(value = {"id", "name"}, operator = Operator.LIKE, relation = Operator.AND)
+        private String id;
+    }
+
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class UserQueryOtherAndMany {
+
+        @Transform(value = {"id", "name"}, operator = Operator.LIKE, relation = Operator.AND)
+        private String id;
+
+        private String name;
+    }
+
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class UserQueryFieldNotExist {
+        private String name2;
     }
 }

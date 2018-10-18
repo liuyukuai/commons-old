@@ -2,10 +2,8 @@ package com.itxiaoer.commons.core.util;
 
 import com.itxiaoer.commons.core.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +33,18 @@ public final class Lists {
      */
     public static <E> boolean iterable(List<E> list) {
         return list != null && !list.isEmpty();
+    }
+
+
+    /**
+     * list is iterable
+     *
+     * @param array list
+     * @param <E>   element type
+     * @return true | false
+     */
+    public static <E> boolean iterable(E[] array) {
+        return array != null && Array.getLength(array) != 0;
     }
 
     /**

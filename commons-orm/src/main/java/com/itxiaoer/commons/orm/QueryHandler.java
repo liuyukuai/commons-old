@@ -3,7 +3,7 @@ package com.itxiaoer.commons.orm;
 import com.itxiaoer.commons.core.Exclude;
 import com.itxiaoer.commons.core.Operator;
 import com.itxiaoer.commons.core.Transform;
-import org.apache.commons.lang3.StringUtils;
+import com.itxiaoer.commons.core.util.Lists;
 import org.joor.Reflect;
 
 import java.util.Map;
@@ -34,11 +34,11 @@ public final class QueryHandler {
             Transform transform = clazz.getDeclaredField(name).getAnnotation(Transform.class);
             // 如果属性没有配置注解，采用默认
             if (transform == null) {
-                return new Transformation(name, value.get(), Operator.EQ, true);
+                return new Transformation(new String[]{name}, value.get(), Operator.EQ, Operator.OR, true);
             }
             // 是否有配置属性，没有取字段名称
-            name = StringUtils.isBlank(transform.value()) ? name : transform.value();
-            return new Transformation(name, value.get(), transform.operator(), transform.ignoreEmpty());
+            String[] names = Lists.iterable(transform.value()) ? transform.value() : new String[]{name};
+            return new Transformation(names, value.get(), transform.operator(), transform.relation(), transform.ignoreEmpty());
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
             return null;

@@ -5,15 +5,15 @@ import com.itxiaoer.commons.orm.QueryHandler;
 import com.itxiaoer.commons.orm.Transformation;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author : liuyk
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
 public class Restrictions<T> {
 
     private Criteria<T> criteria = new Criteria<>();
@@ -193,7 +193,18 @@ public class Restrictions<T> {
         if (ignore(transformation.getValue(), transformation.isIgnoreEmpty())) {
             return;
         }
-        criteria.add(new SimpleCriterion(transformation.getField(), transformation.getValue(), transformation.getOperator()));
+        String[] fields = transformation.getField();
+        if (Array.getLength(fields) == 1) {
+            criteria.add(new SimpleCriterion(fields[0], transformation.getValue(), transformation.getOperator()));
+        } else {
+            List<SimpleCriterion> criterion = Stream.of(fields).map(k -> new SimpleCriterion(k, transformation.getValue(), transformation.getOperator())).collect(Collectors.toList());
+            Criterion[] criteria = criterion.toArray(new Criterion[]{});
+            if (Operator.OR == transformation.getRelation()) {
+                or(criteria);
+            } else {
+                and(criteria);
+            }
+        }
     }
 
 }
