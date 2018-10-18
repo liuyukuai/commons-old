@@ -209,7 +209,7 @@ public class UserControllerTest {
     @Test
     @Repeat(20)
     public void t18_listOtherAndIn() {
-        List<User> users = this.userService.listByWhere(new UserQueryIn(Arrays.asList("1", "2")));
+        List<User> users = this.userService.listByWhere(new UserQueryOtherAndIn(new String[]{"1", "2"}));
         Assert.assertEquals(users.size(), 2);
     }
 
