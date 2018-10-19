@@ -37,9 +37,9 @@ public final class Lists {
 
 
     /**
-     * list is iterable
+     * array is iterable
      *
-     * @param array list
+     * @param array array
      * @param <E>   element type
      * @return true | false
      */
