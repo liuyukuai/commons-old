@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
  *
  * @author : liuyk
  */
-public final class QueryHandler {
+public final class TransformHandler {
 
-    private QueryHandler() {
+    private TransformHandler() {
     }
 
     public static <T> Map<String, Transformation> fields(T queryable) {
@@ -25,7 +25,7 @@ public final class QueryHandler {
         // 过滤掉排除的属性
         return fields.entrySet().stream().filter(e -> !exclude(queryable.getClass(), e.getKey()))
                 // 转换
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> QueryHandler.transform(queryable, e.getKey(), e.getValue())));
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> TransformHandler.transform(queryable, e.getKey(), e.getValue())));
     }
 
     private static <T> Transformation transform(T queryable, String name, Reflect value) {

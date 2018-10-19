@@ -3,8 +3,7 @@ package com.itxiaoer.commons.orm.beans;
 import com.itxiaoer.commons.core.Exclude;
 import com.itxiaoer.commons.core.Operator;
 import com.itxiaoer.commons.core.Transform;
-import com.itxiaoer.commons.orm.QueryHandler;
-import com.itxiaoer.commons.orm.Queryable;
+import com.itxiaoer.commons.orm.TransformHandler;
 import com.itxiaoer.commons.orm.Transformation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,13 +20,13 @@ import java.util.Map;
  *
  * @author : liuyk
  */
-public class TestQueryHandler {
+public class TestTransformHandler {
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    private static class UserQuery implements Queryable {
+    private static class UserQuery {
         private String name;
         private String id;
         @Exclude
@@ -70,15 +69,15 @@ public class TestQueryHandler {
     public void transform() {
 
         // null
-        Map<String, Transformation> fields = QueryHandler.fields(this.nullable);
+        Map<String, Transformation> fields = TransformHandler.fields(this.nullable);
         Assert.assertEquals(fields.size(), 0);
 
         // empty
-        fields = QueryHandler.fields(this.empty);
+        fields = TransformHandler.fields(this.empty);
         Assert.assertEquals(fields.size(), 8);
 
         // userQuery
-        fields = QueryHandler.fields(this.userQuery);
+        fields = TransformHandler.fields(this.userQuery);
         Assert.assertEquals(fields.size(), 8);
 
         // 判断属性的值

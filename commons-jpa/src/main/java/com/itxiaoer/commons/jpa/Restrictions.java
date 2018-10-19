@@ -1,7 +1,7 @@
 package com.itxiaoer.commons.jpa;
 
 import com.itxiaoer.commons.core.Operator;
-import com.itxiaoer.commons.orm.QueryHandler;
+import com.itxiaoer.commons.orm.TransformHandler;
 import com.itxiaoer.commons.orm.Transformation;
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,7 +29,7 @@ public class Restrictions<T> {
 
 
     public <E> Restrictions where(E query) {
-        Map<String, Transformation> fields = QueryHandler.fields(query);
+        Map<String, Transformation> fields = TransformHandler.fields(query);
         fields.forEach((k, v) -> parse(v));
         return this;
     }
