@@ -19,6 +19,7 @@
         <module>commons-jpa</module>
         <module>commons-web</module>
         <module>commons-orm</module>
+        <module>commons-demo</module>
     </modules>
 
     <dependencyManagement>
