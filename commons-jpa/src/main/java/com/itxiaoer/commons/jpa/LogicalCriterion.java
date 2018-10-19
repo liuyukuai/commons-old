@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 /**
  * @author : liuyk
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class LogicalCriterion implements Criterion {
 
     /**
