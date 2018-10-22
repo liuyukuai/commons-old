@@ -26,11 +26,13 @@ public class Main {
                 .entrySet()
                 .stream()
                 .map(data ->
-                        data.getValue().stream().reduce((v1, v2) -> {
-                                    v1.setIds(Stream.concat(v1.getIds().stream(), v2.getIds().stream()).collect(Collectors.toList()));
-                                    return v1;
-                                }
-                        ).orElseThrow(RuntimeException::new)
+                        data.getValue()
+                                .stream()
+                                .reduce((v1, v2) -> {
+                                            v1.setIds(Stream.concat(v1.getIds().stream(), v2.getIds().stream()).collect(Collectors.toList()));
+                                            return v1;
+                                        }
+                                ).orElseThrow(RuntimeException::new)
                 ).collect(Collectors.toList());
 
         Assert.assertEquals(Arrays.asList(new Data("1", Collections.singletonList("1")), new Data("2", Arrays.asList("2", "3"))), result);
