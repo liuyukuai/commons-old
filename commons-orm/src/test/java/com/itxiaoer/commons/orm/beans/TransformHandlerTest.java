@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * @author : liuyk
  */
-public class TestTransformHandler {
+public class TransformHandlerTest {
 
     @Data
     @Builder

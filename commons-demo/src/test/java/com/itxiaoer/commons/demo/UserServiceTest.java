@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 // 回滚事物，无法测试
 //@Transactional
-public class UserControllerTest {
+public class UserServiceTest {
     private static volatile AtomicInteger create = new AtomicInteger(0);
     private static volatile AtomicInteger update = new AtomicInteger(0);
     private static volatile AtomicInteger get = new AtomicInteger(0);

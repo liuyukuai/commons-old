@@ -14,7 +14,7 @@ import org.springframework.data.domain.Sort;
  * @author : liuyk
  */
 @SuppressWarnings("unused")
-public class TestJpaPaging {
+public class JpaPagingTest {
 
     private Paging pagingEmpty;
     private Paging paging;
