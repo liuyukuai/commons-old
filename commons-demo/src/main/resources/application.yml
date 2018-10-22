@@ -8,4 +8,6 @@ spring:
     url: jdbc:mysql://127.0.0.1/commons-demo?userUnicode=true&characterEncoding=UTF-8
     driver-class-name: com.mysql.jdbc.Driver
   application:
-    name: injury
+    name: commons-demo
+  redis:
+    host: localhost

@@ -1,0 +1,23 @@
+{
+  "hints": [
+    {
+      "name": "spring.orm.browse.interval"
+    }
+  ],
+  "groups": [
+    {
+      "sourceType": "com.itxiaoer.commons.orm.OrmProperties",
+      "name": "OrmConfig",
+      "type": "com.itxiaoer.commons.orm.OrmProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.itxiaoer.commons.orm.OrmProperties",
+      "name": "spring.orm.browse.interval",
+      "type": "java.lang.Integer",
+      "defaultValue": "36000",
+      "description": "The interval time is in seconds"
+    }
+  ]
+}

@@ -8,6 +8,7 @@ import com.itxiaoer.commons.core.page.Sort;
 import com.itxiaoer.commons.core.util.Lists;
 import com.itxiaoer.commons.jpa.Restrictions;
 import com.itxiaoer.commons.jpa.page.JpaPaging;
+import com.itxiaoer.commons.orm.service.BaseBrowseService;
 import com.itxiaoer.commons.orm.service.BasicService;
 import com.itxiaoer.commons.orm.validate.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ import java.util.function.Consumer;
 
 @SuppressWarnings({"all"})
 @Transactional(readOnly = true, rollbackFor = Exception.class)
-public abstract class BaseJpaService<DTO, E, ID extends Serializable, JPA extends JpaRepository<E, ID> & JpaSpecificationExecutor> implements BasicService<DTO, E, ID>, Validate<DTO, ID> {
+public abstract class BaseJpaService<DTO, E, ID extends Serializable, JPA extends JpaRepository<E, ID> & JpaSpecificationExecutor> extends BaseBrowseService implements BasicService<DTO, E, ID>, Validate<DTO, ID> {
 
     @Autowired
     private JPA repository;
