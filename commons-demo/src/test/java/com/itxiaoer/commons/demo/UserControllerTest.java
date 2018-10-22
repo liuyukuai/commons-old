@@ -238,7 +238,7 @@ public class UserControllerTest {
     @Repeat(20)
     @Test(expected = InvalidDataAccessApiUsageException.class)
     public void t26_UserQueryFieldNotExist() {
-        List<User> users = this.userService.listByWhere(new UserQueryFieldNotExist("张三40"));
+        this.userService.listByWhere(new UserQueryFieldNotExist("张三40"));
     }
 
 
