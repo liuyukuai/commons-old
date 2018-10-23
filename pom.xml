@@ -11,7 +11,6 @@
     <name>commons</name>
     <description>commons project</description>
 
-
     <modules>
         <module>commons-core</module>
         <module>commons-redis</module>
@@ -22,12 +21,20 @@
         <module>commons-demo</module>
     </modules>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <spring.boot.version>2.0.4.RELEASE</spring.boot.version>
+        <java.version>1.8</java.version>
+    </properties>
+    <url>http://www.itxiaoer.com</url>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.0.4.RELEASE</version>
+                <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -116,13 +123,6 @@
         </dependency>
     </dependencies>
 
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
-    </properties>
-    <url>http://www.itxiaoer.com</url>
 
     <licenses>
         <license>
