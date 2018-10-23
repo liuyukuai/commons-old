@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
 @Service
+@SuppressWarnings("WeakerAccess")
 public class MockUserService extends BaseJpaService<UserDto, User, String, UserRepository> {
     private static volatile AtomicInteger i = new AtomicInteger(0);
 
@@ -52,7 +53,9 @@ public class MockUserService extends BaseJpaService<UserDto, User, String, UserR
     }
 
 
+    @Transactional(rollbackFor = Exception.class)
     public void removeBrowse(String id, String token) {
         redisTemplate.delete(token + id);
+        this.browseRepository.deleteById(id);
     }
 }
