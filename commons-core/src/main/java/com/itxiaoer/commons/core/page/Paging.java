@@ -1,6 +1,7 @@
 package com.itxiaoer.commons.core.page;
 
 import com.itxiaoer.commons.core.Exclude;
+import com.itxiaoer.commons.core.Transfor;
 import com.itxiaoer.commons.core.function.ThirdFunction;
 import com.itxiaoer.commons.core.util.Lists;
 import lombok.*;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 @ToString
 @EqualsAndHashCode
 @SuppressWarnings("unused")
-public class Paging {
+public class Paging implements Transfor<String, String> {
 
     private static final String DESC = "desc";
 
@@ -88,11 +89,11 @@ public class Paging {
             try {
                 String[] split = s.split("-");
                 if (split.length == 1) {
-                    return new Sort(split[0], DESC);
+                    return new Sort(this.apply(split[0]), DESC);
                 }
                 String direction = split[1];
                 direction = !DESC.equalsIgnoreCase(direction) && !ASC.equalsIgnoreCase(direction) ? DESC : direction;
-                return new Sort(split[0], direction);
+                return new Sort(this.apply(split[0]), direction);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
                 return null;
@@ -101,5 +102,15 @@ public class Paging {
         return thirdFunction.apply(PageUtils.page(page), PageUtils.size(size), sorts);
     }
 
-
+    /**
+     * 将排序的类型转换为数据库对应的值
+     * 默认排序名称和数据库名称相同
+     *
+     * @param name 排序的名称
+     * @return 返回数据库的名称
+     */
+    @Override
+    public String apply(String name) {
+        return name;
+    }
 }
