@@ -3,7 +3,7 @@ package com.itxiaoer.commons.core;
 /**
  * @author : liuyk
  */
-public interface Transfor<T, R> {
+public interface Transfer<T, R> {
     /**
      * 转换
      *

@@ -1,7 +1,7 @@
 package com.itxiaoer.commons.core.page;
 
 import com.itxiaoer.commons.core.Exclude;
-import com.itxiaoer.commons.core.Transfor;
+import com.itxiaoer.commons.core.Transfer;
 import com.itxiaoer.commons.core.function.ThirdFunction;
 import com.itxiaoer.commons.core.util.Lists;
 import lombok.*;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @ToString
 @EqualsAndHashCode
 @SuppressWarnings("unused")
-public class Paging implements Transfor<String, String> {
+public class Paging implements Transfer<String, String> {
 
     private static final String DESC = "desc";
 
