@@ -1,18 +1,16 @@
-package com.itxiaoer.commons.jpa.page;
+package com.itxiaoer.commons.orm.page;
 
-import com.itxiaoer.commons.core.page.Sort;
 import com.itxiaoer.commons.core.function.ThirdFunction;
+import com.itxiaoer.commons.core.page.Sort;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
 /**
  * @author : liuyk
- * @see com.itxiaoer.commons.orm.page.PageFunction
  */
-@Deprecated
 @FunctionalInterface
-public interface JpaPageFunction extends ThirdFunction<PageRequest, Integer, Integer, List<Sort>> {
+public interface PageFunction extends ThirdFunction<PageRequest, Integer, Integer, List<Sort>> {
     /**
      * create  PageRequest object
      *

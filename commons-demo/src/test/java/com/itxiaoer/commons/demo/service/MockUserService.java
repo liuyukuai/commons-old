@@ -1,11 +1,11 @@
-package com.itxiaoer.commons.demo;
+package com.itxiaoer.commons.demo.service;
 
-import com.itxiaoer.commons.demo.dto.UserDto;
-import com.itxiaoer.commons.demo.entity.Browse;
-import com.itxiaoer.commons.demo.entity.User;
-import com.itxiaoer.commons.demo.repository.BrowseRepository;
-import com.itxiaoer.commons.demo.repository.UserRepository;
-import com.itxiaoer.commons.jpa.service.BaseJpaService;
+import com.itxiaoer.commons.demo.jpa.dto.UserDto;
+import com.itxiaoer.commons.demo.jpa.entity.Browse;
+import com.itxiaoer.commons.demo.jpa.entity.User;
+import com.itxiaoer.commons.demo.jpa.repository.BrowseRepository;
+import com.itxiaoer.commons.demo.jpa.repository.UserRepository;
+import com.itxiaoer.commons.jpa.service.BasicJpaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.function.BiConsumer;
 
 @Service
 @SuppressWarnings("WeakerAccess")
-public class MockUserService extends BaseJpaService<UserDto, User, String, UserRepository> {
+public class MockUserService extends BasicJpaService<UserDto, User, String, UserRepository> {
     private static volatile AtomicInteger i = new AtomicInteger(0);
 
 

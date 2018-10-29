@@ -1,4 +1,4 @@
-package com.itxiaoer.commons.demo.dto;
+package com.itxiaoer.commons.demo.jpa.dto;
 
 import lombok.Data;
 

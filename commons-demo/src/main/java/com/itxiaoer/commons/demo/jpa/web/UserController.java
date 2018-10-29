@@ -1,9 +1,9 @@
-package com.itxiaoer.commons.demo.web;
+package com.itxiaoer.commons.demo.jpa.web;
 
 import com.itxiaoer.commons.core.page.Response;
-import com.itxiaoer.commons.demo.dto.UserDto;
-import com.itxiaoer.commons.demo.entity.User;
-import com.itxiaoer.commons.demo.service.UserService;
+import com.itxiaoer.commons.demo.jpa.dto.UserDto;
+import com.itxiaoer.commons.demo.jpa.entity.User;
+import com.itxiaoer.commons.demo.jpa.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

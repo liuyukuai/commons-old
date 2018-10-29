@@ -20,7 +20,7 @@ import java.util.function.Function;
  */
 @Slf4j
 @SuppressWarnings("all")
-public abstract class BaseBrowseService {
+public abstract class BasicBrowseService {
 
     @Autowired
     private BrowseProperties browseProperties;

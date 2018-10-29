@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.itxiaoer.commons</groupId>
@@ -17,6 +18,7 @@
         <module>commons-jpa</module>
         <module>commons-web</module>
         <module>commons-orm</module>
+        <module>commons-neo4j</module>
         <module>commons-demo</module>
     </modules>
 
@@ -24,6 +26,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring.boot.version>2.0.4.RELEASE</spring.boot.version>
+        <neo4j.version>3.1.5-SNAPSHOT</neo4j.version>
         <java.version>1.8</java.version>
     </properties>
     <url>http://www.itxiaoer.com</url>
@@ -87,6 +90,13 @@
                 <version>${project.version}</version>
             </dependency>
 
+
+            <dependency>
+                <groupId>com.itxiaoer.commons</groupId>
+                <artifactId>commons-neo4j</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.itxiaoer.commons</groupId>
                 <artifactId>commons-web</artifactId>
@@ -99,6 +109,33 @@
                 <version>4.12</version>
                 <scope>test</scope>
             </dependency>
+            <!--neo4j-->
+
+            <dependency>
+                <groupId>org.neo4j</groupId>
+                <artifactId>neo4j-ogm-core</artifactId>
+                <version>${neo4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.neo4j</groupId>
+                <artifactId>neo4j-ogm-api</artifactId>
+                <version>${neo4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.neo4j</groupId>
+                <artifactId>neo4j-bolt-driver</artifactId>
+                <version>${neo4j.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.neo4j</groupId>
+                <artifactId>neo4j-java-driver</artifactId>
+                <version>${neo4j.version}</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>

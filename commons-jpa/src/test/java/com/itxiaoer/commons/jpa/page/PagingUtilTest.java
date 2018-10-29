@@ -3,6 +3,7 @@ package com.itxiaoer.commons.jpa.page;
 
 import com.itxiaoer.commons.core.page.PageUtils;
 import com.itxiaoer.commons.core.page.Paging;
+import com.itxiaoer.commons.orm.page.PagingUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +15,7 @@ import org.springframework.data.domain.Sort;
  * @author : liuyk
  */
 @SuppressWarnings("unused")
-public class JpaPagingTest {
+public class PagingUtilTest {
 
     private Paging pagingEmpty;
     private Paging paging;
@@ -34,25 +35,25 @@ public class JpaPagingTest {
 
     @Test
     public void get() {
-        PageRequest pageRequest = JpaPaging.of(pagingEmpty);
+        PageRequest pageRequest = PagingUtils.of(pagingEmpty);
         Assert.assertEquals(pageRequest, PageRequest.of(PageUtils.DEFAULT_MIN_PAGE - 1, PageUtils.DEFAULT_PAGE_SIZE));
 
-        pageRequest = JpaPaging.of(paging);
+        pageRequest = PagingUtils.of(paging);
         Assert.assertEquals(pageRequest, PageRequest.of(1, 10));
 
         // 自定义排序or默认排序
-        pageRequest = JpaPaging.of(paging, (sorts ->
+        pageRequest = PagingUtils.of(paging, (sorts ->
                 new Sort(Sort.Direction.DESC, "createTime")
         ));
         Assert.assertEquals(pageRequest, PageRequest.of(1, 10, new Sort(Sort.Direction.DESC, "createTime")));
 
-        pageRequest = JpaPaging.of(pagingStr);
+        pageRequest = PagingUtils.of(pagingStr);
         Assert.assertEquals(pageRequest, PageRequest.of(PageUtils.DEFAULT_MIN_PAGE - 1, PageUtils.DEFAULT_PAGE_SIZE));
 
-        pageRequest = JpaPaging.of(pagingSort);
+        pageRequest = PagingUtils.of(pagingSort);
         Assert.assertEquals(pageRequest, PageRequest.of(PageUtils.DEFAULT_MIN_PAGE - 1, PageUtils.DEFAULT_PAGE_SIZE, new Sort(Sort.Direction.DESC, "createTime")));
 
-        pageRequest = JpaPaging.of(pagingSorts);
+        pageRequest = PagingUtils.of(pagingSorts);
         Assert.assertEquals(pageRequest, PageRequest.of(PageUtils.DEFAULT_MIN_PAGE - 1, PageUtils.DEFAULT_PAGE_SIZE, new Sort(Sort.Direction.DESC, "createTime", "publishTime")));
     }
 }

@@ -1,4 +1,4 @@
-package com.itxiaoer.commons.jpa.page;
+package com.itxiaoer.commons.orm.page;
 
 import com.itxiaoer.commons.core.beans.ProcessUtils;
 import com.itxiaoer.commons.core.page.PageResponse;
@@ -15,18 +15,16 @@ import java.util.stream.Collectors;
 
 /**
  * @author : liuyk
- * @see com.itxiaoer.commons.orm.page.PagingUtils
  */
-@Deprecated
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class JpaPaging {
+public class PagingUtils {
 
-    private static JpaPageFunction defaultFunction = (sorts -> {
+    private static PageFunction defaultFunction = (sorts -> {
         if (sorts.isEmpty()) {
             return Sort.unsorted();
         }
-        List<Sort.Order> orders = sorts.stream().map(sort -> new org.springframework.data.domain.Sort.Order(org.springframework.data.domain.Sort.Direction.fromString(sort.getDirection()), sort.getName())).collect(Collectors.toList());
-        return org.springframework.data.domain.Sort.by(orders);
+        List<Sort.Order> orders = sorts.stream().map(sort -> new Sort.Order(Sort.Direction.fromString(sort.getDirection()), sort.getName())).collect(Collectors.toList());
+        return Sort.by(orders);
     });
 
     public static PageRequest of(Paging paging) {
@@ -34,8 +32,8 @@ public class JpaPaging {
     }
 
 
-    public static PageRequest of(Paging paging, JpaPageFunction jpaPageFunction) {
-        return paging.get(jpaPageFunction);
+    public static PageRequest of(Paging paging, PageFunction pageFunction) {
+        return paging.get(pageFunction);
     }
 
     public static <E> PageResponse<E> of(Page<E> page) {
@@ -54,7 +52,7 @@ public class JpaPaging {
         return PageResponse.apply(page.getTotalElements(), Lists.newArrayList());
     }
 
-    public static org.springframework.data.domain.Sort of(com.itxiaoer.commons.core.page.Sort... sorts) {
+    public static Sort of(com.itxiaoer.commons.core.page.Sort... sorts) {
         return defaultFunction.apply(Arrays.asList(sorts));
     }
 }

@@ -1,4 +1,4 @@
-package com.itxiaoer.commons.demo.entity;
+package com.itxiaoer.commons.demo.jpa.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

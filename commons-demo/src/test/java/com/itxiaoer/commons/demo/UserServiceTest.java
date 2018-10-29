@@ -2,8 +2,9 @@ package com.itxiaoer.commons.demo;
 
 import com.itxiaoer.commons.core.Operator;
 import com.itxiaoer.commons.core.Transform;
-import com.itxiaoer.commons.demo.dto.UserDto;
-import com.itxiaoer.commons.demo.entity.User;
+import com.itxiaoer.commons.demo.jpa.dto.UserDto;
+import com.itxiaoer.commons.demo.jpa.entity.User;
+import com.itxiaoer.commons.demo.service.MockUserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

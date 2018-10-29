@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.itxiaoer.commons.neo4j.Neo4jConfiguration,\
+com.itxiaoer.commons.neo4j.BasicRelation
