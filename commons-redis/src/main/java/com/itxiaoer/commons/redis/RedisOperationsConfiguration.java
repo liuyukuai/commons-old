@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.*;
  * @author : liuyk
  */
 @Configuration
+@SuppressWarnings("all")
 public class RedisOperationsConfiguration {
 
     @Bean
