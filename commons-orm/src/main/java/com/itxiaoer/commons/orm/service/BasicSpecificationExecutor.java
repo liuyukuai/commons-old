@@ -11,6 +11,7 @@ import java.util.List;
  *
  * @author : liuyk
  */
+@SuppressWarnings("unused")
 public interface BasicSpecificationExecutor<E> {
     /**
      * 查询所有的对象
