@@ -19,7 +19,7 @@
         <module>commons-web</module>
         <module>commons-orm</module>
         <!--<module>commons-neo4j</module>-->
-        <module>commons-demo</module>
+        <module>commons-samples</module>
     </modules>
 
     <properties>
@@ -145,12 +145,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
