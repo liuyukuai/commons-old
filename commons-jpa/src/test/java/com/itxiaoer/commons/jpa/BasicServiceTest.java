@@ -8,6 +8,7 @@ import com.itxiaoer.commons.jpa.service.BasicJpaService;
 import org.junit.Assert;
 import org.junit.Test;
 
+@SuppressWarnings("WeakerAccess")
 public class BasicServiceTest {
     static class A extends BasicJpaService<UserDto, User, String, UserRepository> {
 
