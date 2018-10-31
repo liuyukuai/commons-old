@@ -19,7 +19,9 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -147,6 +149,17 @@ public abstract class BasicJpaService<DTO, E, ID extends Serializable, JPA exten
     public <T extends Paging> PageResponse<E> listByWhere(T query) {
         Page<E> page = this.repository.findAll(Restrictions.of().where(query).get(), PagingUtils.of(query));
         return PagingUtils.of(page);
+    }
+
+
+    @Override
+    public Class<E> getGenericClass(int index) {
+        Class cls = this.getClass();
+        while (!Objects.equals(cls.getSuperclass(), BasicJpaService.class)) {
+            cls = cls.getSuperclass();
+        }
+        ParameterizedType genericInterfaces = (ParameterizedType) cls.getGenericSuperclass();
+        return (Class<E>) genericInterfaces.getActualTypeArguments()[index];
     }
 
     /**

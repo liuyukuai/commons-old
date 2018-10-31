@@ -1,10 +1,8 @@
-package com.itxiaoer.commons.orm.beans;
+package com.itxiaoer.commons.orm;
 
 import com.itxiaoer.commons.core.Exclude;
 import com.itxiaoer.commons.core.Operator;
 import com.itxiaoer.commons.core.Transform;
-import com.itxiaoer.commons.orm.TransformHandler;
-import com.itxiaoer.commons.orm.Transformation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -88,8 +86,6 @@ public class TransformHandlerTest {
         Assert.assertEquals(new Transformation(new String[]{"transform_2"}, "transform2", Operator.IN, Operator.OR, true).toString(), fields.get("transform2").toString());
         Assert.assertEquals(new Transformation(new String[]{"transform3"}, "transform3", Operator.EQ, Operator.OR, true).toString(), fields.get("transform3").toString());
         Assert.assertEquals(new Transformation(new String[]{"transform4"}, "transform4", Operator.EQ, Operator.OR, false).toString(), fields.get("transform4").toString());
-
-
     }
 
 

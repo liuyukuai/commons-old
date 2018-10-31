@@ -1,4 +1,4 @@
-package com.itxiaoer.commons.jpa.page;
+package com.itxiaoer.commons.jpa;
 
 import com.itxiaoer.commons.core.beans.ProcessUtils;
 import com.itxiaoer.commons.core.page.PageResponse;

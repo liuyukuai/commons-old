@@ -1,5 +1,6 @@
 package com.itxiaoer.commons.core;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -26,6 +27,6 @@ public class FindFieldTest {
             fields.addAll(Arrays.asList(sFields));
             cls = cls.getSuperclass();
         } while (cls != null);
-        System.out.println(fields);
+        Assert.assertEquals(2, fields.size());
     }
 }
