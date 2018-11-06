@@ -1,13 +1,14 @@
 package com.itxiaoer.commons.core.beans;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.itxiaoer.commons.core.util.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.beans.BeanCopier;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,10 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public final class ProcessUtils {
 
-    public final static Map<String, BeanCopier> BEAN_COPIER_MAP = new ConcurrentHashMap<>();
+
+    private static Cache<String, BeanCopier> BEAN_COPIER_MAP = Caffeine.newBuilder()
+            .expireAfterAccess(1, TimeUnit.HOURS)
+            .build();
 
     private ProcessUtils() {
     }
@@ -125,12 +129,10 @@ public final class ProcessUtils {
     public static <T, R> void processObject(R r, T src, BiConsumer<R, T> biConsumer) {
         try {
             String beanKey = generateKey(src.getClass(), r.getClass());
-            BeanCopier copier;
-            if (!BEAN_COPIER_MAP.containsKey(beanKey)) {
+            BeanCopier copier = BEAN_COPIER_MAP.getIfPresent(beanKey);
+            if (copier == null) {
                 copier = BeanCopier.create(src.getClass(), r.getClass(), false);
                 BEAN_COPIER_MAP.put(beanKey, copier);
-            } else {
-                copier = BEAN_COPIER_MAP.get(beanKey);
             }
             copier.copy(src, r, null);
             if (biConsumer != null) {
