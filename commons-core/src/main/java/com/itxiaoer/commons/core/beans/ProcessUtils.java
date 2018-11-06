@@ -23,6 +23,7 @@ public final class ProcessUtils {
 
 
     private static Cache<String, BeanCopier> BEAN_COPIER_MAP = Caffeine.newBuilder()
+            .expireAfterWrite(2, TimeUnit.MINUTES)
             .expireAfterAccess(1, TimeUnit.HOURS)
             .build();
 
