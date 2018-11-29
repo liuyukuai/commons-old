@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.itxiaoer.commons</groupId>
@@ -15,7 +16,8 @@
         <module>commons-redis</module>
         <module>commons-lbs</module>
         <module>commons-jpa</module>
-        <module>commons-web</module>
+        <module>commons-jwt</module>
+        <module>commons-auth</module>
         <module>commons-orm</module>
         <!--<module>commons-neo4j</module>-->
         <module>commons-samples</module>
@@ -98,7 +100,13 @@
 
             <dependency>
                 <groupId>com.itxiaoer.commons</groupId>
-                <artifactId>commons-web</artifactId>
+                <artifactId>commons-auth</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.itxiaoer.commons</groupId>
+                <artifactId>commons-jwt</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -135,7 +143,11 @@
                 <version>${neo4j.version}</version>
             </dependency>
 
-
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>0.9.1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
