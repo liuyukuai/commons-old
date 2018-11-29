@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 public class JwtConfiguration {
 
     @Bean
-    public JwtTokenUtil jwtTokenUtil() {
-        return new JwtTokenUtil();
+    public JwtBuilder jwtTokenUtil() {
+        return new JwtBuilder();
     }
 
     @Bean

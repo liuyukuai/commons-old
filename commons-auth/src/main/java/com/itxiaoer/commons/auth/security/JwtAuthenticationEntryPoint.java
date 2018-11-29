@@ -24,6 +24,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
+        response.setContentType("application/json");
         Response<String> res = Response.failure("您没有权限访问该");
         res.setCode("401");
         response.getWriter().write(JsonUtil.toJson(res));

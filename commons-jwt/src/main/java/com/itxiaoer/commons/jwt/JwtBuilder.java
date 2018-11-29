@@ -1,5 +1,6 @@
 package com.itxiaoer.commons.jwt;
 
+import com.itxiaoer.commons.core.util.Lists;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,13 +21,17 @@ import java.util.Map;
 
 @Slf4j
 @SuppressWarnings({"WeakerAccess", "unused"})
-public class JwtTokenUtil implements Serializable {
+public class JwtBuilder implements Serializable {
 
     private static final long serialVersionUID = -3301605591108950415L;
-
-    private static final String CLAIM_KEY_USERNAME = "sub";
+    /**
+     * 主题
+     */
+    private static final String CLAIM_KEY_LOGIN_NAME = "sub";
     private static final String CLAIM_KEY_MICK_NAME = "nickName";
+    private static final String CLAIM_KEY_ID = "id";
     private static final String CLAIM_KEY_CREATED = "created";
+    private static final String CLAIM_KEY_ROLE = "role";
 
     @Resource
     private JwtProperties jwtProperties;
@@ -36,7 +42,7 @@ public class JwtTokenUtil implements Serializable {
      * @param token 当前token
      * @return 当前登录用户登录名
      */
-    public String getUsernameFromToken(String token) {
+    public String getLoginNameFromToken(String token) {
         String username = null;
         try {
             final Claims claims = getClaimsFromToken(token);
@@ -54,7 +60,7 @@ public class JwtTokenUtil implements Serializable {
      * @param token 当前token
      * @return token创建时间
      */
-    public LocalDateTime getCreatedDateFromToken(String token) {
+    public LocalDateTime getCreatedTimeFromToken(String token) {
         LocalDateTime created;
         try {
             final Claims claims = getClaimsFromToken(token);
@@ -134,12 +140,14 @@ public class JwtTokenUtil implements Serializable {
      * @param userDetails 用户信息对象
      * @return token
      */
-    public String generateToken(JwtAuth userDetails) {
+    public String build(JwtAuth userDetails) {
         Map<String, Object> claims = new HashMap<>(16);
+        claims.put(CLAIM_KEY_LOGIN_NAME, userDetails.getLoginName());
+        claims.put(CLAIM_KEY_ID, userDetails.getId());
         claims.put(CLAIM_KEY_MICK_NAME, userDetails.getNickName());
-        claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
         claims.put(CLAIM_KEY_CREATED, LocalDateTime.now());
-        return generateToken(claims);
+        claims.put(CLAIM_KEY_ROLE, userDetails.getRoles());
+        return build(claims);
     }
 
 
@@ -147,9 +155,9 @@ public class JwtTokenUtil implements Serializable {
      * 通过map创建token对象
      *
      * @param claims map
-     * @return toeken
+     * @return token
      */
-    private String generateToken(Map<String, Object> claims) {
+    private String build(Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
@@ -158,7 +166,7 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public Boolean canTokenBeRefreshed(String token, LocalDateTime lastPasswordReset) {
-        final LocalDateTime created = getCreatedDateFromToken(token);
+        final LocalDateTime created = getCreatedTimeFromToken(token);
         return !isCreatedBeforeLastPasswordReset(created, lastPasswordReset)
                 && !isTokenExpired(token);
     }
@@ -175,7 +183,7 @@ public class JwtTokenUtil implements Serializable {
         try {
             final Claims claims = getClaimsFromToken(token);
             claims.put(CLAIM_KEY_CREATED, new Date());
-            refreshedToken = generateToken(claims);
+            refreshedToken = build(claims);
         } catch (Exception e) {
             refreshedToken = null;
         }
@@ -190,14 +198,40 @@ public class JwtTokenUtil implements Serializable {
      * @param userDetails 用户信息
      * @return true:合法，false：非法
      */
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validate(String token, UserDetails userDetails) {
         JwtAuth user = (JwtAuth) userDetails;
-        final String username = getUsernameFromToken(token);
-        final LocalDateTime created = getCreatedDateFromToken(token);
+        final String loginName = getLoginNameFromToken(token);
+        final LocalDateTime created = getCreatedTimeFromToken(token);
         return (
-                username.equals(user.getUsername())
+                loginName.equals(user.getLoginName())
                         && !isTokenExpired(token)
-                        && !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetTime()));
+        );
+    }
+
+    /**
+     * 校验token是否合法
+     *
+     * @param token token的值
+     * @return true:合法，false：非法
+     */
+    public Boolean validate(String token) {
+        final String loginName = getLoginNameFromToken(token);
+        final LocalDateTime created = getCreatedTimeFromToken(token);
+        return !isTokenExpired(token);
+    }
+
+
+    /**
+     * 校验token是否合法
+     *
+     * @param token token的值
+     * @return true:合法，false：非法
+     */
+    @SuppressWarnings("all")
+    public JwtAuth getJwtAuth(String token) {
+        Claims claims = this.getClaimsFromToken(token);
+        List<String> roles = (List<String>) claims.get(CLAIM_KEY_ROLE);
+        return new JwtAuth((String) claims.get(CLAIM_KEY_ID), (String) claims.get(CLAIM_KEY_LOGIN_NAME), (String) claims.get(CLAIM_KEY_MICK_NAME), Lists.iterable(roles) ? roles : Lists.newArrayList());
     }
 }
 
