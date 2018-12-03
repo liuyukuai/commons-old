@@ -50,11 +50,12 @@ public class Response<T> implements Serializable {
     private Response(T data) {
         this.success = true;
         this.data = data;
+        this.code = ResponseCode.SUCCESS_CODE;
     }
 
 
     private Response(boolean success, String msg) {
-        this(success, msg, "0");
+        this(success, msg, ResponseCode.SUCCESS_CODE);
     }
 
     private Response(boolean success, String msg, String code) {

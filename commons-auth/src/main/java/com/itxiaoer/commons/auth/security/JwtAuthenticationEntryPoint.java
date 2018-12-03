@@ -2,6 +2,7 @@ package com.itxiaoer.commons.auth.security;
 
 import com.itxiaoer.commons.core.json.JsonUtil;
 import com.itxiaoer.commons.core.page.Response;
+import com.itxiaoer.commons.core.page.ResponseCode;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
@@ -25,8 +26,8 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
         response.setContentType("application/json");
-        Response<String> res = Response.failure("您没有权限访问该");
-        res.setCode("401");
+        Response<String> res = Response.failure("no permissions");
+        res.setCode(ResponseCode.NO_PERMISSION);
         response.getWriter().write(JsonUtil.toJson(res));
     }
 }

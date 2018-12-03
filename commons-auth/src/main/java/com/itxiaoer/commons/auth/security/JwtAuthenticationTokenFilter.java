@@ -48,7 +48,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
             logger.info("checking authentication " + loginName);
 
-            if (StringUtils.isBlank(loginName) && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (StringUtils.isNotBlank(loginName) && SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 // 如果我们足够相信token中的数据，也就是我们足够相信签名token的secret的机制足够好
                 // 这种情况下，我们可以不用再查询数据库，而直接采用token中的数据
@@ -67,8 +67,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
                 if (jwtBuilder.validate(authToken)) {
                     JwtAuth jwtAuth = jwtBuilder.getJwtAuth(authToken);
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            jwtAuth.getLoginName(), null, jwtAuth.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(jwtAuth, null, jwtAuth.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(
                             request));
                     logger.info("authenticated user " + loginName + ", setting security context");

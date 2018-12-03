@@ -1,6 +1,6 @@
 package com.itxiaoer.commons.core;
 
-import com.itxiaoer.commons.core.page.ErrorCode;
+import com.itxiaoer.commons.core.page.ResponseCode;
 
 /**
  * @author : liuyk
@@ -9,10 +9,10 @@ import com.itxiaoer.commons.core.page.ErrorCode;
 public class NotFoundException extends SysException {
 
     public NotFoundException() {
-        super(ErrorCode.NOT_FOUNT_CODE);
+        super(ResponseCode.NOT_FOUNT_CODE);
     }
 
     public NotFoundException(String message) {
-        super(ErrorCode.NOT_FOUNT_CODE, message);
+        super(ResponseCode.NOT_FOUNT_CODE, message);
     }
 }

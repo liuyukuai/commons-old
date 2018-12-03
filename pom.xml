@@ -27,6 +27,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring.boot.version>2.0.4.RELEASE</spring.boot.version>
+        <commons.version>2.0.16-SNAPSHOT</commons.version>
         <neo4j.version>3.1.5-SNAPSHOT</neo4j.version>
         <java.version>1.8</java.version>
     </properties>
@@ -64,50 +65,50 @@
             <dependency>
                 <groupId>com.itxiaoer.commons</groupId>
                 <artifactId>commons-core</artifactId>
-                <version>${project.version}</version>
+                <version>${commons.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.itxiaoer.commons</groupId>
                 <artifactId>commons-jpa</artifactId>
-                <version>${project.version}</version>
+                <version>${commons.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.itxiaoer.commons</groupId>
                 <artifactId>commons-lbs</artifactId>
-                <version>${project.version}</version>
+                <version>${commons.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.itxiaoer.commons</groupId>
                 <artifactId>commons-redis</artifactId>
-                <version>${project.version}</version>
+                <version>${commons.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.itxiaoer.commons</groupId>
                 <artifactId>commons-orm</artifactId>
-                <version>${project.version}</version>
+                <version>${commons.version}</version>
             </dependency>
 
 
             <dependency>
                 <groupId>com.itxiaoer.commons</groupId>
                 <artifactId>commons-neo4j</artifactId>
-                <version>${project.version}</version>
+                <version>${commons.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.itxiaoer.commons</groupId>
                 <artifactId>commons-auth</artifactId>
-                <version>${project.version}</version>
+                <version>${commons.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.itxiaoer.commons</groupId>
                 <artifactId>commons-jwt</artifactId>
-                <version>${project.version}</version>
+                <version>${commons.version}</version>
             </dependency>
 
             <dependency>
@@ -277,7 +278,7 @@
                 <version>2.5.3</version>
 
                 <configuration>
-                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                    <tagNameFormat>v@{commons.version}</tagNameFormat>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <goals>deploy</goals>
                 </configuration>

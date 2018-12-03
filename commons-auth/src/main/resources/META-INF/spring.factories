@@ -1,2 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.itxiaoer.commons.auth.security.WebSecurityConfig
+com.itxiaoer.commons.auth.security.WebSecurityConfig,\
+com.itxiaoer.commons.auth.CrossOriginConfig,\
+com.itxiaoer.commons.auth.WebAuthProperties

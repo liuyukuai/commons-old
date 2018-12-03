@@ -1,6 +1,6 @@
 package com.itxiaoer.commons.core;
 
-import com.itxiaoer.commons.core.page.ErrorCode;
+import com.itxiaoer.commons.core.page.ResponseCode;
 
 /**
  * 参数校验异常
@@ -11,10 +11,10 @@ import com.itxiaoer.commons.core.page.ErrorCode;
 public class ParameterException extends SysException {
 
     public ParameterException() {
-        super(ErrorCode.PARAMETER_VALID_CODE);
+        super(ResponseCode.PARAMETER_VALID_CODE);
     }
 
     public ParameterException(String message) {
-        super(ErrorCode.PARAMETER_VALID_CODE, message);
+        super(ResponseCode.PARAMETER_VALID_CODE, message);
     }
 }

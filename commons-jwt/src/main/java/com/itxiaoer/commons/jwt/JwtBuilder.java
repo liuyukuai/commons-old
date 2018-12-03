@@ -5,7 +5,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
@@ -198,12 +197,11 @@ public class JwtBuilder implements Serializable {
      * @param userDetails 用户信息
      * @return true:合法，false：非法
      */
-    public Boolean validate(String token, UserDetails userDetails) {
-        JwtAuth user = (JwtAuth) userDetails;
+    public Boolean validate(String token, JwtAuth userDetails) {
         final String loginName = getLoginNameFromToken(token);
         final LocalDateTime created = getCreatedTimeFromToken(token);
         return (
-                loginName.equals(user.getLoginName())
+                loginName.equals(userDetails.getLoginName())
                         && !isTokenExpired(token)
         );
     }
