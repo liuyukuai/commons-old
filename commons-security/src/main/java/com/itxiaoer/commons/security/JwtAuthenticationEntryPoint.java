@@ -1,4 +1,4 @@
-package com.itxiaoer.commons.auth.security;
+package com.itxiaoer.commons.security;
 
 import com.itxiaoer.commons.core.json.JsonUtil;
 import com.itxiaoer.commons.core.page.Response;

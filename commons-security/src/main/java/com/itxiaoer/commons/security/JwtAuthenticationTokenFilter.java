@@ -1,4 +1,4 @@
-package com.itxiaoer.commons.auth.security;
+package com.itxiaoer.commons.security;
 
 import com.itxiaoer.commons.jwt.JwtAuth;
 import com.itxiaoer.commons.jwt.JwtBuilder;

@@ -1,4 +1,4 @@
-package com.itxiaoer.commons.auth.security;
+package com.itxiaoer.commons.security;
 
 import com.itxiaoer.commons.auth.WebAuthProperties;
 import org.apache.commons.lang3.StringUtils;

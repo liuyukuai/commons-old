@@ -1,4 +1,4 @@
-package com.itxiaoer.commons.auth;
+package com.itxiaoer.commons.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 public class CrossOriginConfig extends WebMvcConfigurerAdapter {
 
     @Resource
-    private WebAuthProperties webAuthProperties;
+    private com.itxiaoer.commons.auth.WebAuthProperties webAuthProperties;
 
 
     @Override

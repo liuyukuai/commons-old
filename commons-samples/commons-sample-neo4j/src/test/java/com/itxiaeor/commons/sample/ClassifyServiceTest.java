@@ -28,7 +28,7 @@ public class ClassifyServiceTest {
         aDto.setName("分类A");
         Classify A = this.mockClassifyService.create(aDto);
         Classify _A = new Classify();
-        _A.setId("1");
+        _A.setId(1L);
         _A.setName("分类A");
 //        Assert.assertEquals(A, _A);
 

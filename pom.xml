@@ -17,7 +17,7 @@
         <module>commons-lbs</module>
         <module>commons-jpa</module>
         <module>commons-jwt</module>
-        <module>commons-auth</module>
+        <module>commons-security</module>
         <module>commons-orm</module>
         <!--<module>commons-neo4j</module>-->
         <module>commons-samples</module>
@@ -101,7 +101,7 @@
 
             <dependency>
                 <groupId>com.itxiaoer.commons</groupId>
-                <artifactId>commons-auth</artifactId>
+                <artifactId>commons-security</artifactId>
                 <version>${commons.version}</version>
             </dependency>
 

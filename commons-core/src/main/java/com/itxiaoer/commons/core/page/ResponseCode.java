@@ -10,5 +10,6 @@ public final class ResponseCode {
     public final static String PARAMETER_VALID_CODE = "40002";
     public final static String LOGIN_PASSWORD_ERROR_CODE = "40003";
     public final static String NOT_FOUNT_CODE = "40004";
+    public final static String FIELD_REPETITION_CODE = "40005";
 
 }
