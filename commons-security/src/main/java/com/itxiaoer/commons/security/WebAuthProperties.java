@@ -1,4 +1,4 @@
-package com.itxiaoer.commons.auth;
+package com.itxiaoer.commons.security;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

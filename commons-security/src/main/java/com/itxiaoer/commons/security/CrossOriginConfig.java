@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 public class CrossOriginConfig extends WebMvcConfigurerAdapter {
 
     @Resource
-    private com.itxiaoer.commons.auth.WebAuthProperties webAuthProperties;
+    private WebAuthProperties webAuthProperties;
 
 
     @Override
