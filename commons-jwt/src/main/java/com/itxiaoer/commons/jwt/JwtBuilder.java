@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +31,7 @@ public class JwtBuilder implements Serializable {
     private static final String CLAIM_KEY_ID = "id";
     private static final String CLAIM_KEY_CREATED = "created";
     private static final String CLAIM_KEY_ROLE = "role";
+    private static final String CLAIM_KEY_UPDATE_PASSWORD = "update";
 
     @Resource
     private JwtProperties jwtProperties;
@@ -52,6 +53,22 @@ public class JwtBuilder implements Serializable {
         return username;
     }
 
+    /**
+     * 重token中获取用户登录名称
+     *
+     * @param token 当前token
+     * @return 当前登录用户登录名
+     */
+    public String getIdFromToken(String token) {
+        try {
+            final Claims claims = getClaimsFromToken(token);
+            return (String) claims.get(CLAIM_KEY_ID);
+        } catch (Exception e) {
+            log.error("get id from jwt token error :", e);
+            return null;
+        }
+    }
+
 
     /**
      * 重token中获取token创建时间
@@ -59,15 +76,14 @@ public class JwtBuilder implements Serializable {
      * @param token 当前token
      * @return token创建时间
      */
-    public LocalDateTime getCreatedTimeFromToken(String token) {
-        LocalDateTime created;
+    public Instant getCreatedTimeFromToken(String token) {
         try {
             final Claims claims = getClaimsFromToken(token);
-            created = (LocalDateTime) claims.get(CLAIM_KEY_CREATED);
+            return Instant.ofEpochMilli((Long) claims.get(CLAIM_KEY_CREATED));
         } catch (Exception e) {
-            created = null;
+            log.error("get created Time from jwt token error :", e);
+            return null;
         }
-        return created;
     }
 
     /**
@@ -80,11 +96,11 @@ public class JwtBuilder implements Serializable {
         Date expiration;
         try {
             final Claims claims = getClaimsFromToken(token);
-            expiration = claims.getExpiration();
+            return claims.getExpiration();
         } catch (Exception e) {
-            expiration = null;
+            log.error("get expiration Time from jwt token error :", e);
+            return null;
         }
-        return expiration;
     }
 
     /**
@@ -101,6 +117,7 @@ public class JwtBuilder implements Serializable {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
+            log.error("get claims from jwt token error :", e);
             claims = null;
         }
         return claims;
@@ -118,22 +135,6 @@ public class JwtBuilder implements Serializable {
 
 
     /**
-     * 判断token是否过期
-     *
-     * @param token token
-     * @return true | false
-     */
-    private Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
-    }
-
-    private Boolean isCreatedBeforeLastPasswordReset(LocalDateTime created, LocalDateTime lastPasswordReset) {
-        return (lastPasswordReset != null && created.isBefore(lastPasswordReset));
-    }
-
-
-    /**
      * 通过用户信息创建token
      *
      * @param userDetails 用户信息对象
@@ -144,7 +145,7 @@ public class JwtBuilder implements Serializable {
         claims.put(CLAIM_KEY_LOGIN_NAME, userDetails.getLoginName());
         claims.put(CLAIM_KEY_ID, userDetails.getId());
         claims.put(CLAIM_KEY_MICK_NAME, userDetails.getNickName());
-        claims.put(CLAIM_KEY_CREATED, LocalDateTime.now());
+        claims.put(CLAIM_KEY_CREATED, Instant.now().toEpochMilli());
         claims.put(CLAIM_KEY_ROLE, userDetails.getRoles());
         return build(claims);
     }
@@ -164,13 +165,6 @@ public class JwtBuilder implements Serializable {
                 .compact();
     }
 
-    public Boolean canTokenBeRefreshed(String token, LocalDateTime lastPasswordReset) {
-        final LocalDateTime created = getCreatedTimeFromToken(token);
-        return !isCreatedBeforeLastPasswordReset(created, lastPasswordReset)
-                && !isTokenExpired(token);
-    }
-
-
     /**
      * 刷新token的值
      *
@@ -181,41 +175,13 @@ public class JwtBuilder implements Serializable {
         String refreshedToken;
         try {
             final Claims claims = getClaimsFromToken(token);
-            claims.put(CLAIM_KEY_CREATED, new Date());
+            claims.put(CLAIM_KEY_CREATED, Instant.now().toEpochMilli());
             refreshedToken = build(claims);
         } catch (Exception e) {
+            log.error("refreshedToken jwt token error :", e);
             refreshedToken = null;
         }
         return refreshedToken;
-    }
-
-
-    /**
-     * 校验token是否合法
-     *
-     * @param token       token的值
-     * @param userDetails 用户信息
-     * @return true:合法，false：非法
-     */
-    public Boolean validate(String token, JwtAuth userDetails) {
-        final String loginName = getLoginNameFromToken(token);
-        final LocalDateTime created = getCreatedTimeFromToken(token);
-        return (
-                loginName.equals(userDetails.getLoginName())
-                        && !isTokenExpired(token)
-        );
-    }
-
-    /**
-     * 校验token是否合法
-     *
-     * @param token token的值
-     * @return true:合法，false：非法
-     */
-    public Boolean validate(String token) {
-        final String loginName = getLoginNameFromToken(token);
-        final LocalDateTime created = getCreatedTimeFromToken(token);
-        return !isTokenExpired(token);
     }
 
 

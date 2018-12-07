@@ -15,6 +15,9 @@ public class JwtProperties {
     @Value("${spring.jwt.secret}")
     private String secret;
 
-    @Value("${spring.jwt.expiration:604800}")
+    @Value("${spring.jwt.expiration:7200}")
     private long expiration;
+
+    @Value("${spring.jwt.store.prefix:redis_token_prefix}")
+    private String prefix;
 }

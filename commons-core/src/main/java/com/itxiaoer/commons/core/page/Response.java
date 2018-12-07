@@ -36,7 +36,7 @@ public class Response<T> implements Serializable {
     /**
      * message
      */
-    private String msg;
+    private String message;
 
     /**
      * private
@@ -59,7 +59,7 @@ public class Response<T> implements Serializable {
     }
 
     private Response(boolean success, String msg, String code) {
-        this.msg = msg;
+        this.message = msg;
         this.success = success;
         this.code = code;
     }
@@ -128,6 +128,6 @@ public class Response<T> implements Serializable {
      * @return message
      */
     public static <E> String message(Response<E> response) {
-        return Optional.ofNullable(response).map(Response::getMsg).orElse(StringUtils.EMPTY);
+        return Optional.ofNullable(response).map(Response::getMessage).orElse(StringUtils.EMPTY);
     }
 }

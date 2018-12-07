@@ -22,5 +22,10 @@
             <groupId>com.itxiaoer.commons</groupId>
             <artifactId>commons-jwt</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.itxiaoer.commons</groupId>
+            <artifactId>commons-redis</artifactId>
+        </dependency>
     </dependencies>
 </project>

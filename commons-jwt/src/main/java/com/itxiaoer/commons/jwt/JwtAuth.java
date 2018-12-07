@@ -1,5 +1,6 @@
 package com.itxiaoer.commons.jwt;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.List;
@@ -10,10 +11,12 @@ import java.util.List;
 @Data
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class JwtAuth {
-    private final String id;
-    private final String loginName;
-    private final String nickName;
-    private final List<String> roles;
+    private String id;
+    private String loginName;
+    private String nickName;
+    @JsonIgnore
+    private boolean notExpired;
+    private List<String> roles;
 
     public JwtAuth(
             String id,
