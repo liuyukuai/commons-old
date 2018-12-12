@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.itxiaoer.commons.core.date.LocalDateTimeUtil;
 import com.itxiaoer.commons.jwt.JwtRemoteAuth;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -50,11 +51,13 @@ public interface JwtUserDetailService extends UserDetailsService {
      */
     default JwtRemoteAuth loadUserFromCache(String loginName, String token) {
         return Optional.ofNullable(JWT_AUTH_CACHE.getIfPresent(loginName)).orElseGet(() -> {
+            if (StringUtils.isBlank(token)) {
+                return this.loadUserFromCache(loginName);
+            }
             JwtRemoteAuth remote = this.loadUserByUsername(loginName, token);
             if (!Objects.isNull(remote)) {
-                JwtRemoteAuth jwtRemoteAuth = new JwtRemoteAuth(remote.getLoginName(), remote.getModifyPasswordTime());
-                JWT_AUTH_CACHE.put(loginName, jwtRemoteAuth);
-                return jwtRemoteAuth;
+                JWT_AUTH_CACHE.put(loginName, remote);
+                return remote;
             }
             return null;
         });
