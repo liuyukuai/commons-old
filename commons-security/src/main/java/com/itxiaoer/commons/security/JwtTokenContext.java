@@ -86,8 +86,13 @@ public class JwtTokenContext {
         }
         final Instant created = jwtBuilder.getCreatedTimeFromToken(token);
         final String loginName = jwtBuilder.getLoginNameFromToken(token);
+        String modifyPasswordTime = userDetails.getModifyPasswordTime();
+        if (StringUtils.isBlank(modifyPasswordTime)) {
+            return Objects.equals(loginName, userDetails.getLoginName())
+                    && hasToken(token);
+        }
         return Objects.equals(loginName, userDetails.getLoginName())
-                && hasToken(token) && validate(created, LocalDateTimeUtil.parse(userDetails.getModifyPasswordTime(), LocalDateTimeUtil.DEFAULT_PATTERN));
+                && hasToken(token) && validate(created, LocalDateTimeUtil.parse(modifyPasswordTime, LocalDateTimeUtil.DEFAULT_PATTERN));
     }
 
     /**
