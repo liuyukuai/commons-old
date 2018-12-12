@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +35,8 @@ public interface JwtUserDetailService extends UserDetailsService {
         return Optional.ofNullable(JWT_AUTH_CACHE.getIfPresent(loginName)).orElseGet(() -> {
             JwtUserDetail remote = this.loadUserByUsername(loginName);
             if (!Objects.isNull(remote)) {
-                JwtRemoteAuth jwtRemoteAuth = new JwtRemoteAuth(remote.getUsername(), LocalDateTimeUtil.format(remote.getModifyPasswordTime(), LocalDateTimeUtil.DEFAULT_PATTERN));
+                LocalDateTime modifyPasswordTime = remote.getModifyPasswordTime();
+                JwtRemoteAuth jwtRemoteAuth = new JwtRemoteAuth(remote.getUsername(), modifyPasswordTime == null ? "" : LocalDateTimeUtil.format(modifyPasswordTime, LocalDateTimeUtil.DEFAULT_PATTERN));
                 JWT_AUTH_CACHE.put(loginName, jwtRemoteAuth);
                 return jwtRemoteAuth;
             }

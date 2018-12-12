@@ -65,11 +65,11 @@ public class JwtTokenContext {
     }
 
     @Async
-    public Boolean updateTime(String token) {
+    public void updateTime(String token) {
         String key = jwtProperties.getPrefix() + Md5Utils.digestMD5(token);
         Instant now = Instant.now();
         now = now.plusSeconds(jwtProperties.getExpiration());
-        return valueOperations.getOperations().expireAt(key, new Date(now.toEpochMilli()));
+        valueOperations.getOperations().expireAt(key, new Date(now.toEpochMilli()));
     }
 
 
