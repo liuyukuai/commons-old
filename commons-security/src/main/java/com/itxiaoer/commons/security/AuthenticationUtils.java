@@ -1,7 +1,10 @@
 package com.itxiaoer.commons.security;
 
 import com.itxiaoer.commons.jwt.JwtAuth;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.Optional;
 
 /**
  * 获取当前登录用户
@@ -12,6 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public final class AuthenticationUtils {
 
     public static JwtAuth getUser() {
-        return (JwtAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return (JwtAuth) Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication()).map(Authentication::getPrincipal).orElse(null);
     }
 }

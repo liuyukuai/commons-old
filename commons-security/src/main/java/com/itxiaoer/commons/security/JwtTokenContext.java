@@ -1,5 +1,6 @@
 package com.itxiaoer.commons.security;
 
+import com.itxiaoer.commons.core.date.LocalDateTimeUtil;
 import com.itxiaoer.commons.core.util.Md5Utils;
 import com.itxiaoer.commons.jwt.JwtAuth;
 import com.itxiaoer.commons.jwt.JwtBuilder;
@@ -86,7 +87,7 @@ public class JwtTokenContext {
         final Instant created = jwtBuilder.getCreatedTimeFromToken(token);
         final String loginName = jwtBuilder.getLoginNameFromToken(token);
         return Objects.equals(loginName, userDetails.getLoginName())
-                && hasToken(token) && validate(created, userDetails.getModifyPasswordTime());
+                && hasToken(token) && validate(created, LocalDateTimeUtil.parse(userDetails.getModifyPasswordTime(), LocalDateTimeUtil.DEFAULT_PATTERN));
     }
 
     /**

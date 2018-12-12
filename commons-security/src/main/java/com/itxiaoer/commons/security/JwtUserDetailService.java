@@ -2,11 +2,11 @@ package com.itxiaoer.commons.security;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.itxiaoer.commons.core.date.LocalDateTimeUtil;
 import com.itxiaoer.commons.jwt.JwtRemoteAuth;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author : liuyk
  */
+@SuppressWarnings("unused")
 public interface JwtUserDetailService extends UserDetailsService {
 
 
@@ -32,7 +33,26 @@ public interface JwtUserDetailService extends UserDetailsService {
         return Optional.ofNullable(JWT_AUTH_CACHE.getIfPresent(loginName)).orElseGet(() -> {
             JwtUserDetail remote = this.loadUserByUsername(loginName);
             if (!Objects.isNull(remote)) {
-                JwtRemoteAuth jwtRemoteAuth = new JwtRemoteAuth(remote.getUsername(), remote.getModifyPasswordTime());
+                JwtRemoteAuth jwtRemoteAuth = new JwtRemoteAuth(remote.getUsername(), LocalDateTimeUtil.format(remote.getModifyPasswordTime(), LocalDateTimeUtil.DEFAULT_PATTERN));
+                JWT_AUTH_CACHE.put(loginName, jwtRemoteAuth);
+                return jwtRemoteAuth;
+            }
+            return null;
+        });
+    }
+
+    /**
+     * 缓存中查询用户信息
+     *
+     * @param loginName 登录名
+     * @param token     token
+     * @return 用户信息
+     */
+    default JwtRemoteAuth loadUserFromCache(String loginName, String token) {
+        return Optional.ofNullable(JWT_AUTH_CACHE.getIfPresent(loginName)).orElseGet(() -> {
+            JwtRemoteAuth remote = this.loadUserByUsername(loginName, token);
+            if (!Objects.isNull(remote)) {
+                JwtRemoteAuth jwtRemoteAuth = new JwtRemoteAuth(remote.getLoginName(), remote.getModifyPasswordTime());
                 JWT_AUTH_CACHE.put(loginName, jwtRemoteAuth);
                 return jwtRemoteAuth;
             }
@@ -48,5 +68,19 @@ public interface JwtUserDetailService extends UserDetailsService {
      * @throws UsernameNotFoundException e
      */
     @Override
-    JwtUserDetail loadUserByUsername(String loginName) throws UsernameNotFoundException;
+    default JwtUserDetail loadUserByUsername(String loginName) throws UsernameNotFoundException {
+        throw new UsernameNotFoundException("please must overwrite this method.");
+    }
+
+    /**
+     * 中查询用户信息
+     *
+     * @param loginName 登录名
+     * @param token     token
+     * @return 用户信息
+     * @throws UsernameNotFoundException e
+     */
+    default JwtRemoteAuth loadUserByUsername(String loginName, String token) throws UsernameNotFoundException {
+        throw new UsernameNotFoundException("please must overwrite this method.");
+    }
 }

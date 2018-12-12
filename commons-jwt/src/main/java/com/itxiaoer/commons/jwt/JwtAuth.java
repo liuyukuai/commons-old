@@ -15,6 +15,8 @@ public class JwtAuth {
     private String loginName;
     private String nickName;
     @JsonIgnore
+    private String token;
+    @JsonIgnore
     private boolean notExpired;
     private List<String> roles;
 

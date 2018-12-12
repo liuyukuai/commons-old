@@ -20,6 +20,7 @@
         <module>commons-orm</module>
         <!--<module>commons-neo4j</module>-->
         <module>commons-samples</module>
+        <module>commons-request</module>
     </modules>
 
     <properties>
@@ -107,6 +108,12 @@
             <dependency>
                 <groupId>com.itxiaoer.commons</groupId>
                 <artifactId>commons-jwt</artifactId>
+                <version>${commons.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.itxiaoer.commons</groupId>
+                <artifactId>commons-request</artifactId>
                 <version>${commons.version}</version>
             </dependency>
 

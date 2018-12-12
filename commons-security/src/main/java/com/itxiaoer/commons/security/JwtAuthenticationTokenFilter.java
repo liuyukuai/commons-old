@@ -51,9 +51,10 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 jwtTokenContext.updateTime(authToken);
             }
             if (StringUtils.isNotBlank(loginName) && SecurityContextHolder.getContext().getAuthentication() == null) {
-                JwtRemoteAuth jwtRemoteAuth = jwtUserDetailService.loadUserFromCache(loginName);
+                JwtRemoteAuth jwtRemoteAuth = jwtUserDetailService.loadUserFromCache(loginName, authToken);
                 if (jwtTokenContext.validate(authToken, jwtRemoteAuth)) {
                     JwtAuth jwtAuth = jwtBuilder.getJwtAuth(authToken);
+                    jwtAuth.setToken(authToken);
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(jwtAuth, null, jwtAuth.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(
                             request));
