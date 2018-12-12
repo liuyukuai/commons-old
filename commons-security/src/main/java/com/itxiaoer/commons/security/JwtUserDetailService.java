@@ -86,6 +86,12 @@ public interface JwtUserDetailService extends UserDetailsService {
      * @throws UsernameNotFoundException e
      */
     default JwtRemoteAuth loadUserByUsername(String loginName, String token) throws UsernameNotFoundException {
-        throw new UsernameNotFoundException("please must overwrite this method.");
+        try {
+            JwtUserDetail jwtUserDetail = this.loadUserByUsername(loginName);
+            LocalDateTime modifyPasswordTime = jwtUserDetail.getModifyPasswordTime();
+            return new JwtRemoteAuth(jwtUserDetail.getUsername(), modifyPasswordTime == null ? "" : LocalDateTimeUtil.format(modifyPasswordTime, LocalDateTimeUtil.DEFAULT_PATTERN));
+        } catch (Exception e) {
+            throw new UsernameNotFoundException("please must overwrite this method.");
+        }
     }
 }
