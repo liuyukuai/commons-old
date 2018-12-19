@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.itxiaoer.commons</groupId>
@@ -21,6 +22,7 @@
         <!--<module>commons-neo4j</module>-->
         <module>commons-samples</module>
         <module>commons-request</module>
+        <module>commons-web</module>
     </modules>
 
     <properties>
@@ -114,6 +116,12 @@
             <dependency>
                 <groupId>com.itxiaoer.commons</groupId>
                 <artifactId>commons-request</artifactId>
+                <version>${commons.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.itxiaoer.commons</groupId>
+                <artifactId>commons-web</artifactId>
                 <version>${commons.version}</version>
             </dependency>
 

@@ -1,14 +1,12 @@
 package com.itxiaoer.commons.security;
 
-import com.itxiaoer.commons.core.date.LocalDateTimeUtil;
 import com.itxiaoer.commons.core.util.Md5Utils;
 import com.itxiaoer.commons.jwt.JwtAuth;
 import com.itxiaoer.commons.jwt.JwtBuilder;
 import com.itxiaoer.commons.jwt.JwtProperties;
-import com.itxiaoer.commons.jwt.JwtRemoteAuth;
+import com.itxiaoer.commons.jwt.JwtToken;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.scheduling.annotation.Async;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -32,17 +30,34 @@ public class JwtTokenContext {
     private JwtProperties jwtProperties;
 
     @Resource
-    private ValueOperations<String, JwtRemoteAuth> valueOperations;
+    private ValueOperations<String, JwtToken> valueOperations;
 
-    public String build(JwtAuth userDetails) {
-        String token = jwtBuilder.build(userDetails);
-        String key = jwtProperties.getPrefix() + Md5Utils.digestMD5(token);
-        valueOperations.setIfAbsent(key, new JwtRemoteAuth());
-        Instant now = Instant.now();
-        now = now.plusSeconds(jwtProperties.getExpiration());
-        valueOperations.getOperations().expireAt(key, new Date(now.toEpochMilli()));
-        return token;
+    @Resource
+    JwtUserDetailService jwtUserDetailService;
+
+    public JwtToken build(JwtAuth userDetails) {
+        return jwtBuilder.build(userDetails);
     }
+
+    public JwtToken refresh(HttpServletRequest request) {
+        String token = this.getTokenFromRequest(request);
+        JwtUserDetail jwtUserDetail = jwtUserDetailService.loadUserFromCache(jwtBuilder.getLoginNameFromToken(token), token);
+        //判断是否过期
+        if (!this.validate(token, jwtUserDetail)) {
+            throw new IllegalArgumentException("token is expired.");
+        }
+        // 将原来旧的token加入黑名单
+        String key = jwtProperties.getPrefix() + Md5Utils.digestMD5(token);
+        Date expirationDateFromToken = jwtBuilder.getExpirationDateFromToken(token);
+        Boolean ifAbsent = valueOperations.setIfAbsent(key, new JwtToken(token, String.valueOf(expirationDateFromToken.getTime()), Instant.now().toEpochMilli(), JwtToken.Operation.refresh.getValue()));
+        if (ifAbsent != null && ifAbsent) {
+            //设置过期时间
+            valueOperations.getOperations().expireAt(key, expirationDateFromToken);
+        }
+        // 刷新token的值
+        return this.jwtBuilder.refreshToken(token);
+    }
+
 
     public String getTokenFromRequest(HttpServletRequest request) {
         String authHeader = request.getHeader(jwtProperties.getHeader());
@@ -57,21 +72,15 @@ public class JwtTokenContext {
     }
 
 
-    public Boolean remove(String token) {
-        if (StringUtils.isBlank(token)) {
-            return false;
-        }
-        return valueOperations.getOperations().delete(jwtProperties.getPrefix() + Md5Utils.digestMD5(token));
-    }
-
-    @Async
-    public void updateTime(String token) {
+    public Boolean destroy(HttpServletRequest request) {
+        String token = this.getTokenFromRequest(request);
         String key = jwtProperties.getPrefix() + Md5Utils.digestMD5(token);
-        Instant now = Instant.now();
-        now = now.plusSeconds(jwtProperties.getExpiration());
-        valueOperations.getOperations().expireAt(key, new Date(now.toEpochMilli()));
+        Date expirationDateFromToken = jwtBuilder.getExpirationDateFromToken(token);
+        valueOperations.set(key, new JwtToken(token, String.valueOf(expirationDateFromToken.getTime()), Instant.now().toEpochMilli(), JwtToken.Operation.destroy.getValue()));
+        //设置过期时间
+        valueOperations.getOperations().expireAt(key, expirationDateFromToken);
+        return true;
     }
-
 
     /**
      * 校验token是否合法
@@ -80,45 +89,37 @@ public class JwtTokenContext {
      * @param userDetails 用户信息
      * @return true:合法，false：非法
      */
-    public Boolean validate(String token, JwtRemoteAuth userDetails) {
+    public Boolean validate(String token, JwtUserDetail userDetails) {
         if (StringUtils.isBlank(token) || userDetails == null) {
             return false;
         }
-        final Instant created = jwtBuilder.getCreatedTimeFromToken(token);
-        final String loginName = jwtBuilder.getLoginNameFromToken(token);
-        String modifyPasswordTime = userDetails.getModifyPasswordTime();
-        if (StringUtils.isBlank(modifyPasswordTime)) {
-            return Objects.equals(loginName, userDetails.getLoginName())
-                    && hasToken(token);
+        String key = jwtProperties.getPrefix() + Md5Utils.digestMD5(token);
+        JwtToken jwtToken = valueOperations.get(key);
+        // 判断是否在黑名单中
+        if (jwtToken != null) {
+            //销毁状态
+            if (JwtToken.Operation.destroy.getValue() == jwtToken.getType()) {
+                return false;
+            }
+
+            Long refreshTime = jwtToken.getRefreshTime();
+            if (refreshTime != null && jwtToken.getType() == JwtToken.Operation.refresh.getValue()) {
+                // 刷新token二分钟内可以使用
+                return Instant.now().toEpochMilli() - refreshTime < 1000 * 60 * 2;
+            }
         }
-        return Objects.equals(loginName, userDetails.getLoginName())
-                && hasToken(token) && validate(created, LocalDateTimeUtil.parse(modifyPasswordTime, LocalDateTimeUtil.DEFAULT_PATTERN));
-    }
-
-    /**
-     * 校验token是否合法
-     *
-     * @param token token的值
-     * @return true:合法，false：非法
-     */
-    public Boolean validate(String token) {
-        final String loginName = jwtBuilder.getLoginNameFromToken(token);
         final Instant created = jwtBuilder.getCreatedTimeFromToken(token);
-        return hasToken(token);
+        final String loginName = jwtBuilder.getLoginNameFromToken(token);
+        LocalDateTime modifyPasswordTime = userDetails.getModifyPasswordTime();
+        if (Objects.isNull(modifyPasswordTime)) {
+            return Objects.equals(loginName, userDetails.getUsername())
+                    && !jwtBuilder.isExpired(token);
+        }
+        return Objects.equals(loginName, userDetails.getUsername())
+                && !jwtBuilder.isExpired(token) && validate(created, modifyPasswordTime);
     }
-
 
     private Boolean validate(Instant created, LocalDateTime lastPasswordReset) {
         return lastPasswordReset == null || created.isAfter(Instant.from(lastPasswordReset));
-    }
-
-    /**
-     * 判断token是否过期
-     *
-     * @param token token
-     * @return true | false
-     */
-    private Boolean hasToken(String token) {
-        return this.valueOperations.getOperations().hasKey(jwtProperties.getPrefix() + Md5Utils.digestMD5(token));
     }
 }

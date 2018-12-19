@@ -27,4 +27,7 @@ public class WebAuthProperties {
 
     @Value("${spring.auth.access.allowedHeader:*}")
     private String allowedHeader;
+
+    @Value("${spring.auth.client.header:X-CLIENT-ID}")
+    private String clientId;
 }

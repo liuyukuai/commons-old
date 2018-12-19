@@ -140,14 +140,15 @@ public class JwtBuilder implements Serializable {
      * @param userDetails 用户信息对象
      * @return token
      */
-    public String build(JwtAuth userDetails) {
+    public JwtToken build(JwtAuth userDetails) {
+        long epochMilli = Instant.now().toEpochMilli();
         Map<String, Object> claims = new HashMap<>(16);
         claims.put(CLAIM_KEY_LOGIN_NAME, userDetails.getLoginName());
         claims.put(CLAIM_KEY_ID, userDetails.getId());
         claims.put(CLAIM_KEY_MICK_NAME, userDetails.getNickName());
-        claims.put(CLAIM_KEY_CREATED, Instant.now().toEpochMilli());
+        claims.put(CLAIM_KEY_CREATED, epochMilli);
         claims.put(CLAIM_KEY_ROLE, userDetails.getRoles());
-        return build(claims);
+        return new JwtToken(build(claims), String.valueOf(epochMilli + jwtProperties.getExpiration() * 1000));
     }
 
 
@@ -171,17 +172,30 @@ public class JwtBuilder implements Serializable {
      * @param token 原来的toeken值
      * @return 刷新后的token值
      */
-    public String refreshToken(String token) {
+    public JwtToken refreshToken(String token) {
         String refreshedToken;
+        long epochMilli = Instant.now().toEpochMilli();
         try {
             final Claims claims = getClaimsFromToken(token);
-            claims.put(CLAIM_KEY_CREATED, Instant.now().toEpochMilli());
+            claims.put(CLAIM_KEY_CREATED, epochMilli);
             refreshedToken = build(claims);
         } catch (Exception e) {
             log.error("refreshedToken jwt token error :", e);
             refreshedToken = null;
         }
-        return refreshedToken;
+        return new JwtToken(refreshedToken, String.valueOf(epochMilli));
+    }
+
+
+    /**
+     * 判断token是否过期
+     *
+     * @param token token
+     * @return 是否过期
+     */
+    public Boolean isExpired(String token) {
+        final Date expiration = getExpirationDateFromToken(token);
+        return expiration.before(new Date());
     }
 
 
