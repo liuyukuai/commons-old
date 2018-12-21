@@ -49,7 +49,7 @@ public class JwtTokenContext {
         // 将原来旧的token加入黑名单
         String key = jwtProperties.getPrefix() + Md5Utils.digestMD5(token);
         Date expirationDateFromToken = jwtBuilder.getExpirationDateFromToken(token);
-        Boolean ifAbsent = valueOperations.setIfAbsent(key, new JwtToken(token, String.valueOf(expirationDateFromToken.getTime()), Instant.now().toEpochMilli(), JwtToken.Operation.refresh.getValue()));
+        Boolean ifAbsent = valueOperations.setIfAbsent(key, new JwtToken(token, expirationDateFromToken.getTime(), Instant.now().toEpochMilli(), JwtToken.Operation.refresh.getValue()));
         if (ifAbsent != null && ifAbsent) {
             //设置过期时间
             valueOperations.getOperations().expireAt(key, expirationDateFromToken);
@@ -76,7 +76,7 @@ public class JwtTokenContext {
         String token = this.getTokenFromRequest(request);
         String key = jwtProperties.getPrefix() + Md5Utils.digestMD5(token);
         Date expirationDateFromToken = jwtBuilder.getExpirationDateFromToken(token);
-        valueOperations.set(key, new JwtToken(token, String.valueOf(expirationDateFromToken.getTime()), Instant.now().toEpochMilli(), JwtToken.Operation.destroy.getValue()));
+        valueOperations.set(key, new JwtToken(token, expirationDateFromToken.getTime(), Instant.now().toEpochMilli(), JwtToken.Operation.destroy.getValue()));
         //设置过期时间
         valueOperations.getOperations().expireAt(key, expirationDateFromToken);
         return true;

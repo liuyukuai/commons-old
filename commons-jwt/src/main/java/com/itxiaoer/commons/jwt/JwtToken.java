@@ -11,8 +11,11 @@ import java.io.Serializable;
 @Data
 @SuppressWarnings("unused")
 public class JwtToken implements Serializable {
+
+    static final long serialVersionUID = 6739574768237935126L;
+
     private String token;
-    private String expireTime;
+    private Long expireTime;
     @JsonIgnore
     private Long refreshTime;
 
@@ -23,17 +26,17 @@ public class JwtToken implements Serializable {
 
     }
 
-    public JwtToken(String token, String expireTime) {
+    public JwtToken(String token, Long expireTime) {
         this(token, expireTime, null);
     }
 
-    public JwtToken(String token, String expireTime, Long refreshTime) {
+    public JwtToken(String token, Long expireTime, Long refreshTime) {
         this.expireTime = expireTime;
         this.token = token;
         this.refreshTime = refreshTime;
     }
 
-    public JwtToken(String token, String expireTime, Long refreshTime, int type) {
+    public JwtToken(String token, Long expireTime, Long refreshTime, int type) {
         this.expireTime = expireTime;
         this.token = token;
         this.refreshTime = refreshTime;

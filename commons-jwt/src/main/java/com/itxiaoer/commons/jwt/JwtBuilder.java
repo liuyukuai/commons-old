@@ -141,14 +141,14 @@ public class JwtBuilder implements Serializable {
      * @return token
      */
     public JwtToken build(JwtAuth userDetails) {
-        long epochMilli = Instant.now().toEpochMilli();
+        Date expireTime = generateExpirationDate();
         Map<String, Object> claims = new HashMap<>(16);
         claims.put(CLAIM_KEY_LOGIN_NAME, userDetails.getLoginName());
         claims.put(CLAIM_KEY_ID, userDetails.getId());
         claims.put(CLAIM_KEY_MICK_NAME, userDetails.getNickName());
-        claims.put(CLAIM_KEY_CREATED, epochMilli);
+        claims.put(CLAIM_KEY_CREATED, expireTime.getTime());
         claims.put(CLAIM_KEY_ROLE, userDetails.getRoles());
-        return new JwtToken(build(claims), String.valueOf(epochMilli + jwtProperties.getExpiration() * 1000));
+        return new JwtToken(build(claims, expireTime), expireTime.getTime());
     }
 
 
@@ -158,10 +158,10 @@ public class JwtBuilder implements Serializable {
      * @param claims map
      * @return token
      */
-    private String build(Map<String, Object> claims) {
+    private String build(Map<String, Object> claims, Date expireTime) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setExpiration(generateExpirationDate())
+                .setExpiration(expireTime)
                 .signWith(SignatureAlgorithm.HS512, jwtProperties.getSecret())
                 .compact();
     }
@@ -174,16 +174,16 @@ public class JwtBuilder implements Serializable {
      */
     public JwtToken refreshToken(String token) {
         String refreshedToken;
-        long epochMilli = Instant.now().toEpochMilli();
+        Date expireTime = generateExpirationDate();
         try {
             final Claims claims = getClaimsFromToken(token);
-            claims.put(CLAIM_KEY_CREATED, epochMilli);
-            refreshedToken = build(claims);
+            claims.put(CLAIM_KEY_CREATED, expireTime.getTime());
+            refreshedToken = build(claims, expireTime);
         } catch (Exception e) {
             log.error("refreshedToken jwt token error :", e);
             refreshedToken = null;
         }
-        return new JwtToken(refreshedToken, String.valueOf(epochMilli));
+        return new JwtToken(refreshedToken, expireTime.getTime());
     }
 
 
