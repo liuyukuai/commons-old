@@ -2,7 +2,7 @@ package com.itxiaoer.commons.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.annotation.Resource;
 
@@ -10,7 +10,8 @@ import javax.annotation.Resource;
  * @author : liuyk
  */
 @Configuration
-public class CrossOriginConfig implements WebMvcConfigurer {
+@SuppressWarnings("all")
+public class CrossOriginConfig extends WebMvcConfigurerAdapter {
 
     @Resource
     private WebAuthProperties webAuthProperties;
