@@ -62,6 +62,7 @@ public class Paging implements Transfer<String, String> {
     public Paging setSort(String name, String direction) {
         if (StringUtils.isBlank(this.sort)) {
             this.sort = name + "-" + direction;
+            return this;
         }
         this.sort = this.sort + "," + name + "-" + direction;
         return this;
