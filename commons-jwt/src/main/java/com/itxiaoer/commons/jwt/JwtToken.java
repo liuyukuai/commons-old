@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author : liuyk
  */
 @Data
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class JwtToken implements Serializable {
 
     static final long serialVersionUID = 6739574768237935126L;

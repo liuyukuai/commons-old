@@ -48,7 +48,7 @@ public class JwtBuilder implements Serializable {
             final Claims claims = getClaimsFromToken(token);
             username = claims.getSubject();
         } catch (Exception e) {
-            log.error("get username from jwt token error :", e);
+            log.error("get username from jwt token error : {}", e.getMessage());
         }
         return username;
     }
@@ -64,7 +64,7 @@ public class JwtBuilder implements Serializable {
             final Claims claims = getClaimsFromToken(token);
             return (String) claims.get(CLAIM_KEY_ID);
         } catch (Exception e) {
-            log.error("get id from jwt token error :", e);
+            log.error("get id from jwt token error : {}", e.getMessage());
             return null;
         }
     }
@@ -81,7 +81,7 @@ public class JwtBuilder implements Serializable {
             final Claims claims = getClaimsFromToken(token);
             return Instant.ofEpochMilli((Long) claims.get(CLAIM_KEY_CREATED));
         } catch (Exception e) {
-            log.error("get created Time from jwt token error :", e);
+            log.error("get created Time from jwt token error : {}", e.getMessage());
             return null;
         }
     }
@@ -98,7 +98,7 @@ public class JwtBuilder implements Serializable {
             final Claims claims = getClaimsFromToken(token);
             return claims.getExpiration();
         } catch (Exception e) {
-            log.error("get expiration Time from jwt token error :", e);
+            log.error("get expiration Time from jwt token error : {}", e.getMessage());
             return null;
         }
     }
@@ -117,7 +117,7 @@ public class JwtBuilder implements Serializable {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
-            log.error("get claims from jwt token error :", e);
+            log.error("get claims from jwt token error : {}", e.getMessage());
             claims = null;
         }
         return claims;
@@ -180,7 +180,7 @@ public class JwtBuilder implements Serializable {
             claims.put(CLAIM_KEY_CREATED, expireTime.getTime());
             refreshedToken = build(claims, expireTime);
         } catch (Exception e) {
-            log.error("refreshedToken jwt token error :", e);
+            log.error("refreshedToken jwt token error : {}", e.getMessage());
             refreshedToken = null;
         }
         return new JwtToken(refreshedToken, expireTime.getTime());
