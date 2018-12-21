@@ -29,13 +29,17 @@ public class TokenInterceptor implements ClientHttpRequestInterceptor {
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         HttpHeaders headers = request.getHeaders();
+        try {
 
-        String token = Optional.ofNullable(AuthenticationUtils.getUser()).map(JwtAuth::getToken).orElse("");
-        if (log.isDebugEnabled()) {
-            log.debug("get  token =  {} ", token);
-        }
-        if (StringUtils.isNotBlank(token)) {
-            headers.add(jwtProperties.getHeader(), TOKEN_HEAD + " " + token);
+            String token = Optional.ofNullable(AuthenticationUtils.getUser()).map(JwtAuth::getToken).orElse("");
+            if (log.isDebugEnabled()) {
+                log.debug("get  token =  {} ", token);
+            }
+            if (StringUtils.isNotBlank(token)) {
+                headers.add(jwtProperties.getHeader(), TOKEN_HEAD + " " + token);
+            }
+        } catch (Exception e) {
+            log.warn("get token error ,message = {} ", e.getMessage());
         }
         return execution.execute(request, body);
     }

@@ -1,6 +1,7 @@
 package com.itxiaoer.commons.web;
 
 import com.itxiaoer.commons.core.page.Response;
+import com.itxiaoer.commons.core.page.ResponseCode;
 import com.itxiaoer.commons.jwt.JwtAuth;
 import com.itxiaoer.commons.jwt.JwtToken;
 import com.itxiaoer.commons.security.AuthenticationUtils;
@@ -41,6 +42,9 @@ public class TokenController {
         final Authentication authentication = authenticationManager.authenticate(upToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final JwtAuth userDetails = (JwtAuth) userDetailsService.loadUserByUsername(loginDto.getLoginName());
+        if (userDetails == null) {
+            return Response.failure("用户或密码错误", ResponseCode.NOT_FOUNT_CODE);
+        }
         return Response.ok(jwtTokenContext.build(userDetails));
 
     }
