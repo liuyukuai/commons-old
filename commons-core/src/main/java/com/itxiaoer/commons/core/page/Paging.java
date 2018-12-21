@@ -24,9 +24,9 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class Paging implements Transfer<String, String> {
 
-    private static final String DESC = "desc";
+    public static final String DESC = "desc";
 
-    private static final String ASC = "asc";
+    public static final String ASC = "asc";
     /**
      * 分页页数，默认值1，最小值为1
      */
@@ -57,6 +57,10 @@ public class Paging implements Transfer<String, String> {
         this.page = page;
         this.size = size;
         this.sort = sort;
+    }
+
+    public void setSort(String name, String direction) {
+        this.sort = name + "-" + direction;
     }
 
     public static Paging of() {
