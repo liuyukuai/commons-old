@@ -6,9 +6,13 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * @author : liuyk
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@SuppressWarnings("WeakerAccess")
 public class LoginDto {
     @NotBlank
     private String loginName;
