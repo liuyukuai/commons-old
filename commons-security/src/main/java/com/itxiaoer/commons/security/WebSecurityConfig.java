@@ -19,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.Resource;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author : liuyk
@@ -66,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-       return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -78,6 +80,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         String permitAll = webAuthProperties.getPermitAll();
+
+        Map<String, String> roleMap = webAuthProperties.getRoles();
+
+        if (roleMap != null && !roleMap.isEmpty()) {
+            Set<String> roles = roleMap.keySet();
+            for (String role : roles) {
+                String s = roleMap.get(role);
+                httpSecurity.authorizeRequests().antMatchers(StringUtils.isBlank(s) ? new String[]{} : s.split(",")).hasRole(role);
+            }
+        }
 
         httpSecurity
                 // 由于使用的是JWT，我们这里不需要csrf
