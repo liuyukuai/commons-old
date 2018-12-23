@@ -2,7 +2,9 @@ package com.itxiaoer.commons.core.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -23,6 +25,10 @@ public final class JsonUtil {
      * @return Optional
      */
     public static <T> Optional<T> toBean(String json, Class<T> clazz) {
+        if (StringUtils.isBlank(json)) {
+            log.warn("json is blank. ");
+            return Optional.empty();
+        }
         try {
             return Optional.of(OBJECT_MAPPER.readValue(json, clazz));
         } catch (Exception e) {
@@ -40,6 +46,10 @@ public final class JsonUtil {
      * @return string
      */
     public static <T> String toJson(T t) {
+        if (Objects.isNull(t)) {
+            log.warn("t is blank. ");
+            return "";
+        }
         try {
             return OBJECT_MAPPER.writeValueAsString(t);
         } catch (Exception e) {
