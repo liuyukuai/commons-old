@@ -18,7 +18,7 @@ import java.util.Optional;
 @Data
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Response<T> implements Serializable {
+public class Response<T> implements Responsive, Serializable {
 
     private static final long serialVersionUID = -3212041374480698935L;
 
