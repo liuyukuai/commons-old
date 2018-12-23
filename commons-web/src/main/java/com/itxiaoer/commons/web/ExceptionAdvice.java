@@ -5,7 +5,6 @@ import com.itxiaoer.commons.core.page.Response;
 import com.itxiaoer.commons.core.page.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindException;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
@@ -27,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -37,16 +36,15 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class ExceptionAdvice {
 
-    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
     @ResponseBody
     public Response handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
         log.error("不支持当前请求方法:{}", e);
-        return Response.failure(String.format("不支持%s请求方式：", new Object[]{request.getMethod()}));
+        return Response.failure(String.format("不支持%s请求方式：", request.getMethod()));
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public Response UsernameNotFoundException(UsernameNotFoundException e) {
+    public Response usernameNotFoundException(UsernameNotFoundException e) {
         log.error(e.getMessage(), e);
         return Response.failure("登录信息验证失败：" + e.getMessage(), ResponseCode.NO_PERMISSION);
     }
@@ -65,7 +63,6 @@ public class ExceptionAdvice {
         return Response.failure("参数解析失败：" + e.getMessage(), ResponseCode.PARAMETER_VALID_CODE);
     }
 
-    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     @ExceptionHandler({HttpMediaTypeNotSupportedException.class})
     @ResponseBody
     public Response handleHttpMediaTypeNotSupportedException(Exception e) {
@@ -98,9 +95,9 @@ public class ExceptionAdvice {
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public Response<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
-        ArrayList messages = new ArrayList(fieldErrors.size());
+        ArrayList<Map<String, Object>> messages = new ArrayList<>(fieldErrors.size());
         fieldErrors.forEach((item) -> {
-            HashMap jsonObject = new HashMap(fieldErrors.size());
+            Map<String, Object> jsonObject = new HashMap<>(fieldErrors.size());
             jsonObject.put(item.getField(), item.getDefaultMessage());
             messages.add(jsonObject);
         });

@@ -39,8 +39,7 @@ public class JwtTokenContext {
         return jwtBuilder.build(userDetails);
     }
 
-    public JwtToken refresh(HttpServletRequest request) {
-        String token = this.getTokenFromRequest(request);
+    public JwtToken refresh(String token) {
         JwtUserDetail jwtUserDetail = jwtUserDetailService.loadUserFromCache(jwtBuilder.getLoginNameFromToken(token), token);
         //判断是否过期
         if (!this.validate(token, jwtUserDetail)) {

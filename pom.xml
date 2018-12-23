@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.itxiaoer.commons</groupId>
@@ -29,7 +30,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring.boot.version>2.0.4.RELEASE</spring.boot.version>
         <commons.version>2.1.4-SNAPSHOT</commons.version>
-        <disv.version>1.0.0</disv.version>
+        <dis.version>1.0.3</dis.version>
         <neo4j.version>3.1.5-SNAPSHOT</neo4j.version>
         <java.version>1.8</java.version>
     </properties>
@@ -128,7 +129,7 @@
             <dependency>
                 <groupId>com.itxiaoer.dis</groupId>
                 <artifactId>dis-core</artifactId>
-                <version>${disv.version}</version>
+                <version>${dis.version}</version>
             </dependency>
 
             <dependency>
@@ -298,7 +299,7 @@
                 <version>2.5.3</version>
 
                 <configuration>
-                    <tagNameFormat>v@{commons.version}</tagNameFormat>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <goals>deploy</goals>
                 </configuration>

@@ -6,6 +6,8 @@ import com.itxiaoer.commons.jwt.JwtAuth;
 import com.itxiaoer.commons.jwt.JwtToken;
 import com.itxiaoer.commons.security.AuthenticationUtils;
 import com.itxiaoer.commons.security.JwtTokenContext;
+import com.itxiaoer.dis.commons.annotation.Dis;
+import com.itxiaoer.dis.commons.annotation.DisInclude;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,11 +51,12 @@ public class TokenController {
 
     }
 
+    @Dis(expireTime = 2000)
     @PutMapping("/tokens/refresh")
-    public Response<JwtToken> refresh(HttpServletRequest request) {
+    public Response<JwtToken> refresh(@DisInclude @RequestParam String token) {
         try {
             // 刷新token的值
-            return Response.ok(jwtTokenContext.refresh(request));
+            return Response.ok(jwtTokenContext.refresh(token));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Response.failure(" refresh token error. ");
