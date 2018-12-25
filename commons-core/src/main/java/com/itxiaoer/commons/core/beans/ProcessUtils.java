@@ -146,6 +146,6 @@ public final class ProcessUtils {
     }
 
     private static String generateKey(Class<?> class1, Class<?> class2) {
-        return String.join(class1.toString(), class2.toString());
+        return String.join(",", class1.toString(), class2.toString());
     }
 }
