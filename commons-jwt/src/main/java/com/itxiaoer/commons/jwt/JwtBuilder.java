@@ -211,7 +211,7 @@ public class JwtBuilder implements Serializable {
     public JwtAuth getJwtAuth(String token) {
         Claims claims = this.getClaimsFromToken(token);
         List<String> roles = (List<String>) claims.get(CLAIM_KEY_ROLE);
-        return new JwtAuth((String) claims.get(CLAIM_KEY_ID), (String) claims.get(CLAIM_KEY_LOGIN_NAME), (String) claims.get(CLAIM_KEY_MICK_NAME), Lists.iterable(roles) ? roles : Lists.newArrayList());
+        return new JwtAuth((String) claims.get(CLAIM_KEY_ID), (String) claims.get(CLAIM_KEY_LOGIN_NAME), (String) claims.get(CLAIM_KEY_MICK_NAME), (String) claims.get(CLAIM_KEY_AVATAR), Lists.iterable(roles) ? roles : Lists.newArrayList());
     }
 }
 
