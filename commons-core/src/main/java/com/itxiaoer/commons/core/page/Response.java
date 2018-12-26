@@ -1,11 +1,13 @@
 package com.itxiaoer.commons.core.page;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.itxiaoer.commons.core.date.LocalDateUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 
@@ -38,10 +40,14 @@ public class Response<T> implements Responsive, Serializable {
      */
     private String message;
 
+
+    private String now;
+
     /**
      * private
      */
     private Response() {
+        this.now = LocalDateUtil.format(LocalDateTime.now(),"yyyy-MM-dd hh:mm:ss");
     }
 
     /**
@@ -51,6 +57,7 @@ public class Response<T> implements Responsive, Serializable {
         this.success = true;
         this.data = data;
         this.code = ResponseCode.SUCCESS_CODE;
+        this.now = LocalDateUtil.format(LocalDateTime.now(),"yyyy-MM-dd hh:mm:ss");
     }
 
 
@@ -62,6 +69,7 @@ public class Response<T> implements Responsive, Serializable {
         this.message = msg;
         this.success = success;
         this.code = code;
+        this.now = LocalDateUtil.format(LocalDateTime.now(),"yyyy-MM-dd hh:mm:ss");
     }
 
     /**

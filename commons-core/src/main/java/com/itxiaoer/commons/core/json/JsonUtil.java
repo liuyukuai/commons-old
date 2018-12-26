@@ -1,5 +1,6 @@
 package com.itxiaoer.commons.core.json;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +31,7 @@ public final class JsonUtil {
             return Optional.empty();
         }
         try {
+            OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             return Optional.of(OBJECT_MAPPER.readValue(json, clazz));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
