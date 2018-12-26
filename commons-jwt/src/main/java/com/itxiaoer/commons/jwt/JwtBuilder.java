@@ -31,6 +31,7 @@ public class JwtBuilder implements Serializable {
     private static final String CLAIM_KEY_ID = "id";
     private static final String CLAIM_KEY_CREATED = "created";
     private static final String CLAIM_KEY_ROLE = "role";
+    private static final String CLAIM_KEY_AVATAR = "avatar";
     private static final String CLAIM_KEY_UPDATE_PASSWORD = "update";
 
     @Resource
@@ -148,6 +149,7 @@ public class JwtBuilder implements Serializable {
         claims.put(CLAIM_KEY_MICK_NAME, userDetails.getNickName());
         claims.put(CLAIM_KEY_CREATED, expireTime.getTime());
         claims.put(CLAIM_KEY_ROLE, userDetails.getRoles());
+        claims.put(CLAIM_KEY_AVATAR,userDetails.getAvatar());
         return new JwtToken(build(claims, expireTime), expireTime.getTime());
     }
 
