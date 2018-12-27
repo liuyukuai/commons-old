@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>commons</artifactId>
@@ -8,27 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>commons-orm</artifactId>
+    <artifactId>commons-security-wx-work</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.itxiaoer.commons</groupId>
-            <artifactId>commons-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.itxiaoer.commons</groupId>
-            <artifactId>commons-redis</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>joor-java-8</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
+            <artifactId>commons-security</artifactId>
         </dependency>
 
         <!--配置元数据-->

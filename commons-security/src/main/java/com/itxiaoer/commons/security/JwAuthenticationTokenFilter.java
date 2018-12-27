@@ -7,7 +7,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * @author : liuyk
  */
-public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
+public class JwAuthenticationTokenFilter extends AbstractAuthenticationTokenFilter {
 
     @Resource
     private JwtBuilder jwtBuilder;

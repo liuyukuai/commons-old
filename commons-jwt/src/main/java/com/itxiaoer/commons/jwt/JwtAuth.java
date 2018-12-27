@@ -21,6 +21,10 @@ public class JwtAuth {
     private boolean notExpired;
     private List<String> roles;
 
+    public JwtAuth() {
+    }
+
+
     public JwtAuth(
             String id,
             String loginName,
@@ -31,6 +35,7 @@ public class JwtAuth {
         this.nickName = nickName;
         this.roles = roles;
     }
+
     public JwtAuth(
             String id,
             String loginName,

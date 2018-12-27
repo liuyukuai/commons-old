@@ -13,9 +13,4 @@ public class JwtConfiguration {
     public JwtBuilder jwtTokenUtil() {
         return new JwtBuilder();
     }
-
-    @Bean
-    public JwtProperties jwtProperties() {
-        return new JwtProperties();
-    }
 }

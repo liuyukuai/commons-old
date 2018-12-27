@@ -13,29 +13,34 @@ import java.util.Map;
  */
 @Data
 @Configuration
+@ConfigurationProperties(prefix = "commons.security.access")
 @EnableConfigurationProperties
-@ConfigurationProperties(prefix = "spring.auth.access")
 public class WebAuthProperties {
     /**
-     * 不需要登录权限登录url
+     * 不需要登录权限的url
      */
-    @Value("${spring.auth.access.permitAll:''}")
+    @Value("${commons.security.access.permitAll:''}")
     private String permitAll;
 
-
+    /**
+     * 权限列表
+     */
     private Map<String, String> roles;
 
-    @Value("${spring.auth.access.allowedOrigin:*}")
+    /**
+     * 允许的 origin
+     */
+    @Value("${commons.security.access.allowedOrigin:*}")
     private String allowedOrigin;
 
 
-    @Value("${spring.auth.access.allowedMethod:GET,OPTIONS,POST,PUT,DELETE}")
+    @Value("${commons.security.access.allowedMethod:GET,OPTIONS,POST,PUT,DELETE}")
     private String allowedMethod;
 
 
-    @Value("${spring.auth.access.allowedHeader:*}")
+    @Value("${commons.security.access.allowedHeader:*}")
     private String allowedHeader;
 
-    @Value("${spring.auth.client.header:X-CLIENT-ID}")
+    @Value("${commons.security.client.header:X-CLIENT-ID}")
     private String clientId;
 }

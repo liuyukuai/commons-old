@@ -22,6 +22,7 @@
         <module>commons-samples</module>
         <module>commons-request</module>
         <module>commons-web</module>
+        <module>commons-security-wx-work</module>
     </modules>
 
     <properties>

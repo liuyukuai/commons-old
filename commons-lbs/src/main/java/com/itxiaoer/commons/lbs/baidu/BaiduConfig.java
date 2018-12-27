@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Data
 @Configuration
-@ConfigurationProperties("spring.lbs.baidu")
-@ConditionalOnProperty("spring.lbs.baidu.ak")
+@ConfigurationProperties("commons.lbs.baidu")
+@ConditionalOnProperty("commons.lbs.baidu.ak")
 public class BaiduConfig {
     private String ak;
 

@@ -9,7 +9,8 @@ import java.util.List;
  * @author : liuyk
  */
 @Data
-@SuppressWarnings("WeakerAccess")
+@Deprecated
+@SuppressWarnings("all")
 public class JwtRemoteAuth implements Serializable {
     private String id;
     private String loginName;

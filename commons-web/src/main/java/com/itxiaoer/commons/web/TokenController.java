@@ -6,6 +6,7 @@ import com.itxiaoer.commons.jwt.JwtAuth;
 import com.itxiaoer.commons.jwt.JwtToken;
 import com.itxiaoer.commons.security.AuthenticationUtils;
 import com.itxiaoer.commons.security.JwtTokenContext;
+import com.itxiaoer.commons.security.JwtUserDetail;
 import com.itxiaoer.dis.commons.annotation.Dis;
 import com.itxiaoer.dis.commons.annotation.DisInclude;
 import lombok.extern.slf4j.Slf4j;
@@ -76,7 +77,7 @@ public class TokenController {
     }
 
     @GetMapping("/profile")
-    public Response<JwtAuth> profile() {
+    public Response<JwtUserDetail> profile() {
         return Response.ok(AuthenticationUtils.getUser());
     }
 
