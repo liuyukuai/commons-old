@@ -56,7 +56,7 @@ public final class ProcessUtils {
      */
     public static <T, R> List<R> processList(Class<R> clazz, List<T> src, BiConsumer<R, T> biConsumer) {
         if (!Lists.iterable(src)) {
-            log.warn("the src argument must be null, return empty list. ");
+            log.warn("the src argument must be not null, return empty list. ");
             return Lists.newArrayList();
         }
         return src.stream().map(e -> process(clazz, e, biConsumer)).collect(Collectors.toList());
@@ -88,10 +88,10 @@ public final class ProcessUtils {
      */
     public static <T, R> R process(Class<R> clazz, T src, BiConsumer<R, T> biConsumer) {
         if (Objects.isNull(clazz)) {
-            throw new IllegalArgumentException("the clazz argument must be null");
+            throw new IllegalArgumentException("the clazz argument must be not null");
         }
         if (Objects.isNull(src)) {
-            log.warn("the src argument must be null, return null. ");
+            log.warn("the src argument must be not null, return null. ");
             return null;
         }
         try {
