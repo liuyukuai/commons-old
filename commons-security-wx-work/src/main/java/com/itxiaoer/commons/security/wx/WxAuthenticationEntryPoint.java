@@ -1,5 +1,6 @@
 package com.itxiaoer.commons.security.wx;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
@@ -16,6 +17,7 @@ import java.net.URLEncoder;
  *
  * @author : liuyk
  */
+@Slf4j
 public class WxAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
 
     private static final long serialVersionUID = -8970718410437077606L;

@@ -18,13 +18,13 @@ public class JwtConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(AbstractAuthenticationTokenFilter.class)
-    public JwAuthenticationTokenFilter jwtAbstractAuthenticationTokenFilter() {
+    public AbstractAuthenticationTokenFilter abstractAuthenticationTokenFilter() {
         return new JwAuthenticationTokenFilter();
     }
 
     @Bean
     @ConditionalOnMissingBean(AuthenticationEntryPoint.class)
-    public AuthenticationEntryPoint jwtAuthenticationEntryPoint() {
+    public AuthenticationEntryPoint authenticationEntryPoint() {
         return new JwtAuthenticationEntryPoint();
     }
 }

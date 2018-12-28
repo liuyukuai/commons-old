@@ -1,6 +1,7 @@
 package com.itxiaoer.commons.security;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.itxiaoer.commons.jwt.JwtAuth;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,6 +36,7 @@ public abstract class JwtUserDetail extends JwtAuth implements UserDetails {
     public abstract LocalDateTime getModifyPasswordTime();
 
     @Override
+    @JsonIgnore
     public String getPassword() {
         return null;
     }
@@ -46,26 +48,31 @@ public abstract class JwtUserDetail extends JwtAuth implements UserDetails {
 
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }

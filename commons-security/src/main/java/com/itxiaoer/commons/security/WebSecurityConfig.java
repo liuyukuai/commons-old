@@ -74,14 +74,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             }
         }
 
+        //
+
+
         httpSecurity
                 // 由于使用的是JWT，我们这里不需要csrf
                 .csrf().disable()
 
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 
-                // 基于token，所以不需要session
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                //ALWAYS 如果session不存在总是需要创建；
+                //NEVER 框架从不创建session，但如果已经存在，会使用该session ；
+                //IF_REQUIRED 仅当需要时，创建session(默认配置)；
+                // Spring Security不会创建session，或使用session；
+                // STATELESS 基于token，所以不需要session
+                .sessionManagement().sessionCreationPolicy(webAuthProperties.isEnableSession() ? SessionCreationPolicy.IF_REQUIRED : SessionCreationPolicy.STATELESS).and()
 
                 .authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll().and()
 
