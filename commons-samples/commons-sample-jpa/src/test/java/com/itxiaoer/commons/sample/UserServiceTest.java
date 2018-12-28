@@ -243,23 +243,6 @@ public class UserServiceTest {
     }
 
 
-    @Test
-    @Repeat(20)
-    public void t28_Browse() {
-        this.userService.browse("id", "token");
-        Assert.assertEquals(1L, this.userService.getBrowse("id").longValue());
-    }
-
-    @Test
-    public void t99_delete() {
-        for (int i = 1; i < 21; i++) {
-            this.userService.delete(String.valueOf(i));
-        }
-        // 删除缓存
-        this.userService.removeBrowse("id", "token");
-    }
-
-
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

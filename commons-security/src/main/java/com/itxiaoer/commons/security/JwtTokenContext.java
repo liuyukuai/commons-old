@@ -5,8 +5,8 @@ import com.itxiaoer.commons.jwt.JwtAuth;
 import com.itxiaoer.commons.jwt.JwtBuilder;
 import com.itxiaoer.commons.jwt.JwtProperties;
 import com.itxiaoer.commons.jwt.JwtToken;
+import com.itxiaoer.commons.security.cache.CacheService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.ValueOperations;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +30,7 @@ public class JwtTokenContext {
     private JwtProperties jwtProperties;
 
     @Resource
-    private ValueOperations<String, JwtToken> valueOperations;
+    private CacheService cacheService;
 
     @Resource
     JwtUserDetailService jwtUserDetailService;
@@ -48,10 +48,10 @@ public class JwtTokenContext {
         // 将原来旧的token加入黑名单
         String key = jwtProperties.getPrefix() + Md5Utils.digestMD5(token);
         Date expirationDateFromToken = jwtBuilder.getExpirationDateFromToken(token);
-        Boolean ifAbsent = valueOperations.setIfAbsent(key, new JwtToken(token, expirationDateFromToken.getTime(), Instant.now().toEpochMilli(), JwtToken.Operation.refresh.getValue()));
+        Boolean ifAbsent = cacheService.setIfAbsent(key, new JwtToken(token, expirationDateFromToken.getTime(), Instant.now().toEpochMilli(), JwtToken.Operation.refresh.getValue()));
         if (ifAbsent != null && ifAbsent) {
             //设置过期时间
-            valueOperations.getOperations().expireAt(key, expirationDateFromToken);
+            cacheService.expireAt(key, expirationDateFromToken);
         }
         // 刷新token的值
         return this.jwtBuilder.refreshToken(token);
@@ -75,9 +75,9 @@ public class JwtTokenContext {
         String token = this.getTokenFromRequest(request);
         String key = jwtProperties.getPrefix() + Md5Utils.digestMD5(token);
         Date expirationDateFromToken = jwtBuilder.getExpirationDateFromToken(token);
-        valueOperations.set(key, new JwtToken(token, expirationDateFromToken.getTime(), Instant.now().toEpochMilli(), JwtToken.Operation.destroy.getValue()));
+        cacheService.set(key, new JwtToken(token, expirationDateFromToken.getTime(), Instant.now().toEpochMilli(), JwtToken.Operation.destroy.getValue()));
         //设置过期时间
-        valueOperations.getOperations().expireAt(key, expirationDateFromToken);
+        cacheService.expireAt(key, expirationDateFromToken);
         return true;
     }
 
@@ -93,7 +93,7 @@ public class JwtTokenContext {
             return false;
         }
         String key = jwtProperties.getPrefix() + Md5Utils.digestMD5(token);
-        JwtToken jwtToken = valueOperations.get(key);
+        JwtToken jwtToken = cacheService.get(key);
         // 判断是否在黑名单中
         if (jwtToken != null) {
             //销毁状态

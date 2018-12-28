@@ -33,4 +33,11 @@ public class JwtProperties {
      */
     @Value("${commons.security.jwt.prefix:redis_token_prefix}")
     private String prefix;
+
+
+    /**
+     * jwt 过期token存储前缀
+     */
+    @Value("${commons.security.jwt.storeType:local}")
+    private String storeType;
 }

@@ -30,7 +30,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring.boot.version>2.0.4.RELEASE</spring.boot.version>
         <commons.version>2.1.10-SNAPSHOT</commons.version>
-        <dis.version>1.0.3</dis.version>
+        <dis.version>1.0.5</dis.version>
         <neo4j.version>3.1.5-SNAPSHOT</neo4j.version>
         <java.version>1.8</java.version>
     </properties>
