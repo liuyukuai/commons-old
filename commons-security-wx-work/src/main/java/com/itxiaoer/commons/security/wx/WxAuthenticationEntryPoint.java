@@ -1,15 +1,16 @@
 package com.itxiaoer.commons.security.wx;
 
+import com.itxiaoer.commons.security.JwtAuthenticationEntryPoint;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.URLEncoder;
+import java.util.Objects;
 
 
 /**
@@ -18,10 +19,9 @@ import java.net.URLEncoder;
  * @author : liuyk
  */
 @Slf4j
-public class WxAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
+public class WxAuthenticationEntryPoint extends JwtAuthenticationEntryPoint {
 
-    private static final long serialVersionUID = -8970718410437077606L;
-
+    private static final String XML_REQUESTED_WITH = "XMLHttpRequest";
 
     @Resource
     private WxProperties wxProperties;
@@ -30,11 +30,18 @@ public class WxAuthenticationEntryPoint implements AuthenticationEntryPoint, Ser
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
-        StringBuffer url = request.getRequestURL();
-        if (request.getQueryString() != null) {
-            url.append('?');
-            url.append(request.getQueryString());
+        // 判断请求方式
+        String header = request.getHeader("X-Requested-With");
+        if (Objects.equals(header, XML_REQUESTED_WITH)) {
+            super.commence(request, response, authException);
+        } else {
+            StringBuffer url = request.getRequestURL();
+            String queryString = request.getQueryString();
+            if (StringUtils.isNotBlank(queryString)) {
+                url.append('?');
+                url.append(queryString);
+            }
+            response.sendRedirect(String.format(WxConstants.SCAN_URL, wxProperties.getAppId(), wxProperties.getAgentId(), URLEncoder.encode(url.toString(), "UTF-8"), wxProperties.getState()));
         }
-        response.sendRedirect(String.format(WxConstants.SCAN_URL, wxProperties.getAppId(), wxProperties.getAgentId(), URLEncoder.encode(url.toString()), wxProperties.getState()));
     }
 }
