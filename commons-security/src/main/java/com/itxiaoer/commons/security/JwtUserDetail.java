@@ -42,6 +42,7 @@ public abstract class JwtUserDetail extends JwtAuth implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public String getUsername() {
         return this.getLoginName();
     }
