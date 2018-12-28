@@ -53,10 +53,10 @@ public class TokenController {
 
     @Dis(expireTime = 2000)
     @PutMapping("/tokens/refresh")
-    public Response<JwtToken> refresh(@DisInclude @RequestParam String token) {
+    public Response<JwtToken> refresh(@DisInclude @RequestParam JwtToken token) {
         try {
             // 刷新token的值
-            return Response.ok(jwtTokenContext.refresh(token));
+            return Response.ok(jwtTokenContext.refresh(token.getToken()));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Response.failure(" refresh token error. ");
