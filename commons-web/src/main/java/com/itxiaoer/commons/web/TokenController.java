@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.function.Function;
 
 /**
  * @author : liuyk
  */
 @Slf4j
 @RestController
+@SuppressWarnings("unused")
 public class TokenController {
 
 
@@ -39,7 +41,7 @@ public class TokenController {
 
 
     @PostMapping("/login")
-    public Response<JwtToken> login(@Valid @RequestBody LoginDto loginDto) {
+    public Response<JwtToken> doLogin(@Valid @RequestBody LoginDto loginDto) {
         UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(loginDto.getLoginName(), loginDto.getPassword());
         final Authentication authentication = authenticationManager.authenticate(upToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -80,4 +82,7 @@ public class TokenController {
         return Response.ok(AuthenticationUtils.getUser());
     }
 
+    public Function<JwtAuth, JwtAuth> profile(JwtAuth jwtAuth) {
+        return jwtAuth1 -> jwtAuth;
+    }
 }

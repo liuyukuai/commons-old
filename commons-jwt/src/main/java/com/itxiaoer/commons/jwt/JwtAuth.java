@@ -17,7 +17,6 @@ public class JwtAuth {
     private String avatar;
     @JsonIgnore
     private String token;
-    @JsonIgnore
     private boolean notExpired;
     private List<String> roles;
 
