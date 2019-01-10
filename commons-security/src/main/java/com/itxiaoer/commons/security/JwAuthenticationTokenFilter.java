@@ -2,6 +2,7 @@ package com.itxiaoer.commons.security;
 
 import com.itxiaoer.commons.jwt.JwtAuth;
 import com.itxiaoer.commons.jwt.JwtBuilder;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,6 +28,7 @@ public class JwAuthenticationTokenFilter extends AbstractAuthenticationTokenFilt
 
 
     @Resource
+    @Getter
     private JwtTokenContext jwtTokenContext;
 
     @Resource

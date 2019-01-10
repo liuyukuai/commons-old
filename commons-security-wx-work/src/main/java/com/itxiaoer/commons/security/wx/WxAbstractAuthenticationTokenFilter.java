@@ -48,7 +48,9 @@ public class WxAbstractAuthenticationTokenFilter extends JwAuthenticationTokenFi
         if (log.isDebugEnabled()) {
             log.debug("{} , code = {} , state = {} ", url, code, state);
         }
-        if (authentication == null && Objects.equals(wxProperties.getState(), state) && StringUtils.isNotBlank(code)) {
+        String authToken = getJwtTokenContext().getTokenFromRequest(request);
+
+        if (authentication == null && StringUtils.isBlank(authToken) && Objects.equals(wxProperties.getState(), state) && StringUtils.isNotBlank(code)) {
             JwtUserDetail jwtRemoteAuth = jwtUserDetailService.loadUserFromCache(code);
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(jwtRemoteAuth, null, jwtRemoteAuth.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
             usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
