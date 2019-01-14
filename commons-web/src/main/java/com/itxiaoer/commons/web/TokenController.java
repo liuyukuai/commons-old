@@ -26,7 +26,7 @@ import java.util.function.Function;
  */
 @Slf4j
 @RestController
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class TokenController {
 
 
@@ -55,10 +55,10 @@ public class TokenController {
 
     @Dis(expireTime = 2000)
     @PutMapping("/tokens/refresh")
-    public Response<JwtToken> refresh(@DisInclude @RequestBody JwtToken token) {
+    public Response<JwtToken> refreshToken(@DisInclude @RequestBody JwtToken token) {
         try {
             // 刷新token的值
-            return Response.ok(jwtTokenContext.refresh(token.getToken()));
+            return Response.ok(this.refresh().apply(jwtTokenContext.refresh(token.getToken())));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Response.failure(" refresh token error. ");
@@ -70,7 +70,7 @@ public class TokenController {
         try {
             SecurityContextHolder.getContext().setAuthentication(null);
             // 刷新token的值
-            return Response.ok(jwtTokenContext.destroy(request));
+            return Response.ok(this.destroy().apply(jwtTokenContext.destroy(request)));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Response.failure(" destroy token error. ");
@@ -78,11 +78,21 @@ public class TokenController {
     }
 
     @GetMapping("/profile")
-    public Response<JwtAuth> profile() {
-        return Response.ok(AuthenticationUtils.getUser());
+    public Response<JwtAuth> getProfile() {
+        return Response.ok(this.profile().apply(AuthenticationUtils.getUser()));
     }
 
-    public Function<JwtAuth, JwtAuth> profile(JwtAuth jwtAuth) {
-        return jwtAuth1 -> jwtAuth;
+    public Function<JwtAuth, JwtAuth> profile() {
+        return jwtAuth -> jwtAuth;
     }
+
+
+    public Function<JwtToken, JwtToken> refresh() {
+        return jwtToken -> jwtToken;
+    }
+
+    public Function<Boolean, Boolean> destroy() {
+        return success -> success;
+    }
+
 }
