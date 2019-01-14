@@ -21,6 +21,7 @@ public class JwtAuth {
     private List<String> roles;
 
     public JwtAuth() {
+        this.notExpired = true;
     }
 
 
@@ -33,6 +34,7 @@ public class JwtAuth {
         this.loginName = loginName;
         this.nickName = nickName;
         this.roles = roles;
+        this.notExpired = true;
     }
 
     public JwtAuth(
@@ -46,5 +48,6 @@ public class JwtAuth {
         this.nickName = nickName;
         this.roles = roles;
         this.avatar = avatar;
+        this.notExpired = true;
     }
 }
