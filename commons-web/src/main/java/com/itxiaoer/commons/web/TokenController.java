@@ -14,18 +14,21 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.function.Function;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * @author : liuyk
  */
 @Slf4j
-@RestController
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class TokenController {
 
@@ -58,7 +61,10 @@ public class TokenController {
     public Response<JwtToken> refreshToken(@DisInclude @RequestBody JwtToken token) {
         try {
             // 刷新token的值
-            return Response.ok(this.refresh().apply(jwtTokenContext.refresh(token.getToken())));
+            JwtToken refresh = jwtTokenContext.refresh(token.getToken());
+            JwtAuth user = AuthenticationUtils.getUser();
+            this.refresh().accept(refresh, user.getId());
+            return Response.ok(refresh);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Response.failure(" refresh token error. ");
@@ -68,9 +74,12 @@ public class TokenController {
     @PutMapping("/tokens/destroy")
     public Response<Boolean> destroy(HttpServletRequest request) {
         try {
+            String id = AuthenticationUtils.getUser().getId();
             SecurityContextHolder.getContext().setAuthentication(null);
+            Boolean destroy = jwtTokenContext.destroy(request);
+            this.destroy().accept(destroy, id);
             // 刷新token的值
-            return Response.ok(this.destroy().apply(jwtTokenContext.destroy(request)));
+            return Response.ok(destroy);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Response.failure(" destroy token error. ");
@@ -79,20 +88,25 @@ public class TokenController {
 
     @GetMapping("/profile")
     public Response<JwtAuth> getProfile() {
-        return Response.ok(this.profile().apply(AuthenticationUtils.getUser()));
+        JwtAuth user = AuthenticationUtils.getUser();
+        this.profile().accept(user);
+        return Response.ok(user);
     }
 
-    public Function<JwtAuth, JwtAuth> profile() {
-        return jwtAuth -> jwtAuth;
+    public Consumer<JwtAuth> profile() {
+        return jwtAuth -> {
+        };
     }
 
 
-    public Function<JwtToken, JwtToken> refresh() {
-        return jwtToken -> jwtToken;
+    public BiConsumer<JwtToken, String> refresh() {
+        return (jwtToken, id) -> {
+        };
     }
 
-    public Function<Boolean, Boolean> destroy() {
-        return success -> success;
+    public BiConsumer<Boolean, String> destroy() {
+        return (success, id) -> {
+        };
     }
 
 }
