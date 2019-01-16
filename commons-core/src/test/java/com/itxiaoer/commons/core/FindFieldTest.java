@@ -8,13 +8,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class FindFieldTest {
 
-    static class Parent {
+    private static class Parent {
         private String id;
     }
 
-    static class Sun extends Parent {
+    private static class Sun extends Parent {
         private String name;
     }
 
