@@ -1,10 +1,12 @@
 package com.itxiaoer.commons.web;
 
+import com.itxiaoer.commons.core.FieldRepetitionException;
 import com.itxiaoer.commons.core.json.JsonUtil;
 import com.itxiaoer.commons.core.page.Response;
 import com.itxiaoer.commons.core.page.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindException;
@@ -21,7 +23,6 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.xml.bind.ValidationException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,56 +40,56 @@ public class ExceptionAdvice {
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
     @ResponseBody
     public Response handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
-        log.error("不支持当前请求方法:{}", e);
-        return Response.failure(String.format("不支持%s请求方式：", request.getMethod()));
+        log.error("The request method {} is not supported ", request.getMethod(), e);
+        return Response.failure(String.format("The request method %s is not supported ", request.getMethod()), ResponseCode.PARAMETER_VALID_CODE);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public Response usernameNotFoundException(UsernameNotFoundException e) {
-        log.error(e.getMessage(), e);
-        return Response.failure("登录信息验证失败：" + e.getMessage(), ResponseCode.NO_PERMISSION);
+        log.error("User or password error: ", e);
+        return Response.failure(String.format("User or password error.  %s", e.getMessage()), ResponseCode.LOGIN_PASSWORD_ERROR_CODE);
     }
 
     @ExceptionHandler({ValidationException.class})
     @ResponseBody
     public Response handleValidationException(ValidationException e) {
-        log.error("参数验证失败:{}", e);
-        return Response.failure("参数验证失败：" + e.getMessage(), ResponseCode.PARAMETER_VALID_CODE);
+        log.error("Parameter validation failed : ", e);
+        return Response.failure(String.format("Parameter validation failed : %s", e.getMessage()), ResponseCode.PARAMETER_VALID_CODE);
     }
 
     @ExceptionHandler({HttpMessageNotReadableException.class})
     @ResponseBody
     public Response handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        log.error("参数解析失败{}", e);
-        return Response.failure("参数解析失败：" + e.getMessage(), ResponseCode.PARAMETER_VALID_CODE);
+        log.error("Parameter validation failed : ", e);
+        return Response.failure(String.format("Parameter validation failed : %s", e.getMessage()), ResponseCode.PARAMETER_VALID_CODE);
     }
 
     @ExceptionHandler({HttpMediaTypeNotSupportedException.class})
     @ResponseBody
     public Response handleHttpMediaTypeNotSupportedException(Exception e) {
-        log.error("不支持当前媒体类型", e);
-        return Response.failure("不支持当前媒体类型");
+        log.error("The current media type is not supported:  ", e);
+        return Response.failure("The request method %s is not supported ", ResponseCode.SERVER_ERROR_CODE);
     }
 
     @ExceptionHandler({MethodArgumentTypeMismatchException.class})
     @ResponseBody
     public Response handleHttpMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
-        log.error("参数解析失败{}", e);
-        return Response.failure("参数解析失败：" + e.getMessage(), ResponseCode.PARAMETER_VALID_CODE);
+        log.error("Parameter validation failed : ", e);
+        return Response.failure("Parameter validation failed : " + e.getMessage(), ResponseCode.PARAMETER_VALID_CODE);
     }
 
     @ExceptionHandler({NoHandlerFoundException.class})
     @ResponseBody
     public Response handleNoHandlerFoundException(NoHandlerFoundException e) {
-        log.error("资源不存在{}", e);
-        return Response.failure("资源不存在：" + e.getMessage());
+        log.error("Resources don't exist: ", e);
+        return Response.failure(String.format("Resources don't exist : %s", e.getMessage()), ResponseCode.NOT_FOUNT_CODE);
     }
 
     @ExceptionHandler({NullPointerException.class})
     @ResponseBody
     public Response handleNullPointerException(NullPointerException e) {
-        log.error("空指针异常:{}", e);
-        return Response.failure("空指针异常：" + e.getMessage());
+        log.error("null point exception : ", e);
+        return Response.failure(String.format("Resources don't exist : %s", e.getMessage()), ResponseCode.SERVER_ERROR_CODE);
     }
 
     @ResponseBody
@@ -101,8 +102,7 @@ public class ExceptionAdvice {
             jsonObject.put(item.getField(), item.getDefaultMessage());
             messages.add(jsonObject);
         });
-        log.error("参数异常: method={}", e.getParameter().getMethod());
-        log.error("参数异常: detail={} ", messages);
+        log.error("Parameter validation failed:  ", e);
         return Response.failure(JsonUtil.toJson(messages), ResponseCode.PARAMETER_VALID_CODE);
     }
 
@@ -110,34 +110,48 @@ public class ExceptionAdvice {
     @ResponseBody
     @ExceptionHandler({IllegalArgumentException.class})
     public Response<String> handleIllegalArgumentException(IllegalArgumentException e) {
-        return Response.failure("参数校验失败：" + e.getMessage(), ResponseCode.PARAMETER_VALID_CODE);
+        log.error("Parameter validation failed : ", e);
+        return Response.failure(String.format("Parameter validation failed : %s", e.getMessage()), ResponseCode.PARAMETER_VALID_CODE);
     }
 
-    @SuppressWarnings("unchecked")
-    @ResponseBody
-    @ExceptionHandler({UnsupportedEncodingException.class})
-    public Response<String> handleUnsupportedEncodingException(UnsupportedEncodingException e) {
-        return Response.failure("数据解码失败：" + e.getMessage());
-    }
 
     @SuppressWarnings("unchecked")
     @ResponseBody
     @ExceptionHandler({DuplicateKeyException.class})
     public Response<String> handleDuplicateKeyException(DuplicateKeyException e) {
-        return Response.failure("参数重复：" + e.getMessage(), ResponseCode.PARAMETER_VALID_CODE);
+        log.error("The primary key repeat : ", e);
+        return Response.failure(String.format("The primary key repeat : %s", e.getMessage()), ResponseCode.PARAMETER_VALID_CODE);
     }
 
     @SuppressWarnings("unchecked")
     @ResponseBody
     @ExceptionHandler({BindException.class})
     public Response<String> handleBindException(BindException e) {
-        return Response.failure("参数校验失败：" + e.getMessage(), ResponseCode.PARAMETER_VALID_CODE);
+        log.error("Parameter validation failed : ", e);
+        return Response.failure(String.format("Parameter validation failed : %s", e.getMessage()), ResponseCode.PARAMETER_VALID_CODE);
     }
 
     @SuppressWarnings("unchecked")
     @ResponseBody
     @ExceptionHandler({ConstraintViolationException.class})
     public Response<String> handleConstraintViolationException(ConstraintViolationException e) {
-        return Response.failure("参数校验失败：" + e.getMessage(), ResponseCode.PARAMETER_VALID_CODE);
+        log.error("Parameter validation failed : ", e);
+        return Response.failure(String.format("Parameter validation failed : %s", e.getMessage()), ResponseCode.PARAMETER_VALID_CODE);
+    }
+
+    @SuppressWarnings("unchecked")
+    @ResponseBody
+    @ExceptionHandler({EmptyResultDataAccessException.class})
+    public Response<String> handleEmptyResultDataAccessException(EmptyResultDataAccessException e) {
+        log.error("Parameter validation failed : ", e);
+        return Response.failure(String.format("Parameter validation failed : %s", e.getMessage()), ResponseCode.NOT_FOUNT_CODE);
+    }
+
+
+    @ExceptionHandler({FieldRepetitionException.class})
+    @ResponseBody
+    public Response handleFieldRepetitionException(FieldRepetitionException e) {
+        log.error("Parameter validation failed : ", e);
+        return Response.failure(String.format("Parameter validation failed : %s", e.getMessage()), ResponseCode.FIELD_REPETITION_CODE);
     }
 }

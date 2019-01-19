@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.itxiaoer.commons</groupId>
@@ -23,6 +24,8 @@
         <module>commons-request</module>
         <module>commons-web</module>
         <module>commons-security-wx-work</module>
+        <module>commons-poi</module>
+        <module>commons-test</module>
     </modules>
 
     <properties>
@@ -124,6 +127,19 @@
                 <groupId>com.itxiaoer.commons</groupId>
                 <artifactId>commons-web</artifactId>
                 <version>${commons.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.itxiaoer.commons</groupId>
+                <artifactId>commons-poi</artifactId>
+                <version>${commons.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.itxiaoer.commons</groupId>
+                <artifactId>commons-test</artifactId>
+                <version>${commons.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>

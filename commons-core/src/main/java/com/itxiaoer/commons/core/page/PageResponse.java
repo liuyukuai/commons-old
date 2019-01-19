@@ -1,5 +1,6 @@
 package com.itxiaoer.commons.core.page;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.itxiaoer.commons.core.util.Lists;
 import lombok.Data;
 
@@ -27,6 +28,11 @@ public class PageResponse<T> implements Serializable {
     private PageResponse(Long total, List<T> data) {
         this.total = total;
         this.data = Lists.empty(data);
+    }
+
+    @JsonIgnore
+    public boolean isEmpty() {
+        return this.total == 0;
     }
 
     public static <E> PageResponse<E> empty() {

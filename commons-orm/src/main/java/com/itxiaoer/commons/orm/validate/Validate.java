@@ -20,6 +20,16 @@ public interface Validate<E, ID> {
     }
 
     /**
+     * 校验方法
+     *
+     * @param id id
+     * @param e  校验的对象
+     */
+    default void valid(ID id, E e) {
+
+    }
+
+    /**
      * 校验id方法
      *
      * @param id id

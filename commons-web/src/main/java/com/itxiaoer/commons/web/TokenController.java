@@ -50,7 +50,7 @@ public class TokenController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final JwtAuth userDetails = (JwtAuth) userDetailsService.loadUserByUsername(loginDto.getLoginName());
         if (userDetails == null) {
-            return Response.failure("用户或密码错误", ResponseCode.NOT_FOUNT_CODE);
+            return Response.failure("User or password error", ResponseCode.LOGIN_PASSWORD_ERROR_CODE);
         }
         return Response.ok(jwtTokenContext.build(userDetails));
 

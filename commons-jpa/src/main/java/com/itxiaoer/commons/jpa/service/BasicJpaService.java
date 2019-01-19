@@ -62,6 +62,7 @@ public abstract class BasicJpaService<DTO, E, ID extends Serializable, JPA exten
     @Transactional(rollbackFor = Exception.class)
     public E update(ID id, DTO dto, BiConsumer<E, DTO> consumer) {
         this.idValid(id);
+        this.valid(id, dto);
         Optional<E> optional = this.repository.findById(id);
         E e = optional.orElseThrow(NotFoundException::new);
         this.process(e, dto, consumer);
@@ -73,6 +74,7 @@ public abstract class BasicJpaService<DTO, E, ID extends Serializable, JPA exten
     @Transactional(rollbackFor = Exception.class)
     public E update(ID id, Consumer<E> consumer) {
         this.idValid(id);
+
         Optional<E> optional = this.repository.findById(id);
         E e = optional.orElseThrow(NotFoundException::new);
         consumer.accept(e);

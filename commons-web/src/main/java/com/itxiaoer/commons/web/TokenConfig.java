@@ -15,4 +15,9 @@ public class TokenConfig {
     public TokenController tokenController() {
         return new TokenController();
     }
+
+    @Bean
+    public ExceptionAdvice exceptionAdvice() {
+        return new ExceptionAdvice();
+    }
 }
