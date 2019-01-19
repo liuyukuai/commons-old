@@ -20,4 +20,9 @@ public class WxProperties {
     @Value("${commons.security.wx.state:wx}")
     private String state;
     private String agentId;
+    /**
+     * 是否跳转页面
+     */
+    @Value("${commons.security.wx.redirect:true}")
+    private boolean redirect;
 }

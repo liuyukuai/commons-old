@@ -32,7 +32,7 @@ public class WxAuthenticationEntryPoint extends JwtAuthenticationEntryPoint {
                          AuthenticationException authException) throws IOException {
         // 判断请求方式
         String header = request.getHeader("X-Requested-With");
-        if (Objects.equals(header, XML_REQUESTED_WITH)) {
+        if (!wxProperties.isRedirect() || Objects.equals(header, XML_REQUESTED_WITH)) {
             super.commence(request, response, authException);
         } else {
             StringBuffer url = request.getRequestURL();
