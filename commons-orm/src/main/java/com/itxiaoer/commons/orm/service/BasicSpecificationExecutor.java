@@ -42,4 +42,15 @@ public interface BasicSpecificationExecutor<E> {
      */
     <T extends Paging> PageResponse<E> listByWhere(T query);
 
+
+    /**
+     * 查询所有的对象
+     *
+     * @param query  多条件查询对象
+     * @param <T>    query
+     * @param paging paging
+     * @return list
+     */
+    <T> PageResponse<E> listByWhere(T query, Paging paging);
+
 }

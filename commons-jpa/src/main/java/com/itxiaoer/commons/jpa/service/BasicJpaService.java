@@ -152,6 +152,12 @@ public abstract class BasicJpaService<DTO, E, ID extends Serializable, JPA exten
         return PagingUtils.of(page);
     }
 
+    @Override
+    public <T> PageResponse<E> listByWhere(T query, Paging paging) {
+        Page<E> page = this.repository.findAll(Restrictions.of().where(query).get(), PagingUtils.of(paging));
+        return PagingUtils.of(page);
+    }
+
 
     @Override
     public Class<E> getGenericClass(int index) {
