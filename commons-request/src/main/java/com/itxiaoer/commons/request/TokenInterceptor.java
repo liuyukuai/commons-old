@@ -39,7 +39,7 @@ public class TokenInterceptor implements ClientHttpRequestInterceptor {
                 headers.add(jwtProperties.getHeader(), TOKEN_HEAD + " " + token);
             }
         } catch (Exception e) {
-            log.warn("get token error ,message = {} ", e.getMessage());
+            log.warn("get token error , message = {} ", e.getMessage());
         }
         return execution.execute(request, body);
     }

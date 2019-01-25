@@ -36,7 +36,7 @@ public class JwtProperties {
 
 
     /**
-     * jwt 过期token存储前缀
+     * jwt 过期token存储方式,local 或者redis
      */
     @Value("${commons.security.jwt.storeType:local}")
     private String storeType;
