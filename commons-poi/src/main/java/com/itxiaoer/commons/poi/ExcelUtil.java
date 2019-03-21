@@ -8,6 +8,8 @@ import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,6 +62,21 @@ public final class ExcelUtil {
             log.error(e.getMessage(), e);
         }
     }
+
+
+    public static List<String> getRow(Row row) {
+        if (!Objects.isNull(row)) {
+            int cellCount = row.getPhysicalNumberOfCells();
+            List<String> rows = new ArrayList<>(cellCount);
+            for (int c = 0; c < cellCount; c++) {
+                Cell cell = row.getCell(c);
+                rows.add(getValue(cell));
+            }
+            return rows;
+        }
+        return Collections.emptyList();
+    }
+
 
     public static String getValue(Cell cell) {
         CellType cellType = cell.getCellType();
