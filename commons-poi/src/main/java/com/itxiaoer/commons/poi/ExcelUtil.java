@@ -4,14 +4,12 @@ import com.itxiaoer.commons.core.util.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.formula.functions.T;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author : liuyk
@@ -59,5 +57,29 @@ public final class ExcelUtil {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    public static String getValue(Cell cell) {
+        CellType cellType = cell.getCellType();
+        if (Objects.equals(cellType, CellType.NUMERIC)) {
+            return String.valueOf(cell.getNumericCellValue());
+        }
+
+        if (Objects.equals(cellType, CellType.STRING)) {
+            return cell.getStringCellValue();
+        }
+
+        if (Objects.equals(cellType, CellType.FORMULA)) {
+            return String.valueOf(cell.getCellFormula());
+        }
+
+        if (Objects.equals(cellType, CellType.ERROR)) {
+            return String.valueOf(cell.getErrorCellValue());
+        }
+
+        if (Objects.equals(cellType, CellType.BOOLEAN)) {
+            return String.valueOf(cell.getBooleanCellValue());
+        }
+        return "";
     }
 }
