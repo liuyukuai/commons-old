@@ -50,7 +50,6 @@ public final class ExcelUtil {
                 Sheet sheet = workbook.getSheetAt(i);
                 //获取总行数
                 int rowCount = sheet.getPhysicalNumberOfRows();
-                //遍历第一行，因为第一行，也就是索引为0的那一行是标题，所以这里从第二行也就是索引为1的行开始遍历
                 for (int r = 0; r < rowCount; r++) {
                     Row row = sheet.getRow(r);
                     consumer.accept(sheetCount, sheet.getSheetName(), r, row);
