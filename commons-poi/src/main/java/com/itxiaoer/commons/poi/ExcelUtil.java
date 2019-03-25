@@ -53,9 +53,7 @@ public final class ExcelUtil {
                 //遍历第一行，因为第一行，也就是索引为0的那一行是标题，所以这里从第二行也就是索引为1的行开始遍历
                 for (int r = 1; r < rowCount; r++) {
                     Row row = sheet.getRow(r);
-                    if (!Objects.isNull(row)) {
-                        consumer.accept(sheetCount, sheet.getSheetName(), r, row);
-                    }
+                    consumer.accept(sheetCount, sheet.getSheetName(), r, row);
                 }
             }
         } catch (Exception e) {
