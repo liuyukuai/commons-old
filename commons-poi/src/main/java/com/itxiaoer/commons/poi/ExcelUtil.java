@@ -76,6 +76,10 @@ public final class ExcelUtil {
 
 
     public static String getValue(Cell cell) {
+        if (cell == null) {
+            return "";
+        }
+
         CellType cellType = cell.getCellType();
         if (Objects.equals(cellType, CellType.NUMERIC)) {
             return String.valueOf(cell.getNumericCellValue());
