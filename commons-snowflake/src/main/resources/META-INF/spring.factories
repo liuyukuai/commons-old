@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.itxiaoer.commons.snowflake.IdWorkerProperties,\
+com.itxiaoer.commons.snowflake.IdWorkerConfiguration

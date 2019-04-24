@@ -25,6 +25,7 @@
         <module>commons-security-wx-work</module>
         <module>commons-poi</module>
         <module>commons-test</module>
+        <module>commons-snowflake</module>
     </modules>
 
     <properties>
