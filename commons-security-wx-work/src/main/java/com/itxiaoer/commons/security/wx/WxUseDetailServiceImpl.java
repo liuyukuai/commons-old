@@ -155,13 +155,22 @@ public class WxUseDetailServiceImpl implements JwtUserDetailService {
 
             String userJson = response.getBody();
             Optional<Map> optional = JsonUtil.toBean(userJson, Map.class);
-            String userId = optional.map(item -> item.get("UserId")).orElseGet(() -> {
-                log.warn("load wx user error , {} ", response);
-                return "";
-            }).toString();
 
-            if (StringUtils.isNotBlank(userId)) {
-                return getUserById(userId);
+            if (optional.isPresent()) {
+                Map map = optional.get();
+
+                String userId = (String) map.get("UserId");
+
+                if (StringUtils.isNotBlank(userId)) {
+                    return getUserById(userId);
+                }
+                // 如果用户加载失败
+                String errCode = (String) map.get("errcode");
+
+                // 如果是token过期
+                if (Objects.equals(errCode, "42001")) {
+                    this.tokenCache.cleanUp();
+                }
             }
         }
         return null;

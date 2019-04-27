@@ -52,12 +52,14 @@ public class WxAbstractAuthenticationTokenFilter extends JwAuthenticationTokenFi
 
         if (authentication == null && StringUtils.isBlank(authToken) && Objects.equals(wxProperties.getState(), state) && StringUtils.isNotBlank(code)) {
             JwtUserDetail jwtRemoteAuth = jwtUserDetailService.loadUserFromCache(code);
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(jwtRemoteAuth, null, jwtRemoteAuth.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
-            usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            if (logger.isDebugEnabled()) {
-                logger.debug("authenticated user " + jwtRemoteAuth.getLoginName() + " success , setting security context");
+            if (jwtRemoteAuth != null) {
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(jwtRemoteAuth, null, jwtRemoteAuth.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                if (logger.isDebugEnabled()) {
+                    logger.debug("authenticated user " + jwtRemoteAuth.getLoginName() + " success , setting security context");
+                }
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             chain.doFilter(request, response);
         } else {
             super.doFilterInternal(request, response, chain);
