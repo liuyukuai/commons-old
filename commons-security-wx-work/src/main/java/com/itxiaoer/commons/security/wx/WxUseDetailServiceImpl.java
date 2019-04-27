@@ -165,10 +165,10 @@ public class WxUseDetailServiceImpl implements JwtUserDetailService {
                     return getUserById(userId);
                 }
                 // 如果用户加载失败
-                String errCode = (String) map.get("errcode");
+                Integer errCode = (Integer) map.get("errcode");
 
                 // 如果是token过期
-                if (Objects.equals(errCode, "42001")) {
+                if (Objects.equals(errCode, 42001)) {
                     this.tokenCache.cleanUp();
                 }
             }
