@@ -3,6 +3,7 @@ package com.itxiaoer.commons.jwt;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,8 @@ import java.util.List;
  */
 @Data
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class JwtAuth {
+public class JwtAuth implements Serializable {
+    private static final long serialVersionUID = -6764469906496100993L;
     private String id;
     private String loginName;
     private String nickName;
