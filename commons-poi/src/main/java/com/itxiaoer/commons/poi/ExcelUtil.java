@@ -49,7 +49,7 @@ public final class ExcelUtil {
             for (int i = 0; i < sheetCount; i++) {
                 Sheet sheet = workbook.getSheetAt(i);
                 //获取总行数
-                int rowCount = sheet.getPhysicalNumberOfRows();
+                int rowCount = sheet.getLastRowNum();
                 for (int r = 0; r < rowCount; r++) {
                     Row row = sheet.getRow(r);
                     consumer.accept(sheetCount, sheet.getSheetName(), r, row);
