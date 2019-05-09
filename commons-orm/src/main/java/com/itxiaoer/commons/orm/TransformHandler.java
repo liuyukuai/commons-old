@@ -6,6 +6,7 @@ import com.itxiaoer.commons.core.Transform;
 import com.itxiaoer.commons.core.util.Lists;
 import org.joor.Reflect;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -28,31 +29,30 @@ public final class TransformHandler {
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> TransformHandler.transform(queryable, e.getKey(), e.getValue())));
     }
 
+
     private static <T> Transformation transform(T queryable, String name, Reflect value) {
-        try {
-            Class<?> clazz = queryable.getClass();
-            Transform transform = clazz.getDeclaredField(name).getAnnotation(Transform.class);
-            // 如果属性没有配置注解，采用默认
-            if (transform == null) {
-                return new Transformation(new String[]{name}, value.get(), Operator.EQ, Operator.OR, true);
-            }
-            // 是否有配置属性，没有取字段名称
-            String[] names = Lists.iterable(transform.value()) ? transform.value() : new String[]{name};
-            return new Transformation(names, value.get(), transform.operator(), transform.relation(), transform.ignoreEmpty());
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
+        Class<?> clazz = queryable.getClass();
+        Transform transform = getDeclaredField(clazz, name).getAnnotation(Transform.class);
+        // 如果属性没有配置注解，采用默认
+        if (transform == null) {
+            return new Transformation(new String[]{name}, value.get(), Operator.EQ, Operator.OR, true);
         }
+        // 是否有配置属性，没有取字段名称
+        String[] names = Lists.iterable(transform.value()) ? transform.value() : new String[]{name};
+        return new Transformation(names, value.get(), transform.operator(), transform.relation(), transform.ignoreEmpty());
     }
 
-
     private static <T> boolean exclude(Class<T> clazz, String name) {
+        Exclude annotation = getDeclaredField(clazz, name).getAnnotation(Exclude.class);
+        return annotation != null;
+    }
+
+    private static <T> Field getDeclaredField(Class<T> clazz, String name) {
         try {
-            Exclude annotation = clazz.getDeclaredField(name).getAnnotation(Exclude.class);
-            return annotation != null;
+            return clazz.getDeclaredField(name);
         } catch (NoSuchFieldException e) {
-            // ignore
-            return true;
+            // 查询父类是否有
+            return getDeclaredField(clazz.getSuperclass(), name);
         }
     }
 }
