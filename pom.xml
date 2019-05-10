@@ -137,6 +137,12 @@
 
             <dependency>
                 <groupId>com.itxiaoer.commons</groupId>
+                <artifactId>commons-snowflake</artifactId>
+                <version>${commons.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.itxiaoer.commons</groupId>
                 <artifactId>commons-test</artifactId>
                 <version>${commons.version}</version>
                 <scope>test</scope>
