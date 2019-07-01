@@ -18,6 +18,8 @@ import java.util.Objects;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class Criteria<T> implements Specification<T> {
 
+    private static final long serialVersionUID = -8131656158505941172L;
+
     private List<Criterion> criteria = new ArrayList<>();
 
     @Override
