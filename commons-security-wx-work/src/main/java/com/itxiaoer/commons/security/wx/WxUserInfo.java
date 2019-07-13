@@ -17,6 +17,7 @@ import java.util.List;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class WxUserInfo extends JwtUserDetail {
 
+    private static final long serialVersionUID = 2073919952024602670L;
 
     private String modifyPasswordTime;
 

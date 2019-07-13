@@ -10,6 +10,7 @@
 
     <modules>
         <module>commons-sample-jpa</module>
+        <module>commons-sample-web</module>
         <!--<module>commons-sample-neo4j</module>-->
     </modules>
 

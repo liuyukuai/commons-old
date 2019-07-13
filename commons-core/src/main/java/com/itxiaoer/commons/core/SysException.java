@@ -7,6 +7,8 @@ import lombok.Getter;
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class SysException extends RuntimeException {
+    
+    private static final long serialVersionUID = 6034307555798502244L;
     /**
      * 异常错误编码
      */

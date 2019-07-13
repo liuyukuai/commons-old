@@ -28,7 +28,7 @@ public class WebAuthProperties {
     /**
      * 权限列表
      */
-    private Map<String, String> roles;
+    private Map<String, Object> roles;
 
     /**
      * 允许的 origin
