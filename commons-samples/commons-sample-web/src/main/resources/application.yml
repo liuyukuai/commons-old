@@ -1,0 +1,26 @@
+commons:
+  security:
+    jwt:
+      secret: mySecret
+    access:
+      enable-session: true
+      permit-all: /login,/token
+      roles:
+        USER:
+          GET: /users/*
+          POST: /users/*
+          DELETE: /users/*
+          PUT: /users/*
+        OTHER:
+          GET: /others/**
+          POST: /samples
+          DELETE: /others/*
+          PUT: /others/*
+        ADMIN:
+          GET: /**
+#        HAPPY: /**/*
+logging:
+  level:
+    org.springframework: debug
+
+        
