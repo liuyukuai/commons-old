@@ -20,5 +20,10 @@
             <groupId>com.itxiaoer.commons</groupId>
             <artifactId>commons-security</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.itxiaoer.commons</groupId>
+            <artifactId>commons-upload</artifactId>
+        </dependency>
     </dependencies>
 </project>

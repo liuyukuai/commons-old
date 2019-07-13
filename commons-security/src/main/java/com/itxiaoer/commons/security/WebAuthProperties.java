@@ -17,7 +17,7 @@ import java.util.Map;
 @EnableConfigurationProperties
 public class WebAuthProperties {
 
-    @Value("${commons.security.enableSession:false}")
+    @Value("${commons.security.access.enableSession:false}")
     private boolean enableSession;
     /**
      * 不需要登录权限的url

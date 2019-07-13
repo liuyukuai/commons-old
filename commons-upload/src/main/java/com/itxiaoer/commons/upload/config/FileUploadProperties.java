@@ -1,4 +1,4 @@
-package com.itxiaoer.commons.snowflake;
+package com.itxiaoer.commons.upload.config;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,25 +7,24 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration;
 
 /**
- * id生成器配置
- *
  * @author : liuyk
  */
 @Data
 @Configuration
+@ConfigurationProperties(prefix = "commons.upload")
 @EnableConfigurationProperties
-@ConfigurationProperties(prefix = "commons.snowflake")
-public class IdWorkerProperties {
-    /**
-     * 当前机器编号，默认0-31
-     */
-    @Value("${commons.snowflake.workerId:0}")
-    private long workerId;
+public class FileUploadProperties {
 
     /**
-     * 当前数据中心编号,默认0-31
+     * 文件存放目录
      */
-    @Value("${commons.snowflake.dataCenterId:0}")
-    private long dataCenterId;
+    @Value("${commons.upload.dir}")
+    private String dir;
+
+    /**
+     * id生成规则
+     */
+    @Value("${commons.upload.idRule:uuid}")
+    private String idRule;
 
 }

@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.itxiaoer.commons.upload.config.FileUploadProperties,\
+com.itxiaoer.commons.upload.config.FileUploadConfig

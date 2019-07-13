@@ -18,7 +18,11 @@ commons:
           PUT: /others/*
         ADMIN:
           GET: /**
+  upload:
+    dir: /Users/liuyukuai/Documents/dir
+    id-rule: md5
 #        HAPPY: /**/*
+
 logging:
   level:
     org.springframework: debug

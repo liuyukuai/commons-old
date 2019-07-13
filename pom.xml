@@ -27,6 +27,7 @@
         <module>commons-poi</module>
         <module>commons-test</module>
         <module>commons-snowflake</module>
+        <module>commons-upload</module>
     </modules>
 
     <properties>
@@ -139,6 +140,12 @@
             <dependency>
                 <groupId>com.itxiaoer.commons</groupId>
                 <artifactId>commons-snowflake</artifactId>
+                <version>${commons.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.itxiaoer.commons</groupId>
+                <artifactId>commons-upload</artifactId>
                 <version>${commons.version}</version>
             </dependency>
 
