@@ -9,6 +9,7 @@ import com.itxiaoer.commons.security.JwtUserDetailService;
 import com.itxiaoer.commons.security.wx.commons.Token;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class WxUseDetailServiceImpl implements JwtUserDetailService {
+public class WxUseDetailServiceImpl implements JwtUserDetailService, InitializingBean {
 
     @Resource
     @Qualifier("wxRestTemplate")
@@ -94,24 +95,9 @@ public class WxUseDetailServiceImpl implements JwtUserDetailService {
                         });
                         WxUserInfo process = process(jsonObject);
                         if (!Objects.isNull(process)) {
-                            // 获取tag属性
-                            ResponseEntity<String> tagResponse = restTemplate.getForEntity(String.format(WxConstants.WX_USER_TAG_URL, getToken()), String.class);
-                            if (log.isDebugEnabled()) {
-                                log.debug("load wx user tags response = {} ", tagResponse);
-                            }
 
-                            WxTagInfo tagMap = JsonUtil.toBean(body, WxTagInfo.class).orElseGet(() -> {
-                                log.warn("load wx user error , {} ", tagResponse);
-                                return new WxTagInfo();
-                            });
-                            List<WxTagInfo.Tag> tagList = tagMap.getTaglist();
-
-                            if (Lists.iterable(tagList)) {
-                                List<String> ids = tagList.stream().map(WxTagInfo.Tag::getTagid).collect(Collectors.toList());
-                                process.setTags(ids);
-                            } else {
-                                process.setTags(Collections.emptyList());
-                            }
+                            Set<String> tagsList = this.getTagsById(process.getId());
+                            process.setTags(tagsList);
                         }
                         return process;
                     }
@@ -119,6 +105,23 @@ public class WxUseDetailServiceImpl implements JwtUserDetailService {
                 }
                 throw new RuntimeException("load user  error, response is null. ");
             });
+
+
+    private LoadingCache<String, Map<String, Set<String>>> userTagMapCache
+            = Caffeine.newBuilder()
+            //设置写缓存后1个小时过期
+            .expireAfterWrite(1, TimeUnit.HOURS)
+            //设置缓存容器的初始容量为10
+            .initialCapacity(1)
+            //设置缓存最大容量为100，超过100之后就会按照LRU最近虽少使用算法来移除缓存项
+            .maximumSize(10)
+            //设置要统计缓存的命中率
+            .recordStats()
+            //设置缓存的移除通知
+            .removalListener((k, v, cause) ->
+                    log.info(k + " {} = {}  was removed, cause is {} ", k, v, cause)
+            )
+            .build((key) -> this.userTagMap());
 
 
     public String getToken() {
@@ -136,6 +139,77 @@ public class WxUseDetailServiceImpl implements JwtUserDetailService {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return null;
+        }
+    }
+
+    public Set<String> getTagsById(String userId) {
+        try {
+            Map<String, Set<String>> stringSetMap = userTagMapCache.get("tagMap");
+            return stringSetMap != null ? stringSetMap.get(userId) : Collections.emptySet();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Collections.emptySet();
+        }
+    }
+
+    /**
+     * 获取用户和tag的关系列表
+     *
+     * @return map
+     */
+    private Map<String, Set<String>> userTagMap() {
+        Map<String, Set<String>> userTagMap = new HashMap<>();
+
+        List<String> tags = this.getTags();
+        for (String tag : tags) {
+            ResponseEntity<String> tagResponse = restTemplate.getForEntity(String.format(WxConstants.WX_USER_OF_TAG_URL, getToken(), tag), String.class);
+            if (log.isDebugEnabled()) {
+                log.debug("load wx tags userList response = {} ", tagResponse);
+            }
+            WxUserListOfTag tagMap = JsonUtil.toBean(tagResponse.getBody(), WxUserListOfTag.class).orElseGet(() -> {
+                log.warn("load wx user error , {} ", tagResponse);
+                return new WxUserListOfTag();
+            });
+
+            List<WxUserListOfTag.WxUser> userList = tagMap.getUserlist();
+            if (Lists.iterable(userList)) {
+                List<String> ids = userList.stream().map(WxUserListOfTag.WxUser::getUserid).collect(Collectors.toList());
+                for (String id : ids) {
+                    Set<String> strings = userTagMap.get(id);
+                    if (strings == null) {
+                        strings = new HashSet<>();
+                    }
+                    strings.add(tag);
+                    userTagMap.put(id, strings);
+                }
+            }
+        }
+        return userTagMap;
+    }
+
+
+    @SuppressWarnings("all")
+    private List<String> getTags() {
+        try {
+            // 获取tag属性
+            ResponseEntity<String> tagResponse = restTemplate.getForEntity(String.format(WxConstants.WX_USER_TAG_URL, getToken()), String.class);
+            if (log.isDebugEnabled()) {
+                log.debug("load wx user tags response = {} ", tagResponse);
+            }
+
+            WxTagInfo tagMap = JsonUtil.toBean(tagResponse.getBody(), WxTagInfo.class).orElseGet(() -> {
+                log.warn("load wx user error , {} ", tagResponse);
+                return new WxTagInfo();
+            });
+            List<WxTagInfo.Tag> tagList = tagMap.getTaglist();
+
+            if (Lists.iterable(tagList)) {
+                return tagList.stream().map(WxTagInfo.Tag::getTagid).collect(Collectors.toList());
+            }
+            return Collections.emptyList();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Collections.emptyList();
         }
     }
 
@@ -200,5 +274,10 @@ public class WxUseDetailServiceImpl implements JwtUserDetailService {
     @Override
     public JwtUserDetail loadUserByUsername(String userId, String token) throws UsernameNotFoundException {
         return this.getUserById(userId);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        this.getTagsById("1");
     }
 }

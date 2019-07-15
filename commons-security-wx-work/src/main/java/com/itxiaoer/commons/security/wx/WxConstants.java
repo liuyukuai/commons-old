@@ -15,4 +15,6 @@ public class WxConstants {
     public static final String WX_USER_BY_CODE_URL = "https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=%s&code=%s";
 
     public static final String WX_USER_TAG_URL = "https://qyapi.weixin.qq.com/cgi-bin/tag/list?access_token=%s";
+
+    public static final String WX_USER_OF_TAG_URL = "https://qyapi.weixin.qq.com/cgi-bin/tag/get?access_token=%s&tagid=%s";
 }

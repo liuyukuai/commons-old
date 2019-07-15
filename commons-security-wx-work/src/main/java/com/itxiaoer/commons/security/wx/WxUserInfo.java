@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author : liuyk
@@ -23,7 +24,7 @@ public class WxUserInfo extends JwtUserDetail {
 
     private List<String> departments;
 
-    private List<String> tags;
+    private Set<String> tags;
 
     public WxUserInfo() {
     }
