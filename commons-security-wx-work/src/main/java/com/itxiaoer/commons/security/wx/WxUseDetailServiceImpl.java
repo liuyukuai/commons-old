@@ -92,7 +92,28 @@ public class WxUseDetailServiceImpl implements JwtUserDetailService {
                             log.warn("load wx user error , {} ", response);
                             return Collections.emptyMap();
                         });
-                        return process(jsonObject);
+                        WxUserInfo process = process(jsonObject);
+                        if (!Objects.isNull(process)) {
+                            // 获取tag属性
+                            ResponseEntity<String> tagResponse = restTemplate.getForEntity(String.format(WxConstants.WX_USER_TAG_URL, getToken()), String.class);
+                            if (log.isDebugEnabled()) {
+                                log.debug("load wx user tags response = {} ", tagResponse);
+                            }
+
+                            WxTagInfo tagMap = JsonUtil.toBean(body, WxTagInfo.class).orElseGet(() -> {
+                                log.warn("load wx user error , {} ", tagResponse);
+                                return new WxTagInfo();
+                            });
+                            List<WxTagInfo.Tag> tagList = tagMap.getTaglist();
+
+                            if (Lists.iterable(tagList)) {
+                                List<String> ids = tagList.stream().map(WxTagInfo.Tag::getTagid).collect(Collectors.toList());
+                                process.setTags(ids);
+                            } else {
+                                process.setTags(Collections.emptyList());
+                            }
+                        }
+                        return process;
                     }
                     log.error("load wx user error ,{} ", response);
                 }

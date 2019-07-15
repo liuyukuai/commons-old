@@ -23,6 +23,8 @@ public class WxUserInfo extends JwtUserDetail {
 
     private List<String> departments;
 
+    private List<String> tags;
+
     public WxUserInfo() {
     }
 
