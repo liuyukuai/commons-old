@@ -277,7 +277,7 @@ public class WxUseDetailServiceImpl implements JwtUserDetailService, Initializin
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         this.getTagsById("1");
     }
 }
