@@ -17,4 +17,13 @@ public class WxConstants {
     public static final String WX_USER_TAG_URL = "https://qyapi.weixin.qq.com/cgi-bin/tag/list?access_token=%s";
 
     public static final String WX_USER_OF_TAG_URL = "https://qyapi.weixin.qq.com/cgi-bin/tag/get?access_token=%s&tagid=%s";
+
+    public static final String WX_USER_CREATE_URL = "https://qyapi.weixin.qq.com/cgi-bin/user/create?access_token=%s";
+
+    public static final String WX_USER_UPDATE_URL = "https://qyapi.weixin.qq.com/cgi-bin/user/update?access_token=%s";
+
+    public static final String WX_USER_UPLOAD_MEDIA_URL = "https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token=%s&type=file HTTP/1.1";
+
+    public static final String WX_USER_CREATE_TAG_URL = "https://qyapi.weixin.qq.com/cgi-bin/tag/addtagusers?access_token=%s";
+
 }
