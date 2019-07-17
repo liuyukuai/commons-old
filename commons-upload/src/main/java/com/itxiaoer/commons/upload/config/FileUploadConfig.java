@@ -5,6 +5,7 @@ import com.itxiaoer.commons.upload.rule.FileIdRule;
 import com.itxiaoer.commons.upload.rule.IdRule;
 import com.itxiaoer.commons.upload.rule.Md5IdRule;
 import com.itxiaoer.commons.upload.rule.UUIDRule;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class FileUploadConfig {
-    
+
     @Bean
     public FileUploadProperties fileUploadProperties() {
         return new FileUploadProperties();
@@ -42,6 +43,7 @@ public class FileUploadConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean(FileUploadController.class)
     public FileUploadController fileUploadController() {
         return new FileUploadController();
     }

@@ -3,7 +3,6 @@ package com.itxiaoer.commons.security.wx;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.itxiaoer.commons.core.json.JsonUtil;
-import com.itxiaoer.commons.core.page.Response;
 import com.itxiaoer.commons.core.util.Lists;
 import com.itxiaoer.commons.security.JwtUserDetail;
 import com.itxiaoer.commons.security.JwtUserDetailService;
@@ -12,17 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-import java.io.File;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -284,89 +277,7 @@ public class WxUseDetailServiceImpl implements JwtUserDetailService, Initializin
     }
 
 
-    /**
-     * 创建微信用户
-     *
-     * @param wxCreateUser wxCreateUser
-     * @param file         file
-     * @return Response
-     */
-    @SuppressWarnings("ALL")
-    public Response<String> createUser(WxCreateUser wxCreateUser, File file) {
-        if (!Objects.isNull(file)) {
-            //先上传图片
-            FileSystemResource resource = new FileSystemResource(file);
-            MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
-            param.add("file", resource);
-            HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(param);
-            ResponseEntity<String> responseEntity = restTemplate.exchange(String.format(WxConstants.WX_USER_UPLOAD_MEDIA_URL, getToken()), HttpMethod.POST, httpEntity, String.class);
-            if (log.isDebugEnabled()) {
-                log.debug(" upload wx avatar response = [{}]", responseEntity.getBody());
-            }
-            String body = responseEntity.getBody();
-            Map jsonObject = JsonUtil.toBean(body, Map.class).orElseGet(() -> {
-                log.warn("upload wx avatar response = [{}]", responseEntity);
-                return Collections.emptyMap();
-            });
-
-            String mediaId = (String) jsonObject.get("media_id");
-            if (StringUtils.isNotBlank(mediaId)) {
-                wxCreateUser.setAvatar_mediaid(mediaId);
-            }
-        }
-        ResponseEntity<String> response = restTemplate.postForEntity(String.format(WxConstants.WX_USER_CREATE_URL, getToken()), wxCreateUser, String.class);
-        if (log.isDebugEnabled()) {
-            log.debug(" create wx user response = [{}]", response.getBody());
-        }
-        Map<String, Object> params = new HashMap<>();
-        params.put("tagid", wxCreateUser.getTagid());
-        params.put("userlist", Collections.singletonList(wxCreateUser.getUserid()));
-        // 创建tag
-        response = restTemplate.postForEntity(String.format(WxConstants.WX_USER_CREATE_TAG_URL, getToken()), params, String.class);
-        if (log.isDebugEnabled()) {
-            log.debug(" create wx user tag response = [{}]", response.getBody());
-        }
-        return Response.ok();
-    }
-
-
-    /**
-     * 创建微信用户
-     *
-     * @param wxCreateUser wxCreateUser
-     * @param file         file
-     * @return Response
-     */
-    @SuppressWarnings("ALL")
-    public Response<String> updateUser(WxCreateUser wxCreateUser, File file) {
-        if (!Objects.isNull(file)) {
-            //先上传图片
-            FileSystemResource resource = new FileSystemResource(file);
-            MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
-            param.add("file", resource);
-            HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(param);
-            ResponseEntity<String> responseEntity = restTemplate.exchange(String.format(WxConstants.WX_USER_UPLOAD_MEDIA_URL, getToken()), HttpMethod.POST, httpEntity, String.class);
-            if (log.isDebugEnabled()) {
-                log.debug(" upload wx avatar response = [{}]", responseEntity.getBody());
-            }
-            String body = responseEntity.getBody();
-            Map jsonObject = JsonUtil.toBean(body, Map.class).orElseGet(() -> {
-                log.warn("upload wx avatar response = [{}]", responseEntity);
-                return Collections.emptyMap();
-            });
-
-            String mediaId = (String) jsonObject.get("media_id");
-            if (StringUtils.isNotBlank(mediaId)) {
-                wxCreateUser.setAvatar_mediaid(mediaId);
-            }
-        }
-        ResponseEntity<String> response = restTemplate.postForEntity(String.format(WxConstants.WX_USER_UPDATE_URL, getToken()), wxCreateUser, String.class);
-        if (log.isDebugEnabled()) {
-            log.debug(" create wx user response = [{}]", response.getBody());
-        }
-        return Response.ok();
-    }
-
+ 
 
     @Override
     public void afterPropertiesSet() {

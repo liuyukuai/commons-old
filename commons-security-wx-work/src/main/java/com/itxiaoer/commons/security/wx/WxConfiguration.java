@@ -27,6 +27,11 @@ public class WxConfiguration {
     }
 
     @Bean
+    public WxAddressService wxAddressService() {
+        return new WxAddressService();
+    }
+
+    @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return new WxAuthenticationEntryPoint();
     }
