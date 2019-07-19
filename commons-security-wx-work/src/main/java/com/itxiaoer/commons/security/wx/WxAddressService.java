@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -83,14 +84,15 @@ public class WxAddressService {
     }
 
     @SuppressWarnings("unused")
-    public Response<String> uploadAvatar(File file) {
+    public Response<String> uploadAvatar(File file) throws IOException {
         if (!Objects.isNull(file)) {
             //先上传图片
             FileSystemResource resource = new FileSystemResource(file);
             MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
             param.add("file", resource);
+            param.add("Content-Type", "multipart/form-data");
             HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(param);
-            ResponseEntity<String> responseEntity = restTemplate.exchange(String.format(WxConstants.WX_USER_UPLOAD_MEDIA_URL, getToken()), HttpMethod.POST, httpEntity, String.class);
+            ResponseEntity<String> responseEntity = restTemplate.exchange(String.format(WxConstants.WX_USER_UPLOAD_MEDIA_URL, getToken(), "image"), HttpMethod.POST, httpEntity, String.class);
             if (log.isDebugEnabled()) {
                 log.debug(" upload wx avatar response = [{}]", responseEntity.getBody());
             }

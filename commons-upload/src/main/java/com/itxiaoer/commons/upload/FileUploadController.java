@@ -49,7 +49,9 @@ public class FileUploadController {
         }
         try {
             String id = idRule.id(file);
-            file.transferTo(new File(filePath, id));
+            File dest = new File(filePath, id);
+            file.transferTo(dest);
+            this.function().apply(dest);
             return Response.ok(id);
         } catch (IOException e) {
             e.printStackTrace();

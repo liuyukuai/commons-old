@@ -22,7 +22,7 @@ public class WxConstants {
 
     public static final String WX_USER_UPDATE_URL = "https://qyapi.weixin.qq.com/cgi-bin/user/update?access_token=%s";
 
-    public static final String WX_USER_UPLOAD_MEDIA_URL = "https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token=%s&type=file HTTP/1.1";
+    public static final String WX_USER_UPLOAD_MEDIA_URL = "https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token=%s&type=%s HTTP/1.1";
 
     public static final String WX_USER_CREATE_TAG_URL = "https://qyapi.weixin.qq.com/cgi-bin/tag/addtagusers?access_token=%s";
 
