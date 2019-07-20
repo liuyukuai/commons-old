@@ -69,7 +69,7 @@ public class WxUseDetailServiceImpl implements JwtUserDetailService, Initializin
     private LoadingCache<String, WxUserInfo> userInfoCache
             = Caffeine.newBuilder()
             //设置写缓存后1个小时过期
-            .expireAfterWrite(1, TimeUnit.HOURS)
+            .expireAfterWrite(30, TimeUnit.MINUTES)
             //设置缓存容器的初始容量为10
             .initialCapacity(1)
             //设置缓存最大容量为100，超过100之后就会按照LRU最近虽少使用算法来移除缓存项
@@ -110,7 +110,7 @@ public class WxUseDetailServiceImpl implements JwtUserDetailService, Initializin
     private LoadingCache<String, Map<String, Set<String>>> userTagMapCache
             = Caffeine.newBuilder()
             //设置写缓存后1个小时过期
-            .expireAfterWrite(1, TimeUnit.HOURS)
+            .expireAfterWrite(30, TimeUnit.MINUTES)
             //设置缓存容器的初始容量为10
             .initialCapacity(1)
             //设置缓存最大容量为100，超过100之后就会按照LRU最近虽少使用算法来移除缓存项
@@ -276,8 +276,6 @@ public class WxUseDetailServiceImpl implements JwtUserDetailService, Initializin
         return this.getUserById(userId);
     }
 
-
- 
 
     @Override
     public void afterPropertiesSet() {
