@@ -20,9 +20,8 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.Resource;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * @author : liuyk
@@ -66,31 +65,48 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         String permitAll = webAuthProperties.getPermitAll();
 
+        Map<RoleData, Set<String>> roleDataListMap = new LinkedHashMap<>();
+
         Map<String, Object> roleMap = webAuthProperties.getRoles();
 
         if (roleMap != null && !roleMap.isEmpty()) {
             Set<Map.Entry<String, Object>> entries = roleMap.entrySet();
             for (Map.Entry<String, Object> entry : entries) {
-
+                // key  role
                 String role = entry.getKey();
                 Object value = entry.getValue();
                 if (value instanceof String) {
                     String urls = String.class.cast(value);
-                    httpSecurity.authorizeRequests().antMatchers(StringUtils.isBlank(urls) ? new String[]{} : urls.split(",")).hasRole(role);
+
+                    Stream.of(StringUtils.split(urls, ",")).forEach(e ->
+                            roleDataListMap.computeIfAbsent(new RoleData(e, ""), i -> new HashSet<>()).add(role)
+                    );
                 }
                 if (value instanceof LinkedHashMap) {
                     // GET -> URL
                     LinkedHashMap<String, String> urlMap = (LinkedHashMap<String, String>) value;
-                    Set<Map.Entry<String, String>> urlEnties = urlMap.entrySet();
-                    for (Map.Entry<String, String> urlRole : urlEnties) {
+                    Set<Map.Entry<String, String>> urlEntries = urlMap.entrySet();
+                    for (Map.Entry<String, String> urlRole : urlEntries) {
                         String urls = urlRole.getValue();
                         String method = urlRole.getKey();
-                        httpSecurity.authorizeRequests().antMatchers(HttpMethod.valueOf(method), StringUtils.isBlank(urls) ? new String[]{} : urls.split(",")).hasRole(role);
+                        Stream.of(StringUtils.split(urls, ",")).forEach(e ->
+                                roleDataListMap.computeIfAbsent(new RoleData(e, method), i -> new HashSet<>()).add(role)
+                        );
                     }
                 }
             }
         }
-        //
+
+        Set<Map.Entry<RoleData, Set<String>>> entries = roleDataListMap.entrySet();
+        for (Map.Entry<RoleData, Set<String>> entry : entries) {
+            RoleData key = entry.getKey();
+            if (StringUtils.isBlank(key.getMethod())) {
+                httpSecurity.authorizeRequests().antMatchers(key.getUrl()).hasAnyRole(entry.getValue().toArray(new String[]{}));
+            } else {
+                httpSecurity.authorizeRequests().antMatchers(HttpMethod.valueOf(key.getMethod()), key.getUrl()).hasAnyRole(entry.getValue().toArray(new String[]{}));
+            }
+        }
+
         httpSecurity
                 // 由于使用的是JWT，我们这里不需要csrf
                 .csrf().disable()
