@@ -40,7 +40,7 @@ public class FileUploadController {
         if (file.isEmpty()) {
             return Response.failure("文件不存在");
         }
-        File filePath = new File(fileUploadProperties.getDir());
+        File filePath = new File(fileUploadProperties.getDir()+"/static");
         if (!filePath.exists()) {
             boolean mkdirs = filePath.mkdirs();
             if (!mkdirs) {
