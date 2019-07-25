@@ -19,10 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  * @author : liuyk
  */
 @Slf4j
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings("ALL")
 public class WxAddressService {
 
     @Resource
@@ -115,20 +112,32 @@ public class WxAddressService {
      * @return Response
      */
     @SuppressWarnings("ALL")
-    public Response<String> createUser(WxCreateUser wxCreateUser) {
-        ResponseEntity<String> response = restTemplate.postForEntity(String.format(WxConstants.WX_USER_CREATE_URL, getToken()), wxCreateUser, String.class);
+    public WxResponse createUser(WxCreateUser wxCreateUser) {
+        ResponseEntity<WxResponse> response = restTemplate.postForEntity(String.format(WxConstants.WX_USER_CREATE_URL, getToken()), wxCreateUser, WxResponse.class);
         if (log.isDebugEnabled()) {
             log.debug(" create wx user response = [{}]", response.getBody());
         }
-        Map<String, Object> params = new HashMap<>(20);
-        params.put("tagid", wxCreateUser.getTagid());
-        params.put("userlist", Collections.singletonList(wxCreateUser.getUserid()));
+        return response.getBody();
+    }
+
+    /**
+     * 给用户添加tag
+     *
+     * @param tagId   tagId
+     * @param userIds userIds
+     * @return WxResponse
+     */
+    @SuppressWarnings("ALL")
+    public WxResponse createUserTag(String tagId, List<String> userIds) {
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("tagid", tagId);
+        params.put("userlist", userIds);
         // 创建tag
-        response = restTemplate.postForEntity(String.format(WxConstants.WX_USER_CREATE_TAG_URL, getToken()), params, String.class);
+        ResponseEntity<WxResponse> response = restTemplate.postForEntity(String.format(WxConstants.WX_USER_CREATE_TAG_URL, getToken()), params, WxResponse.class);
         if (log.isDebugEnabled()) {
             log.debug(" create wx user tag response = [{}]", response.getBody());
         }
-        return Response.ok();
+        return response.getBody();
     }
 
 
@@ -139,12 +148,12 @@ public class WxAddressService {
      * @return Response
      */
     @SuppressWarnings("ALL")
-    public Response<String> updateUser(WxCreateUser wxCreateUser) {
-        ResponseEntity<String> response = restTemplate.postForEntity(String.format(WxConstants.WX_USER_UPDATE_URL, getToken()), wxCreateUser, String.class);
+    public WxResponse updateUser(WxCreateUser wxCreateUser) {
+        ResponseEntity<WxResponse> response = restTemplate.postForEntity(String.format(WxConstants.WX_USER_UPDATE_URL, getToken()), wxCreateUser, WxResponse.class);
         if (log.isDebugEnabled()) {
             log.debug(" create wx user response = [{}]", response.getBody());
         }
-        return Response.ok();
+        return response.getBody();
     }
 
     /**
@@ -165,14 +174,14 @@ public class WxAddressService {
      * 通过id删除用户
      *
      * @param id id
-     * @return
+     * @return WxResponse
      */
-    public Response<String> deleteUserById(String id) {
-        ResponseEntity<String> response = restTemplate.getForEntity(String.format(WxConstants.WX_USER_DELETE_URL, getToken(), id), String.class);
+    public WxResponse deleteUserById(String id) {
+        ResponseEntity<WxResponse> response = restTemplate.getForEntity(String.format(WxConstants.WX_USER_DELETE_URL, getToken(), id), WxResponse.class);
         if (log.isDebugEnabled()) {
             log.debug(" create wx user response = [{}]", response.getBody());
         }
-        return Response.ok(response.getBody());
+        return response.getBody();
     }
 
 
