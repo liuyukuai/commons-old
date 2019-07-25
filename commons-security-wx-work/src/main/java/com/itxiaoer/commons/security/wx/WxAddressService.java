@@ -147,4 +147,33 @@ public class WxAddressService {
         return Response.ok();
     }
 
+    /**
+     * 通过id查询用户
+     *
+     * @param id id
+     * @return user
+     */
+    public Response<WxCreateUser> getUserById(String id) {
+        ResponseEntity<WxCreateUser> response = restTemplate.getForEntity(String.format(WxConstants.WX_USER_QUERY_URL, getToken(), id), WxCreateUser.class);
+        if (log.isDebugEnabled()) {
+            log.debug(" create wx user response = [{}]", response.getBody());
+        }
+        return Response.ok(response.getBody());
+    }
+
+    /**
+     * 通过id删除用户
+     *
+     * @param id id
+     * @return
+     */
+    public Response<String> deleteUserById(String id) {
+        ResponseEntity<String> response = restTemplate.getForEntity(String.format(WxConstants.WX_USER_DELETE_URL, getToken(), id), String.class);
+        if (log.isDebugEnabled()) {
+            log.debug(" create wx user response = [{}]", response.getBody());
+        }
+        return Response.ok(response.getBody());
+    }
+
+
 }

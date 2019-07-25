@@ -26,4 +26,9 @@ public class WxConstants {
 
     public static final String WX_USER_CREATE_TAG_URL = "https://qyapi.weixin.qq.com/cgi-bin/tag/addtagusers?access_token=%s";
 
+    public static final String WX_USER_DELETE_URL = "https://qyapi.weixin.qq.com/cgi-bin/user/delete?access_token=%s&userid=%s";
+
+    public static final String WX_USER_QUERY_URL = "https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=%s&userid=%s";
+
+
 }
