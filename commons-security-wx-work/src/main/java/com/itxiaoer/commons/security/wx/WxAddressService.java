@@ -142,6 +142,27 @@ public class WxAddressService {
 
 
     /**
+     * 给用户添加tag
+     *
+     * @param tagId   tagId
+     * @param userIds userIds
+     * @return WxResponse
+     */
+    @SuppressWarnings("ALL")
+    public WxResponse deleteUserTag(String tagId, List<String> userIds) {
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("tagid", tagId);
+        params.put("userlist", userIds);
+        // 创建tag
+        ResponseEntity<WxResponse> response = restTemplate.postForEntity(String.format(WxConstants.WX_USER_DELETE_TAG_URL, getToken()), params, WxResponse.class);
+        if (log.isDebugEnabled()) {
+            log.debug(" create wx user tag response = [{}]", response.getBody());
+        }
+        return response.getBody();
+    }
+
+
+    /**
      * 创建微信用户
      *
      * @param wxCreateUser wxCreateUser
