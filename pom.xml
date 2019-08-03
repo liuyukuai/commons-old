@@ -29,6 +29,7 @@
         <module>commons-snowflake</module>
         <module>commons-upload</module>
         <module>commons-scanner</module>
+        <module>commons-zip</module>
     </modules>
 
     <properties>
