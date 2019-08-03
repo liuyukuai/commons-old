@@ -85,10 +85,14 @@ public final class ExcelUtil {
         }
 
         if (Objects.equals(cellType, CellType.STRING)) {
-            if (HSSFDateUtil.isCellDateFormatted(cell)) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
-                Date date = HSSFDateUtil.getJavaDate(cell.getNumericCellValue());
-                return sdf.format(date);
+            try {
+                if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+                    Date date = HSSFDateUtil.getJavaDate(cell.getNumericCellValue());
+                    return sdf.format(date);
+                }
+            } catch (Exception e) {
+                // ignore
             }
             return cell.getStringCellValue();
         }
