@@ -3,15 +3,14 @@ package com.itxiaoer.commons.poi;
 import com.itxiaoer.commons.core.util.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author : liuyk
@@ -86,6 +85,11 @@ public final class ExcelUtil {
         }
 
         if (Objects.equals(cellType, CellType.STRING)) {
+            if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+                Date date = HSSFDateUtil.getJavaDate(cell.getNumericCellValue());
+                return sdf.format(date);
+            }
             return cell.getStringCellValue();
         }
 
@@ -100,6 +104,8 @@ public final class ExcelUtil {
         if (Objects.equals(cellType, CellType.BOOLEAN)) {
             return String.valueOf(cell.getBooleanCellValue());
         }
+
+
         return "";
     }
 }
