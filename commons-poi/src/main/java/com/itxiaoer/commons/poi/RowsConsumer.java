@@ -1,6 +1,7 @@
 package com.itxiaoer.commons.poi;
 
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 
 /**
  * @author : liuyk
@@ -12,10 +13,10 @@ public interface RowsConsumer {
      * accept
      *
      * @param sheetIndex sheet index
-     * @param sheetName  sheetName
+     * @param sheet      sheet
      * @param rowIndex   rowIndex
      * @param row        row
      */
-    void accept(int sheetIndex, String sheetName, int rowIndex, Row row);
+    void accept(int sheetIndex, Sheet sheet, int rowIndex, Row row);
 
 }
