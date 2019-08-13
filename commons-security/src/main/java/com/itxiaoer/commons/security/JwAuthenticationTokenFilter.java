@@ -1,6 +1,5 @@
 package com.itxiaoer.commons.security;
 
-import com.itxiaoer.commons.jwt.JwtAuth;
 import com.itxiaoer.commons.jwt.JwtBuilder;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -43,7 +42,7 @@ public class JwAuthenticationTokenFilter extends AbstractAuthenticationTokenFilt
 
         String authToken = jwtTokenContext.getTokenFromRequest(request);
         if (StringUtils.isNotBlank(authToken)) {
-            String loginName = jwtBuilder.getLoginNameFromToken(authToken);
+            String loginName = jwtBuilder.get(authToken, "loginName");
 
             if (logger.isDebugEnabled()) {
                 logger.info("checking authentication " + loginName);
@@ -52,9 +51,8 @@ public class JwAuthenticationTokenFilter extends AbstractAuthenticationTokenFilt
             if (StringUtils.isNotBlank(loginName) && SecurityContextHolder.getContext().getAuthentication() == null) {
                 JwtUserDetail jwtRemoteAuth = jwtUserDetailService.loadUserFromCache(loginName, authToken);
                 if (jwtTokenContext.validate(authToken, jwtRemoteAuth)) {
-                    JwtAuth jwtAuth = jwtBuilder.getJwtAuth(authToken);
-                    jwtAuth.setToken(authToken);
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(jwtAuth, null, jwtAuth.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+                    jwtRemoteAuth.setToken(authToken);
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(jwtRemoteAuth, null, jwtRemoteAuth.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(
                             request));
                     if (logger.isDebugEnabled()) {

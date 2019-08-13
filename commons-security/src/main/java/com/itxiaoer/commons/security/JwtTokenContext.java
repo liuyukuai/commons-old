@@ -36,25 +36,25 @@ public class JwtTokenContext {
     JwtUserDetailService jwtUserDetailService;
 
     public JwtToken build(JwtAuth userDetails) {
-        return jwtBuilder.build(userDetails);
+        return jwtBuilder.encode(userDetails);
     }
 
     public JwtToken refresh(String token) {
-        JwtUserDetail jwtUserDetail = jwtUserDetailService.loadUserFromCache(jwtBuilder.getLoginNameFromToken(token), token);
+        JwtUserDetail jwtUserDetail = jwtUserDetailService.loadUserFromCache(jwtBuilder.get(token, "loginName"), token);
         //判断是否过期
         if (!this.validate(token, jwtUserDetail)) {
             throw new IllegalArgumentException("token is expired.");
         }
         // 将原来旧的token加入黑名单
         String key = jwtProperties.getPrefix() + Md5Utils.digestMD5(token);
-        Date expirationDateFromToken = jwtBuilder.getExpirationDateFromToken(token);
+        Date expirationDateFromToken = jwtBuilder.expirationDate(token);
         Boolean ifAbsent = cacheService.setIfAbsent(key, new JwtToken(token, expirationDateFromToken.getTime(), Instant.now().toEpochMilli(), JwtToken.Operation.refresh.getValue()));
         if (ifAbsent != null && ifAbsent) {
             //设置过期时间
             cacheService.expireAt(key, expirationDateFromToken);
         }
         // 刷新token的值
-        return this.jwtBuilder.refreshToken(token);
+        return this.jwtBuilder.refresh(token);
     }
 
 
@@ -74,7 +74,7 @@ public class JwtTokenContext {
     public Boolean destroy(HttpServletRequest request) {
         String token = this.getTokenFromRequest(request);
         String key = jwtProperties.getPrefix() + Md5Utils.digestMD5(token);
-        Date expirationDateFromToken = jwtBuilder.getExpirationDateFromToken(token);
+        Date expirationDateFromToken = jwtBuilder.expirationDate(token);
         cacheService.set(key, new JwtToken(token, expirationDateFromToken.getTime(), Instant.now().toEpochMilli(), JwtToken.Operation.destroy.getValue()));
         //设置过期时间
         cacheService.expireAt(key, expirationDateFromToken);
@@ -107,8 +107,8 @@ public class JwtTokenContext {
                 return Instant.now().toEpochMilli() - refreshTime < 1000 * 60 * 2;
             }
         }
-        final Instant created = jwtBuilder.getCreatedTimeFromToken(token);
-        final String loginName = jwtBuilder.getLoginNameFromToken(token);
+        final Instant created = jwtBuilder.createdTime(token);
+        final String loginName = jwtBuilder.get(token, "loginName");
         LocalDateTime modifyPasswordTime = userDetails.getModifyPasswordTime();
         if (Objects.isNull(modifyPasswordTime)) {
             return Objects.equals(loginName, userDetails.getUsername())
