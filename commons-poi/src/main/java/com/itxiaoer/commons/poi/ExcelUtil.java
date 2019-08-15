@@ -134,8 +134,6 @@ public final class ExcelUtil {
     }
 
     public static List<CellRangeAddress> getCombineCellList(Sheet sheet) {
-        int numMergedRegions = sheet.getNumMergedRegions();
-        System.out.println(numMergedRegions);
         return sheet.getMergedRegions();
     }
 
