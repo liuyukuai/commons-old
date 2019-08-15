@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -39,7 +40,8 @@ public class JwtBuilder implements Serializable {
      */
     public Instant createdTime(String token) {
         final Claims claims = claims(token);
-        return Instant.ofEpochMilli((Long) claims.get(CLAIM_KEY_CREATED));
+        Object o = claims.get(CLAIM_KEY_CREATED);
+        return !Objects.isNull(o) ? Instant.ofEpochMilli((Long) o) : null;
     }
 
     /**
@@ -103,6 +105,7 @@ public class JwtBuilder implements Serializable {
      * @return token
      */
     private String encode(Map<String, Object> claims, Date expireTime) {
+        claims.put(CLAIM_KEY_CREATED, Instant.now().toEpochMilli());
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(expireTime)

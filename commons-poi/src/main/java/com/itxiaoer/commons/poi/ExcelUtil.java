@@ -8,6 +8,7 @@ import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFPictureData;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 
 import java.io.File;
@@ -96,7 +97,7 @@ public final class ExcelUtil {
         if (Objects.equals(cellType, CellType.STRING)) {
             try {
                 if (HSSFDateUtil.isCellDateFormatted(cell)) {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss");
                     Date date = HSSFDateUtil.getJavaDate(cell.getNumericCellValue());
                     return sdf.format(date);
                 }
@@ -132,6 +133,30 @@ public final class ExcelUtil {
         return "";
     }
 
+    public static List<CellRangeAddress> getCombineCellList(Sheet sheet) {
+        int numMergedRegions = sheet.getNumMergedRegions();
+        System.out.println(numMergedRegions);
+        return sheet.getMergedRegions();
+    }
+
+    public static Optional<CombineCell> isCombineCell(List<CellRangeAddress> listCombineCell, Cell cell, Sheet sheet) {
+        for (CellRangeAddress ca : listCombineCell) {
+            //获得合并单元格的起始行, 结束行, 起始列, 结束列
+            int firstColumn = ca.getFirstColumn();
+            int lastColumn = ca.getLastColumn();
+            int firstRow = ca.getFirstRow();
+            int lastRow = ca.getLastRow();
+            //判断cell是否在合并区域之内，在的话返回true和合并行列数
+            if (cell.getRowIndex() >= firstRow && cell.getRowIndex() <= lastRow) {
+                if (cell.getColumnIndex() >= firstColumn && cell.getColumnIndex() <= lastColumn) {
+                    int mergedRow = lastRow - firstRow + 1;
+                    int mergedCol = lastColumn - firstColumn + 1;
+                    return Optional.of(new CombineCell(true, mergedRow, mergedCol));
+                }
+            }
+        }
+        return Optional.empty();
+    }
 
     private static List<XSSFPictureData> getPictures(XSSFSheet sheet) {
         Map<String, HSSFPictureData> map = new HashMap<>(16);
