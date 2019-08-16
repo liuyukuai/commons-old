@@ -33,6 +33,13 @@ public final class ExcelUtil {
 
     }
 
+
+    /**
+     * 遍历文件路径
+     *
+     * @param path     excel文件路径
+     * @param consumer 回调函数
+     */
     public static void apply(String path, RowsConsumer consumer) {
         if (StringUtils.isBlank(path)) {
             return;
@@ -40,6 +47,12 @@ public final class ExcelUtil {
         apply(new File(path), consumer);
     }
 
+    /**
+     * 遍历文件
+     *
+     * @param file     excel文件
+     * @param consumer 回调函数
+     */
     public static void apply(File file, RowsConsumer consumer) {
         if (file == null || !file.exists()) {
             return;
@@ -69,7 +82,12 @@ public final class ExcelUtil {
         }
     }
 
-
+    /**
+     * 获取某行的所有值
+     *
+     * @param row 行
+     * @return 值集合
+     */
     public static List<String> getRow(Row row) {
         if (!Objects.isNull(row)) {
             int cellCount = row.getPhysicalNumberOfCells();
@@ -83,9 +101,14 @@ public final class ExcelUtil {
         return Collections.emptyList();
     }
 
-
+    /**
+     * 获取单元格值
+     *
+     * @param cell 单元格
+     * @return 单元格值
+     */
     public static String getValue(Cell cell) {
-        if (cell == null) {
+        if (Objects.isNull(cell)) {
             return "";
         }
 
@@ -129,16 +152,29 @@ public final class ExcelUtil {
             return String.valueOf(cell.getBooleanCellValue());
         }
 
-
         return "";
     }
 
-    public static List<CellRangeAddress> getCombineCellList(Sheet sheet) {
+    /**
+     * 获取sheet页中的所有合并单元格
+     *
+     * @param sheet sheet页
+     * @return 合并单雅戈尔地址
+     */
+    public static List<CellRangeAddress> getCombines(Sheet sheet) {
         return sheet.getMergedRegions();
     }
 
-    public static Optional<CombineCell> isCombineCell(List<CellRangeAddress> listCombineCell, Cell cell, Sheet sheet) {
-        for (CellRangeAddress ca : listCombineCell) {
+    /**
+     * 判断单元是否为合并单元格，并返回单元格占用的行数和列数
+     *
+     * @param combines sheet页所有的合并单元格式
+     * @param cell     具体某个单元格
+     * @param sheet    sheet页
+     * @return 单元是否是合并单元格
+     */
+    public static Optional<CombineCell> isCombineCell(List<CellRangeAddress> combines, Cell cell, Sheet sheet) {
+        for (CellRangeAddress ca : combines) {
             //获得合并单元格的起始行, 结束行, 起始列, 结束列
             int firstColumn = ca.getFirstColumn();
             int lastColumn = ca.getLastColumn();
@@ -156,6 +192,12 @@ public final class ExcelUtil {
         return Optional.empty();
     }
 
+    /**
+     * 获取sheet页的所有图片
+     *
+     * @param sheet sheet页
+     * @return 图片集合
+     */
     private static List<XSSFPictureData> getPictures(XSSFSheet sheet) {
         Map<String, HSSFPictureData> map = new HashMap<>(16);
         XSSFDrawing drawingPatriarch = sheet.getDrawingPatriarch();
@@ -171,7 +213,13 @@ public final class ExcelUtil {
         return Collections.emptyList();
     }
 
-
+    /**
+     * 所有图片路径
+     *
+     * @param pictures 图片
+     * @param function 回调函数
+     * @return 图片路径
+     */
     private static List<Path> getPicture(List<XSSFPictureData> pictures, Function<String, String> function) {
         //遍历写入图片
         return pictures.stream().map((v) -> {
