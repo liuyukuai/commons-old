@@ -68,7 +68,7 @@ public final class FileScanner {
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
             String fileName = file.toString();
-            if (fileName.endsWith(suffix)) {
+            if (fileName.endsWith(suffix) || org.apache.commons.lang3.StringUtils.isBlank(suffix)) {
                 classes.add(file.toFile());
             }
             return FileVisitResult.CONTINUE;
