@@ -13,6 +13,7 @@ import org.apache.poi.xssf.usermodel.*;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -62,10 +63,26 @@ public final class ExcelUtil {
             log.info("file  = {} ", file.getAbsolutePath());
         }
 
+        try {
+            apply(new FileInputStream(file),consumer);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 遍历文件
+     *
+     * @param fis     fis
+     * @param consumer 回调函数
+     */
+    public static void apply(FileInputStream fis, RowsConsumer consumer) {
+
         List<T> list = Lists.newArrayList();
-        try (FileInputStream fis = new FileInputStream(file)) {
+        Workbook workbook = null;
+        try {
             // 兼容性处理
-            Workbook workbook = WorkbookFactory.create(fis);
+            workbook = WorkbookFactory.create(fis);
             // Sheet的数量
             int sheetCount = workbook.getNumberOfSheets();
             for (int i = 0; i < sheetCount; i++) {
@@ -79,6 +96,24 @@ public final class ExcelUtil {
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (workbook != null) {
+                try {
+                    workbook.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
         }
     }
 
