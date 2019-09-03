@@ -73,6 +73,9 @@ public class JwtTokenContext {
 
     public Boolean destroy(HttpServletRequest request) {
         String token = this.getTokenFromRequest(request);
+        if (StringUtils.isBlank(token)){
+            return true;
+        }
         String key = jwtProperties.getPrefix() + Md5Utils.digestMD5(token);
         Date expirationDateFromToken = jwtBuilder.expirationDate(token);
         cacheService.set(key, new JwtToken(token, expirationDateFromToken.getTime(), Instant.now().toEpochMilli(), JwtToken.Operation.destroy.getValue()));

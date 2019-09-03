@@ -11,10 +11,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -76,7 +73,7 @@ public final class ExcelUtil {
      * @param fis     fis
      * @param consumer 回调函数
      */
-    public static void apply(FileInputStream fis, RowsConsumer consumer) {
+    public static void apply(InputStream fis, RowsConsumer consumer) {
 
         List<T> list = Lists.newArrayList();
         Workbook workbook = null;
