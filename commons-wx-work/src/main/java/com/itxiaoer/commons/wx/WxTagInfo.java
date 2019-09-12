@@ -1,4 +1,4 @@
-package com.itxiaoer.commons.security.wx;
+package com.itxiaoer.commons.wx;
 
 import lombok.Data;
 
@@ -10,18 +10,17 @@ import java.util.List;
  */
 @Data
 @SuppressWarnings("ALL")
-public class WxUserListOfTag implements Serializable {
+public class WxTagInfo implements Serializable {
     private static final long serialVersionUID = -1188341114492367222L;
 
     private String errcode;
     private String errmsg;
-    private String tagname;
-    private List<WxUser> userlist;
+    private List<Tag> taglist;
 
     @Data
-    static class WxUser implements Serializable {
+    public static class Tag implements Serializable {
         private static final long serialVersionUID = -272297650625635192L;
-        private String userid;
-        private String name;
+        private String tagid;
+        private String tagname;
     }
 }

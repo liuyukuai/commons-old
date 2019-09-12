@@ -28,6 +28,7 @@
         <module>commons-snowflake</module>
         <module>commons-upload</module>
         <module>commons-scanner</module>
+        <module>commons-wx-work</module>
         <!--<module>commons-zip</module>-->
     </modules>
 
@@ -161,6 +162,12 @@
                 <artifactId>commons-test</artifactId>
                 <version>${commons.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.itxiaoer.commons</groupId>
+                <artifactId>commons-wx-work</artifactId>
+                <version>${commons.version}</version>
             </dependency>
 
             <dependency>

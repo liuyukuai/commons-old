@@ -1,0 +1,30 @@
+package com.itxiaoer.commons.wx;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * @author : liuyk
+ */
+@Configuration
+@ComponentScan("com.itxiaoer.commons.wx")
+public class WxConfiguration {
+
+    @Bean
+    public RestTemplate wxRestTemplate() {
+        return new RestTemplate();
+    }
+
+    @Bean
+    public WxProperties wxProperties() {
+        return new WxProperties();
+    }
+
+    @Bean
+    public WxAddressService wxAddressService() {
+        return new WxAddressService();
+    }
+
+}

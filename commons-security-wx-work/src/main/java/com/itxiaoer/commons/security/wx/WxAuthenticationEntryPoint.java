@@ -1,6 +1,8 @@
 package com.itxiaoer.commons.security.wx;
 
 import com.itxiaoer.commons.security.JwtAuthenticationEntryPoint;
+import com.itxiaoer.commons.wx.WxConstants;
+import com.itxiaoer.commons.wx.WxProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.AuthenticationException;

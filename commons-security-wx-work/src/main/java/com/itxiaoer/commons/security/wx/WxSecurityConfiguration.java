@@ -7,29 +7,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * @author : liuyk
  */
 @Configuration
 @ComponentScan("com.itxiaoer.commons.security.wx.web")
-public class WxConfiguration {
-
-    @Bean
-    public RestTemplate wxRestTemplate() {
-        return new RestTemplate();
-    }
-
-    @Bean
-    public WxProperties wxProperties() {
-        return new WxProperties();
-    }
-
-    @Bean
-    public WxAddressService wxAddressService() {
-        return new WxAddressService();
-    }
+public class WxSecurityConfiguration {
 
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {

@@ -1,4 +1,4 @@
-package com.itxiaoer.commons.security.wx.commons;
+package com.itxiaoer.commons.wx;
 
 import lombok.Data;
 

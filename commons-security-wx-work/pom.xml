@@ -15,6 +15,11 @@
             <artifactId>commons-security</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.itxiaoer.commons</groupId>
+            <artifactId>commons-wx-work</artifactId>
+        </dependency>
+
         <!--配置元数据-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

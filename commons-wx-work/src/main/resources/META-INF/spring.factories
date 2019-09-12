@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.itxiaoer.commons.security.wx.WxSecurityConfiguration
+com.itxiaoer.commons.wx.WxConfiguration

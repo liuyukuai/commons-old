@@ -3,6 +3,7 @@ package com.itxiaoer.commons.security.wx;
 import com.itxiaoer.commons.security.JwAuthenticationTokenFilter;
 import com.itxiaoer.commons.security.JwtUserDetail;
 import com.itxiaoer.commons.security.JwtUserDetailService;
+import com.itxiaoer.commons.wx.WxProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

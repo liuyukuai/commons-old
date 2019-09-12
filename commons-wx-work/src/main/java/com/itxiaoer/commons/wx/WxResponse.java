@@ -1,4 +1,4 @@
-package com.itxiaoer.commons.security.wx;
+package com.itxiaoer.commons.wx;
 
 import com.itxiaoer.commons.core.page.Responsive;
 import lombok.Data;

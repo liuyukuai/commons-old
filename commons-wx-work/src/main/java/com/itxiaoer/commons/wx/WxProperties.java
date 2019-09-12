@@ -1,4 +1,4 @@
-package com.itxiaoer.commons.security.wx;
+package com.itxiaoer.commons.wx;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
