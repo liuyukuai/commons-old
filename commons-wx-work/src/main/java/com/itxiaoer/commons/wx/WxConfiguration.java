@@ -1,5 +1,7 @@
 package com.itxiaoer.commons.wx;
 
+import com.itxiaoer.commons.wx.js.JsTokenController;
+import com.itxiaoer.commons.wx.js.JsTokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +27,16 @@ public class WxConfiguration {
     @Bean
     public WxAddressService wxAddressService() {
         return new WxAddressService();
+    }
+
+    @Bean
+    public JsTokenService jsTokenService() {
+        return new JsTokenService();
+    }
+
+    @Bean
+    public JsTokenController jsTokenController() {
+        return new JsTokenController();
     }
 
 }

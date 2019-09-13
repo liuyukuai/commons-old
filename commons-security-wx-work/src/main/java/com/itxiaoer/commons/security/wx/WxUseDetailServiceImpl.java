@@ -102,37 +102,8 @@ public class WxUseDetailServiceImpl implements JwtUserDetailService, Initializin
 
     @Override
     public JwtUserDetail loadUserByUsername(String code) throws UsernameNotFoundException {
-        if (log.isDebugEnabled()) {
-            log.debug("load user by code , code = {} ", code);
-        }
-        if (StringUtils.isNotBlank(code)) {
-
-            ResponseEntity<String> response = restTemplate.getForEntity(String.format(WxConstants.WX_USER_BY_CODE_URL, getToken(), code), String.class);
-            if (log.isDebugEnabled()) {
-                log.debug("load wx user response = {} ", response);
-            }
-
-            String userJson = response.getBody();
-            Optional<Map> optional = JsonUtil.toBean(userJson, Map.class);
-
-            if (optional.isPresent()) {
-                Map map = optional.get();
-
-                String userId = (String) map.get("UserId");
-
-                if (StringUtils.isNotBlank(userId)) {
-                    return this.getUserById(userId);
-                }
-                // 如果用户加载失败
-                Integer errCode = (Integer) map.get("errcode");
-
-                // 如果是token过期
-                if (Objects.equals(errCode, 42001)) {
-                    this.tokenCache.cleanUp();
-                }
-            }
-        }
-        return null;
+        WxUser userByCode = wxAddressService.getUserByCode(code);
+        return getUserById(userByCode);
     }
 
     @Override
@@ -143,6 +114,11 @@ public class WxUseDetailServiceImpl implements JwtUserDetailService, Initializin
 
     public WxUserInfo getUserById(String userId) {
         WxUser wxUser = wxAddressService.getUserById(userId);
+        return getUserById(wxUser);
+    }
+
+
+    public WxUserInfo getUserById(WxUser wxUser) {
         if (Objects.nonNull(wxUser)) {
             WxUserInfo userInfo = new WxUserInfo();
             List<Integer> departments = wxUser.getDepartment();

@@ -16,6 +16,8 @@ public class Token {
 
     private String access_token;
 
+    private String ticket;
+
     private String expires_in;
 
 }
