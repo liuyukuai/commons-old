@@ -182,39 +182,6 @@ public class WxAddressService {
         }
     }
 
-    public WxUser getUserByCode(String code) {
-        if (log.isDebugEnabled()) {
-            log.debug("load user by code , code = {} ", code);
-        }
-        if (StringUtils.isNotBlank(code)) {
-
-            ResponseEntity<String> response = restTemplate.getForEntity(String.format(WxConstants.WX_USER_BY_CODE_URL, getToken(), code), String.class);
-            if (log.isDebugEnabled()) {
-                log.debug("load wx user response = {} ", response);
-            }
-
-            String userJson = response.getBody();
-            Optional<Map> optional = JsonUtil.toBean(userJson, Map.class);
-
-            if (optional.isPresent()) {
-                Map map = optional.get();
-
-                String userId = (String) map.get("UserId");
-
-                if (StringUtils.isNotBlank(userId)) {
-                    return this.getUserById(userId);
-                }
-                // 如果用户加载失败
-                Integer errCode = (Integer) map.get("errcode");
-
-                // 如果是token过期
-                if (Objects.equals(errCode, 42001)) {
-                    this.tokenCache.cleanUp();
-                }
-            }
-        }
-        return null;
-    }
 
     public Set<String> getTagsById(String userId) {
         try {

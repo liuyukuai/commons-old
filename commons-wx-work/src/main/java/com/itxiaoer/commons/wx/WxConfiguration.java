@@ -30,6 +30,11 @@ public class WxConfiguration {
     }
 
     @Bean
+    public WxLoginService wxLoginService() {
+        return new WxLoginService();
+    }
+
+    @Bean
     public JsTokenService jsTokenService() {
         return new JsTokenService();
     }
