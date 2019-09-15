@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -145,6 +146,14 @@ public class ExceptionAdvice {
     public Response<String> handleEmptyResultDataAccessException(EmptyResultDataAccessException e) {
         log.error("Parameter validation failed : ", e);
         return Response.failure(String.format("Parameter validation failed : %s", e.getMessage()), ResponseCode.NOT_FOUNT_CODE);
+    }
+
+    @SuppressWarnings("unchecked")
+    @ResponseBody
+    @ExceptionHandler({BadCredentialsException.class})
+    public Response<String> handleBadCredentialsException(BadCredentialsException e) {
+        log.error("Parameter validation failed : ", e);
+        return Response.failure("用户名或密码错误，请重新输入");
     }
 
 

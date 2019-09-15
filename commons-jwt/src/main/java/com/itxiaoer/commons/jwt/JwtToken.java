@@ -15,7 +15,9 @@ public class JwtToken implements Serializable {
     static final long serialVersionUID = 6739574768237935126L;
 
     private String token;
+
     private Long expireTime;
+
     @JsonIgnore
     private Long refreshTime;
 
