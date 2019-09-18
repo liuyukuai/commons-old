@@ -1,5 +1,6 @@
 package com.itxiaoer.commons.wx;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,18 +17,23 @@ public class WxProperties {
 
     private String appId;
 
+    @JsonIgnore
     private String secret;
     /**
      * 通讯录秘钥
      */
+    @JsonIgnore
     private String addressSecret;
 
+    @JsonIgnore
     @Value("${commons.security.wx.scope:snsapi_base}")
     private String scope;
 
+    @JsonIgnore
     @Value("${commons.security.wx.responseType:code}")
     private String responseType;
 
+    @JsonIgnore
     @Value("${commons.security.wx.state:wx}")
     private String state;
 
