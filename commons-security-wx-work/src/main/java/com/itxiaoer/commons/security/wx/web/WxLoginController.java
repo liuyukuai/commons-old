@@ -26,7 +26,7 @@ public class WxLoginController {
         try {
             return Response.ok(jwtTokenContext.build(AuthenticationUtils.getUser()));
         } catch (Exception e) {
-            return Response.ok();
+            return Response.ok(null);
         }
     }
 

@@ -8,11 +8,13 @@ import com.itxiaoer.commons.core.page.ResponseCode;
 @SuppressWarnings("unused")
 public class FieldRepetitionException extends SysException {
 
+    private static final long serialVersionUID = -1305822674064735727L;
+
     public FieldRepetitionException() {
-        super(ResponseCode.FIELD_REPETITION_CODE);
+        super(ResponseCode.DATA_NAME_IS_EXISTS.getCode(), ResponseCode.DATA_NAME_IS_EXISTS.getMessage());
     }
 
     public FieldRepetitionException(String message) {
-        super(ResponseCode.FIELD_REPETITION_CODE, message);
+        super(ResponseCode.DATA_NAME_IS_EXISTS.getCode(), message);
     }
 }

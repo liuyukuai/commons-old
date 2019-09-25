@@ -47,9 +47,6 @@ public class TokenController {
         final Authentication authentication = authenticationManager.authenticate(upToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final JwtAuth userDetails = (JwtAuth) userDetailsService.loadUserByUsername(loginDto.getLoginName());
-        if (userDetails == null) {
-            return Response.failure("User or password error", ResponseCode.LOGIN_PASSWORD_ERROR_CODE);
-        }
         return Response.ok(jwtTokenContext.build(userDetails));
 
     }

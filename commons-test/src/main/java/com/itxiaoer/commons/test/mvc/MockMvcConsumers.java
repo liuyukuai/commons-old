@@ -17,7 +17,7 @@ public final class MockMvcConsumers {
     private static final Consumer<ResultActions> DEFAULT_SUCCESS = (actions) -> {
         try {
             actions.andExpect(MockMvcResultMatchers.jsonPath("$.success").value("true"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(ResponseCode.SUCCESS_CODE));
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(ResponseCode.SUCCESS.getCode()));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -26,7 +26,7 @@ public final class MockMvcConsumers {
     private static Consumer<ResultActions> DEFAULT_FAIL = (actions) -> {
         try {
             actions.andExpect(MockMvcResultMatchers.jsonPath("$.success").value("false"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(ResponseCode.SUCCESS_CODE));
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(ResponseCode.SUCCESS.getCode()));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

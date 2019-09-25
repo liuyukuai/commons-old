@@ -10,11 +10,13 @@ import com.itxiaoer.commons.core.page.ResponseCode;
 @SuppressWarnings("unused")
 public class ParameterException extends SysException {
 
+    private static final long serialVersionUID = -517633067951061993L;
+
     public ParameterException() {
-        super(ResponseCode.PARAMETER_VALID_CODE);
+        super(ResponseCode.API_PARAM_ERROR.getCode(), ResponseCode.API_PARAM_ERROR.getMessage());
     }
 
     public ParameterException(String message) {
-        super(ResponseCode.PARAMETER_VALID_CODE, message);
+        super(ResponseCode.API_PARAM_ERROR.getCode(), message);
     }
 }

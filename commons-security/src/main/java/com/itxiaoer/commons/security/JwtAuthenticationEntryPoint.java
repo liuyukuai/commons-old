@@ -26,8 +26,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
         response.setContentType("application/json");
-        Response<String> res = Response.failure("no permissions");
-        res.setCode(ResponseCode.NO_PERMISSION);
+        Response<String> res = Response.failure(ResponseCode.USER_NO_PERMISSION);
         response.getWriter().write(JsonUtil.toJson(res));
     }
 }

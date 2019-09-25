@@ -8,11 +8,13 @@ import com.itxiaoer.commons.core.page.ResponseCode;
 @SuppressWarnings("unused")
 public class NotFoundException extends SysException {
 
+    private static final long serialVersionUID = 5037516519804075943L;
+
     public NotFoundException() {
-        super(ResponseCode.NOT_FOUNT_CODE);
+        super(ResponseCode.DATA_NOT_EXISTS.getCode(), ResponseCode.DATA_NOT_EXISTS.getMessage());
     }
 
     public NotFoundException(String message) {
-        super(ResponseCode.NOT_FOUNT_CODE, message);
+        super(ResponseCode.DATA_NOT_EXISTS.getCode(), message);
     }
 }
