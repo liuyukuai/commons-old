@@ -9,6 +9,7 @@ import com.itxiaoer.dis.commons.annotation.Dis;
 import com.itxiaoer.dis.commons.annotation.DisInclude;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -48,7 +49,7 @@ public class TokenController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             final JwtAuth userDetails = (JwtAuth) userDetailsService.loadUserByUsername(loginDto.getLoginName());
             return Response.ok(jwtTokenContext.build(userDetails));
-        } catch (Exception e) {
+        } catch (BadCredentialsException e) {
             if (this.userDetailsService instanceof LoginLockUserService) {
                 LoginLockUserService loginLockUserService = (LoginLockUserService) userDetailsService;
                 loginLockUserService.lock(loginDto.getLoginName());
