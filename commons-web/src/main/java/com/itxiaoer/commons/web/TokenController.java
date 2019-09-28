@@ -1,7 +1,6 @@
 package com.itxiaoer.commons.web;
 
 import com.itxiaoer.commons.core.page.Response;
-import com.itxiaoer.commons.core.page.ResponseCode;
 import com.itxiaoer.commons.jwt.JwtAuth;
 import com.itxiaoer.commons.jwt.JwtToken;
 import com.itxiaoer.commons.security.AuthenticationUtils;
@@ -43,12 +42,19 @@ public class TokenController {
 
     @PostMapping("/login")
     public Response<JwtToken> doLogin(@Valid @RequestBody LoginDto loginDto) {
-        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(loginDto.getLoginName(), loginDto.getPassword());
-        final Authentication authentication = authenticationManager.authenticate(upToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        final JwtAuth userDetails = (JwtAuth) userDetailsService.loadUserByUsername(loginDto.getLoginName());
-        return Response.ok(jwtTokenContext.build(userDetails));
-
+        try {
+            UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(loginDto.getLoginName(), loginDto.getPassword());
+            final Authentication authentication = authenticationManager.authenticate(upToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            final JwtAuth userDetails = (JwtAuth) userDetailsService.loadUserByUsername(loginDto.getLoginName());
+            return Response.ok(jwtTokenContext.build(userDetails));
+        } catch (Exception e) {
+            if (this.userDetailsService instanceof LoginLockUserService) {
+                LoginLockUserService loginLockUserService = (LoginLockUserService) userDetailsService;
+                loginLockUserService.lock(loginDto.getLoginName());
+            }
+            throw e;
+        }
     }
 
     @Dis(expireTime = 2000)

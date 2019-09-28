@@ -115,7 +115,7 @@ public enum ResponseCode {
     USER_LOGIN_PASSWORD_INVALID("20012", "用户密码格式不正确"),
 
     /**
-     * 用户已经被禁用
+     * 用户已经被锁定
      */
     USER_LOCKED("20013", "用户已经被锁定，请联系管理员解锁"),
 

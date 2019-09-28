@@ -9,6 +9,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -195,7 +196,7 @@ public class ExceptionAdvice {
     @ResponseBody
     @ExceptionHandler({BindException.class})
     public Response<String> handleBindException(BindException e) {
-        log.error("Parameter validation failed : ", e);
+        log.error(e.getMessage(), e);
         return Response.failure(ResponseCode.API_PARAM_ERROR);
     }
 
@@ -204,7 +205,7 @@ public class ExceptionAdvice {
     @ResponseBody
     @ExceptionHandler({EmptyResultDataAccessException.class})
     public Response<String> handleEmptyResultDataAccessException(EmptyResultDataAccessException e) {
-        log.error("Parameter validation failed : ", e);
+        log.error(e.getMessage(), e);
         return Response.failure(ResponseCode.DATA_NOT_EXISTS);
     }
 
@@ -212,15 +213,22 @@ public class ExceptionAdvice {
     @ResponseBody
     @ExceptionHandler({BadCredentialsException.class})
     public Response<String> handleBadCredentialsException(BadCredentialsException e) {
-        log.error("Parameter validation failed : ", e);
+        log.error(e.getMessage(), e);
         return Response.failure(ResponseCode.USER_ERROR);
     }
 
+    @SuppressWarnings("unchecked")
+    @ResponseBody
+    @ExceptionHandler({LockedException.class})
+    public Response<String> handleBadCredentialsException(LockedException e) {
+        log.error(e.getMessage(), e);
+        return Response.failure(ResponseCode.USER_LOCKED);
+    }
 
     @ExceptionHandler({FieldRepetitionException.class})
     @ResponseBody
     public Response handleFieldRepetitionException(FieldRepetitionException e) {
-        log.error("Parameter validation failed : ", e);
+        log.error(e.getMessage(), e);
         return Response.failure(ResponseCode.DATA_NAME_IS_EXISTS);
     }
 }
