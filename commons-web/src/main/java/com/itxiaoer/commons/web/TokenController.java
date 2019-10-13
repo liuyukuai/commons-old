@@ -54,6 +54,7 @@ public class TokenController {
             final Authentication authentication = authenticationManager.authenticate(upToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             final JwtAuth userDetails = (JwtAuth) userDetailsService.loadUserByUsername(loginDto.getLoginName());
+            this.doLogin().accept(userDetails, loginDto);
             return Response.ok(jwtTokenContext.build(userDetails));
         } catch (BadCredentialsException e) {
             if (this.userDetailsService instanceof LoginLockUserService) {
@@ -115,6 +116,11 @@ public class TokenController {
 
     public Consumer<JwtAuth> profile() {
         return jwtAuth -> {
+        };
+    }
+
+    public BiConsumer<JwtAuth, LoginDto> doLogin() {
+        return (auth, dto) -> {
         };
     }
 

@@ -121,6 +121,12 @@ public enum ResponseCode {
 
 
     /**
+     * 验证码错误
+     */
+    USER_LOGIN_CODE_ERROR("20014", "请输入正确的验证码"),
+
+
+    /**
      * 数据主键为空
      */
     DATA_FIELD_IS_NULL("30001", "%s不能为空"),

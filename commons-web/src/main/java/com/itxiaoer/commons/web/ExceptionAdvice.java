@@ -1,6 +1,7 @@
 package com.itxiaoer.commons.web;
 
 import com.itxiaoer.commons.core.FieldRepetitionException;
+import com.itxiaoer.commons.core.SysException;
 import com.itxiaoer.commons.core.json.JsonUtil;
 import com.itxiaoer.commons.core.page.Response;
 import com.itxiaoer.commons.core.page.ResponseCode;
@@ -94,6 +95,20 @@ public class ExceptionAdvice {
     public Response<String> handleDuplicateKeyException(DuplicateKeyException e) {
         log.error(e.getMessage(), e);
         return Response.failure(ResponseCode.DATA_IS_EXISTS.getCode(), ResponseCode.DATA_IS_EXISTS.getMessage());
+    }
+
+
+    /**
+     * default exception  handler
+     *
+     * @param e exception
+     * @return response
+     */
+    @ResponseBody
+    @ExceptionHandler({SysException.class})
+    public Response handlerSysException(SysException e) {
+        log.error("default SysException msg = [{}] ", e.getMessage(), e);
+        return Response.failure(e.getCode(), e.getMessage());
     }
 
 

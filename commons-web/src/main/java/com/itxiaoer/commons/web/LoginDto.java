@@ -14,8 +14,12 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @SuppressWarnings("WeakerAccess")
 public class LoginDto {
+
     @NotBlank
     private String loginName;
+
     @NotBlank
     private String password;
+
+    private String code;
 }
