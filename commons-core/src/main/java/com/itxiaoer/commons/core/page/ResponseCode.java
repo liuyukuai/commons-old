@@ -97,7 +97,7 @@ public enum ResponseCode {
     /**
      * 用户登录名格式不正确
      */
-    USER_LOGIN_NAME_INVALID("20009", "用户登录名格式不正确，%s"),
+    USER_LOGIN_NAME_INVALID("20009", "用户登录名不正确，%s"),
 
     /**
      * 用户登录名已经存在
@@ -112,7 +112,7 @@ public enum ResponseCode {
     /**
      * 用户密码格式不正确
      */
-    USER_LOGIN_PASSWORD_INVALID("20012", "用户密码格式不正确"),
+    USER_LOGIN_PASSWORD_INVALID("20012", "用户密码不正确"),
 
     /**
      * 用户已经被锁定

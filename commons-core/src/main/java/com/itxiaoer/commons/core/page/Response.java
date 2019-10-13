@@ -150,7 +150,7 @@ public class Response<T> implements Responsive, Serializable {
 
 
     /**
-     * failure response
+     * response
      *
      * @param <E>  data type
      * @param data data
@@ -159,7 +159,7 @@ public class Response<T> implements Responsive, Serializable {
      * @return response
      */
 
-    public static <E> Response<E> failure(E data, String code, String msg) {
+    public static <E> Response<E> build(E data, String code, String msg) {
         return new Response<>(data, code, msg);
     }
 
