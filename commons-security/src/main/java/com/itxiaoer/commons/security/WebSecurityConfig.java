@@ -89,7 +89,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     for (Map.Entry<String, String> urlRole : urlEntries) {
                         String urls = urlRole.getValue();
                         String method = urlRole.getKey();
-                        Stream.of(StringUtils.split(urls, ",")).forEach(e ->
+                        Stream.of(StringUtils.split(urls, ",")).map(e -> e.replaceAll(" ", "")).forEach(e ->
                                 roleDataListMap.computeIfAbsent(new RoleData(e, method), i -> new HashSet<>()).add(role)
                         );
                     }
