@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -44,8 +42,6 @@ public class TokenController {
     @Resource
     private JwtTokenContext jwtTokenContext;
 
-    private static final Map<String, AtomicInteger> COUNTER = new ConcurrentHashMap<>();
-
 
     @PostMapping("/login")
     public Response<JwtToken> doLogin(@Valid @RequestBody LoginDto loginDto) {
@@ -57,19 +53,19 @@ public class TokenController {
             this.doLogin().accept(userDetails, loginDto);
             return Response.ok(jwtTokenContext.build(userDetails));
         } catch (BadCredentialsException e) {
-            if (this.userDetailsService instanceof LoginLockUserService) {
+            if (this.userDetailsService instanceof Lockable) {
+                Lockable lockable = (Lockable) userDetailsService;
                 String loginName = loginDto.getLoginName();
-                AtomicInteger integer = COUNTER.get(loginName);
+                AtomicInteger integer = Lockable.COUNTER.get(loginName);
                 if (Objects.isNull(integer)) {
                     integer = new AtomicInteger(1);
-                    COUNTER.put(loginName, integer);
+                    Lockable.COUNTER.put(loginName, integer);
                 } else {
-                    LoginLockUserService loginLockUserService = (LoginLockUserService) userDetailsService;
                     int i = integer.incrementAndGet();
-                    COUNTER.put(loginName, integer);
-                    if (i >= loginLockUserService.wrongTimes()) {
-                        loginLockUserService.lock(loginDto.getLoginName());
-                        COUNTER.remove(loginName);
+                    Lockable.COUNTER.put(loginName, integer);
+                    if (i >= lockable.wrongTimes()) {
+                        lockable.lock(loginDto.getLoginName());
+                        Lockable.COUNTER.remove(loginName);
                     }
                 }
             }
