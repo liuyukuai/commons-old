@@ -21,6 +21,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
+ * excel操作类
+ *
  * @author : liuyk
  */
 @Slf4j
@@ -61,7 +63,7 @@ public final class ExcelUtil {
         }
 
         try {
-            apply(new FileInputStream(file),consumer);
+            apply(new FileInputStream(file), consumer);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -70,7 +72,7 @@ public final class ExcelUtil {
     /**
      * 遍历文件
      *
-     * @param fis     fis
+     * @param fis      fis
      * @param consumer 回调函数
      */
     public static void apply(InputStream fis, RowsConsumer consumer) {
