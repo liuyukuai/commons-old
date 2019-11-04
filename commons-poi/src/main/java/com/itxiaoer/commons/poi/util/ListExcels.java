@@ -25,7 +25,7 @@ import java.util.Optional;
  * @author liuyk
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
-public final class Excels {
+public final class ListExcels {
 
     /**
      * 写入数据
@@ -72,7 +72,7 @@ public final class Excels {
             File file = new File(System.getProperty("user.dir"), UUIDUtils.guid());
             try (HSSFWorkbook workbook = new HSSFWorkbook()) {
                 IOUtils.copy(fis, file);
-                sheetsList.forEach(sheets -> write(workbook, sheets));
+                sheetsList.forEach(sheets -> ListExcels.write(workbook, sheets));
                 workbook.write(file);
                 return Optional.of(file);
             } catch (Exception ignored) {
@@ -88,7 +88,7 @@ public final class Excels {
      * @param workbook workbook对象
      * @param sheets   数据
      */
-    private static void write(HSSFWorkbook workbook, Sheets sheets) {
+    static void write(HSSFWorkbook workbook, Sheets sheets) {
         // 创建sheet页面
         HSSFSheet sheet = workbook.createSheet(sheets.getName());
         // 写入表头
@@ -104,7 +104,7 @@ public final class Excels {
      * @param headers 表头数据
      */
 
-    private static void writeHeaders(HSSFSheet sheet, List<String> headers) {
+    static void writeHeaders(HSSFSheet sheet, List<String> headers) {
         Optional.ofNullable(headers)
                 .filter(Lists::iterable)
                 .ifPresent(e -> {
@@ -123,7 +123,7 @@ public final class Excels {
      * @param sheet sheet对象
      * @param rows  数据
      */
-    private static void writeRows(HSSFSheet sheet, List<List<String>> rows) {
+    static void writeRows(HSSFSheet sheet, List<List<String>> rows) {
         Optional.ofNullable(rows)
                 .filter(Lists::iterable)
                 .ifPresent(e -> {
