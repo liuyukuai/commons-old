@@ -60,7 +60,11 @@ public class JwtTokenContext {
 
     public String getTokenFromRequest(HttpServletRequest request) {
         String authHeader = request.getHeader(jwtProperties.getHeader());
-        return this.getTokenFromHeader(authHeader);
+        String token = this.getTokenFromHeader(authHeader);
+        if (StringUtils.isBlank(token)) {
+            token = request.getParameter("token");
+        }
+        return token;
     }
 
     public String getTokenFromHeader(String authHeader) {
@@ -73,7 +77,7 @@ public class JwtTokenContext {
 
     public Boolean destroy(HttpServletRequest request) {
         String token = this.getTokenFromRequest(request);
-        if (StringUtils.isBlank(token)){
+        if (StringUtils.isBlank(token)) {
             return true;
         }
         String key = jwtProperties.getPrefix() + Md5Utils.digestMD5(token);
