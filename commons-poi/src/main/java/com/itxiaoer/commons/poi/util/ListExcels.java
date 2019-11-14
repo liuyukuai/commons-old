@@ -2,19 +2,15 @@
 package com.itxiaoer.commons.poi.util;
 
 import com.itxiaoer.commons.core.util.Lists;
-import com.itxiaoer.commons.core.util.UUIDUtils;
 import com.itxiaoer.commons.poi.Sheets;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.util.IOUtils;
-import org.springframework.core.io.ClassPathResource;
+import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,62 +20,34 @@ import java.util.Optional;
  *
  * @author liuyk
  */
+@Slf4j
 @SuppressWarnings({"unused", "WeakerAccess"})
 public final class ListExcels {
 
-    /**
-     * 写入数据
-     *
-     * @param path       模板路径
-     * @param sheetsList excel数据
-     * @return 写入数据的文件
-     */
-    public static Optional<File> write(String path, List<Sheets> sheetsList) {
-        try (InputStream fis = new FileInputStream(new File(path))) {
-            return write(fis, sheetsList);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
-    }
 
     /**
      * 写入数据
      *
-     * @param resource   模板文件
+     * @param file       模板文件流
      * @param sheetsList excel数据
-     * @return 写入数据的文件
      */
-    public static Optional<File> write(ClassPathResource resource, List<Sheets> sheetsList) {
-        try (InputStream fis = resource.getInputStream()) {
-            return write(fis, sheetsList);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
-    }
+    public static void write(File file, List<Sheets> sheetsList) {
 
-
-    /**
-     * 写入数据
-     *
-     * @param fis        模板文件流
-     * @param sheetsList excel数据
-     * @return 写入数据的文件
-     */
-    public static Optional<File> write(InputStream fis, List<Sheets> sheetsList) {
-
-        if (Lists.iterable(sheetsList) && Objects.nonNull(fis)) {
+        String path = file.getAbsolutePath();
+        if (Lists.iterable(sheetsList)) {
+            File dest = new File(System.getProperty("user.dir"), file.getName() + ".new");
             // 创建workbook对象
-            File file = new File(System.getProperty("user.dir"), UUIDUtils.guid());
-            try (HSSFWorkbook workbook = new HSSFWorkbook()) {
-                IOUtils.copy(fis, file);
+            try (Workbook workbook = WorkbookFactory.create(file)) {
                 sheetsList.forEach(sheets -> ListExcels.write(workbook, sheets));
-                workbook.write(file);
-                return Optional.of(file);
-            } catch (Exception ignored) {
-                return Optional.empty();
+                workbook.write(new FileOutputStream(dest));
+                boolean delete = file.delete();
+                if (delete) {
+                    Files.move(Paths.get(dest.getAbsolutePath()), Paths.get(path));
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
             }
         }
-        return Optional.empty();
     }
 
     /**
@@ -88,9 +56,12 @@ public final class ListExcels {
      * @param workbook workbook对象
      * @param sheets   数据
      */
-    static void write(HSSFWorkbook workbook, Sheets sheets) {
+    static void write(Workbook workbook, Sheets sheets) {
         // 创建sheet页面
-        HSSFSheet sheet = workbook.createSheet(sheets.getName());
+        Sheet sheet = workbook.getSheet(sheets.getName());
+        if (Objects.isNull(sheet)) {
+            sheet = workbook.createSheet(sheets.getName());
+        }
         // 写入表头
         writeHeaders(sheet, sheets.getHeaders());
         // 写入数据
@@ -104,14 +75,14 @@ public final class ListExcels {
      * @param headers 表头数据
      */
 
-    static void writeHeaders(HSSFSheet sheet, List<String> headers) {
+    static void writeHeaders(Sheet sheet, List<String> headers) {
+        Row row = sheet.createRow(0);
         Optional.ofNullable(headers)
                 .filter(Lists::iterable)
                 .ifPresent(e -> {
                     // 创建sheet页面
-                    HSSFRow row = sheet.createRow(0);
                     for (int i = 0; i < e.size(); i++) {
-                        HSSFCell cell = row.createCell(i);
+                        Cell cell = row.createCell(i);
                         cell.setCellValue(e.get(i));
                     }
                 });
@@ -123,15 +94,15 @@ public final class ListExcels {
      * @param sheet sheet对象
      * @param rows  数据
      */
-    static void writeRows(HSSFSheet sheet, List<List<String>> rows) {
+    static void writeRows(Sheet sheet, List<List<String>> rows) {
         Optional.ofNullable(rows)
                 .filter(Lists::iterable)
                 .ifPresent(e -> {
                     for (int i = 0; i < e.size(); i++) {
-                        HSSFRow row = sheet.createRow(i + 1);
+                        Row row = sheet.createRow(i + 1);
                         List<String> values = e.get(i);
                         for (int j = values.size() - 1; j >= 0; j--) {
-                            HSSFCell cell = row.createCell(j);
+                            Cell cell = row.createCell(j);
                             String s = values.get(j);
                             cell.setCellValue(StringUtils.isBlank(s) ? "" : s);
                         }

@@ -2,82 +2,55 @@
 package com.itxiaoer.commons.poi.util;
 
 import com.itxiaoer.commons.core.util.Lists;
-import com.itxiaoer.commons.core.util.UUIDUtils;
 import com.itxiaoer.commons.poi.FixedSheets;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
-import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * excel工作类
  *
  * @author liuyk
  */
+@Slf4j
 @SuppressWarnings({"unused", "WeakerAccess"})
 public final class FixedExcels {
     /**
      * 写入数据
      *
-     * @param path       模板路径
+     * @param file       模板文件流
      * @param sheetsList excel数据
-     * @return 写入数据的文件
      */
-    public static Optional<File> write(String path, List<FixedSheets> sheetsList) {
-        try (InputStream fis = new FileInputStream(new File(path))) {
-            return write(fis, sheetsList);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
-    }
+    public static void write(File file, List<FixedSheets> sheetsList) {
 
-    /**
-     * 写入数据
-     *
-     * @param resource   模板文件
-     * @param sheetsList excel数据
-     * @return 写入数据的文件
-     */
-    public static Optional<File> write(ClassPathResource resource, List<FixedSheets> sheetsList) {
-        try (InputStream fis = resource.getInputStream()) {
-            return write(fis, sheetsList);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
-    }
+        String path = file.getAbsolutePath();
 
-
-    /**
-     * 写入数据
-     *
-     * @param fis        模板文件流
-     * @param sheetsList excel数据
-     * @return 写入数据的文件
-     */
-    public static Optional<File> write(InputStream fis, List<FixedSheets> sheetsList) {
-
-        if (Lists.iterable(sheetsList) && Objects.nonNull(fis)) {
+        if (Lists.iterable(sheetsList)) {
             // 创建workbook对象
-            File file = new File(System.getProperty("user.dir"), UUIDUtils.guid());
-            try (Workbook workbook = WorkbookFactory.create(fis)) {
-                IOUtils.copy(fis, file);
+            File dest = new File(System.getProperty("user.dir"), file.getName() + ".new");
+            try (Workbook workbook = WorkbookFactory.create(file)) {
                 sheetsList.forEach(sheets -> FixedExcels.write(workbook, sheets));
-                workbook.write(new FileOutputStream(file));
-                return Optional.of(file);
-            } catch (Exception ignored) {
-                return Optional.empty();
+                workbook.write(new FileOutputStream(dest));
+                boolean delete = file.delete();
+                if (delete) {
+                    Files.move(Paths.get(dest.getAbsolutePath()), Paths.get(path));
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
             }
         }
-        return Optional.empty();
     }
 
     /**
@@ -90,10 +63,13 @@ public final class FixedExcels {
 
         // 创建sheet页面
         Sheet sheet = workbook.getSheet(sheets.getName());
+//        if (Objects.isNull(sheet)) {
+//            sheet = workbook.createSheet(sheets.getName());
+//        }
         Drawing patriarch = sheet.createDrawingPatriarch();
         // 写入数据
         Lists.empty(sheets.getCells()).forEach(e -> {
-            if (e.isDrawable()) {
+            if (e.isDrawable() && Objects.nonNull(e.getValue()) && StringUtils.isNotBlank(e.getValue().toString())) {
                 try (InputStream is = new FileInputStream((File) e.getValue())) {
                     byte[] bytes = IOUtils.toByteArray(is);
 
@@ -103,11 +79,20 @@ public final class FixedExcels {
                     //插入图片
                     patriarch.createPicture(anchor, workbook.addPicture(bytes, HSSFWorkbook.PICTURE_TYPE_JPEG));
                 } catch (Exception e1) {
-                    e1.printStackTrace();
+//                    e1.printStackTrace();
+                    log.error(e1.getMessage());
                 }
             } else {
                 Row row = sheet.getRow(e.getRows());
+                if (Objects.isNull(row)) {
+                    row = sheet.createRow(e.getRows());
+                }
                 Cell cell = row.getCell(e.getCols());
+                if (Objects.isNull(cell)) {
+                    cell = row.createCell(e.getCols());
+                    CellStyle style = workbook.createCellStyle();
+                    cell.setCellStyle(style);
+                }
                 cell.setCellValue(Objects.isNull(e.getValue()) ? "" : String.valueOf(e.getValue()));
             }
         });
