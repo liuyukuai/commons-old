@@ -1,6 +1,7 @@
 package com.itxiaoer.commons.web;
 
 import com.itxiaoer.commons.core.page.Response;
+import com.itxiaoer.commons.core.page.ResponseCode;
 import com.itxiaoer.commons.jwt.JwtAuth;
 import com.itxiaoer.commons.jwt.JwtToken;
 import com.itxiaoer.commons.security.AuthenticationUtils;
@@ -44,13 +45,14 @@ public class TokenController {
 
 
     @PostMapping("/login")
-    public Response<JwtToken> doLogin(@Valid @RequestBody LoginDto loginDto) {
+    public Response<Object> doLogin(@Valid @RequestBody LoginDto loginDto) {
         try {
             UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(loginDto.getLoginName(), loginDto.getPassword());
             final Authentication authentication = authenticationManager.authenticate(upToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             final JwtAuth userDetails = (JwtAuth) userDetailsService.loadUserByUsername(loginDto.getLoginName());
             this.doLogin().accept(userDetails, loginDto);
+            Lockable.COUNTER.remove(loginDto.getLoginName());
             return Response.ok(jwtTokenContext.build(userDetails));
         } catch (BadCredentialsException e) {
             if (this.userDetailsService instanceof Lockable) {
@@ -68,8 +70,9 @@ public class TokenController {
                         Lockable.COUNTER.remove(loginName);
                     }
                 }
+                return Response.build(integer.get(), ResponseCode.USER_LOGIN_PASSWORD_INVALID.getCode(), ResponseCode.USER_LOGIN_PASSWORD_INVALID.getMessage());
             }
-            throw e;
+            return Response.failure(ResponseCode.USER_LOGIN_PASSWORD_INVALID);
         }
     }
 
