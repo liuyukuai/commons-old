@@ -76,10 +76,11 @@ public final class ListExcels {
      */
 
     static void writeHeaders(Sheet sheet, List<String> headers) {
-        Row row = sheet.createRow(0);
+
         Optional.ofNullable(headers)
                 .filter(Lists::iterable)
                 .ifPresent(e -> {
+                    Row row = sheet.createRow(0);
                     // 创建sheet页面
                     for (int i = 0; i < e.size(); i++) {
                         Cell cell = row.createCell(i);
@@ -99,8 +100,12 @@ public final class ListExcels {
                 .filter(Lists::iterable)
                 .ifPresent(e -> {
                     for (int i = 0; i < e.size(); i++) {
-                        Row row = sheet.createRow(i + 1);
                         List<String> values = e.get(i);
+                        if (!Lists.iterable(values)) {
+                            continue;
+                        }
+                        Row row = sheet.createRow(i + 1);
+
                         for (int j = values.size() - 1; j >= 0; j--) {
                             Cell cell = row.createCell(j);
                             String s = values.get(j);
