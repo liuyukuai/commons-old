@@ -148,7 +148,13 @@ public final class ExcelUtil {
 
         CellType cellType = cell.getCellType();
         if (Objects.equals(cellType, CellType.NUMERIC)) {
-            return String.valueOf(cell.getNumericCellValue());
+            if (DateUtil.isCellDateFormatted(cell)) {
+                Date tempValue = cell.getDateCellValue();
+                SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                return simpleFormat.format(tempValue);
+            } else {
+                return String.valueOf(cell.getNumericCellValue());
+            }
         }
 
         if (Objects.equals(cellType, CellType.STRING)) {
