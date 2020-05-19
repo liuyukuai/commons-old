@@ -55,7 +55,7 @@ public final class MockMvcExecutor {
         perform = perform.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8));
         if (consumer != null) {
-            consumer.accept(perform);
+        consumer.accept(perform);
         }
 
         if (returned != null) {

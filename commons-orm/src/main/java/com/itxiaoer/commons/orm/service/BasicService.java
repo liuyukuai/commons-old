@@ -84,6 +84,18 @@ public interface BasicService<DTO, E, ID> {
 
 
     /**
+     * 通过id查询名称是否重复
+     *
+     * @param id   id
+     * @param name name
+     * @return ture or false
+     */
+   default Boolean validateName(ID id, Object name){
+       throw new IllegalArgumentException(" please override this method");
+   }
+
+
+    /**
      * 通过id查询对象
      *
      * @param id id
