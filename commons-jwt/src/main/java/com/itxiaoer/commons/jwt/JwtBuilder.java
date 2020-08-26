@@ -1,6 +1,8 @@
 package com.itxiaoer.commons.jwt;
 
+import com.itxiaoer.commons.core.SysException;
 import com.itxiaoer.commons.core.json.JsonUtil;
+import com.itxiaoer.commons.core.page.ResponseCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -70,7 +72,7 @@ public class JwtBuilder implements Serializable {
                     .getBody();
         } catch (Exception e) {
             log.error("get claims from jwt token error : {}", e.getMessage());
-            throw e;
+            throw new SysException(ResponseCode.USER_TOKEN_EXPIRED.getCode(), ResponseCode.USER_TOKEN_EXPIRED.getMessage());
         }
         return claims;
     }
