@@ -51,6 +51,7 @@ public class JwAuthenticationTokenFilter extends AbstractAuthenticationTokenFilt
                 loginName = jwtBuilder.get(authToken, "loginName");
             } catch (SysException e) {
                 response.setContentType("application/json;charset=UTF-8");
+                response.setHeader("Access-Control-Allow-Origin", "*");
                 Response<String> res = Response.failure(ResponseCode.USER_TOKEN_EXPIRED);
                 response.getWriter().write(JsonUtil.toJson(res));
                 return;
