@@ -1,5 +1,9 @@
 package com.itxiaoer.commons.security;
 
+import com.itxiaoer.commons.core.SysException;
+import com.itxiaoer.commons.core.json.JsonUtil;
+import com.itxiaoer.commons.core.page.Response;
+import com.itxiaoer.commons.core.page.ResponseCode;
 import com.itxiaoer.commons.jwt.JwtBuilder;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -42,7 +46,15 @@ public class JwAuthenticationTokenFilter extends AbstractAuthenticationTokenFilt
 
         String authToken = jwtTokenContext.getTokenFromRequest(request);
         if (StringUtils.isNotBlank(authToken)) {
-            String loginName = jwtBuilder.get(authToken, "loginName");
+            String loginName = "";
+            try {
+                loginName = jwtBuilder.get(authToken, "loginName");
+            } catch (SysException e) {
+                response.setContentType("application/json;charset=UTF-8");
+                Response<String> res = Response.failure(ResponseCode.USER_TOKEN_EXPIRED);
+                response.getWriter().write(JsonUtil.toJson(res));
+                return;
+            }
 
             if (logger.isDebugEnabled()) {
                 logger.info("checking authentication " + loginName);
